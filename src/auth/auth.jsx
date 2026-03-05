@@ -1,11 +1,13 @@
 import axios from "axios";
 
-// const BASE_URL = "http://127.0.0.1:8000/";
 const BASE_URL = "https://hfapi.herofashion.com/";
 
+// ---------------- TOKEN HELPERS ----------------
 export const setTokens = (access, refresh) => {
   localStorage.setItem("access_token", access);
-  localStorage.setItem("refresh_token", refresh);
+  if (refresh) {
+    localStorage.setItem("refresh_token", refresh);
+  }
 };
 
 export const getAccessToken = () => localStorage.getItem("access_token");
@@ -16,27 +18,33 @@ export const clearTokens = () => {
   localStorage.removeItem("refresh_token");
 };
 
+// ---------------- AXIOS INSTANCE ----------------
+export const api = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// ---------------- LOGIN ----------------
 export const loginUser = async (username, password) => {
-  const res = await axios.post(BASE_URL + "login/", {
-    username,
-    password,
-  });
+  const res = await axios.post(BASE_URL + "login/", { username, password });
 
   setTokens(res.data.access, res.data.refresh);
-  startSilentRefresh(); // start refresh
+
+  startSilentRefresh();
+
   return res.data;
 };
 
-
-
+// ---------------- LOGOUT ----------------
 export const logoutUser = async () => {
   try {
     const refreshToken = getRefreshToken();
 
-    await api.post("logout/", {
-      refresh: refreshToken,
-    });
-
+    if (refreshToken) {
+      await api.post("logout/", { refresh: refreshToken });
+    }
   } catch (err) {
     console.log("Logout error", err);
   } finally {
@@ -45,27 +53,18 @@ export const logoutUser = async () => {
   }
 };
 
-
-// export const logoutUser = () => {
-//   clearTokens();
-//   window.location.href = "/";
-// };
-
-export const api = axios.create({
-  baseURL: BASE_URL,
-  headers: { "Content-Type": "application/json" },
-});
-
-/* ---------------- REQUEST INTERCEPTOR ---------------- */
+// ---------------- REQUEST INTERCEPTOR ----------------
 api.interceptors.request.use((config) => {
   const token = getAccessToken();
+
   if (token) {
     config.headers["Authorization"] = `Bearer ${token}`;
   }
+
   return config;
 });
 
-/* ---------------- RESPONSE INTERCEPTOR ---------------- */
+// ---------------- RESPONSE INTERCEPTOR ----------------
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -74,26 +73,31 @@ api.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
-      try {
-        const refreshToken = getRefreshToken();
-        if (!refreshToken) return Promise.reject(error);
+      const refreshToken = getRefreshToken();
 
+      if (!refreshToken) {
+        clearTokens();
+        window.location.href = "/";
+        return Promise.reject(error);
+      }
+
+      try {
         const res = await axios.post(BASE_URL + "token/refresh/", {
           refresh: refreshToken,
         });
 
         const newAccess = res.data.access;
-        const newRefresh = res.data.refresh; // 🔥 IMPORTANT
+        const newRefresh = res.data.refresh || refreshToken;
 
-        setTokens(newAccess, newRefresh || currentRefresh);
-
+        setTokens(newAccess, newRefresh);
 
         originalRequest.headers["Authorization"] = `Bearer ${newAccess}`;
 
-        return api(originalRequest); // ✅ IMPORTANT
+        return api(originalRequest);
       } catch (err) {
-        console.log("Refresh expired");
+        console.log("Refresh expired, logging out");
         clearTokens();
+        window.location.href = "/";
         return Promise.reject(err);
       }
     }
@@ -102,26 +106,65 @@ api.interceptors.response.use(
   }
 );
 
-/* ---------------- SILENT REFRESH ---------------- */
+// ---------------- SILENT REFRESH ----------------
 let refreshInterval;
 
 export const startSilentRefresh = () => {
   if (refreshInterval) return;
 
   refreshInterval = setInterval(async () => {
-    try {
-      const refreshToken = getRefreshToken();
-      if (!refreshToken) return;
+    const refreshToken = getRefreshToken();
 
+    if (!refreshToken) {
+      clearInterval(refreshInterval);
+      return;
+    }
+
+    try {
       const res = await axios.post(BASE_URL + "token/refresh/", {
         refresh: refreshToken,
       });
 
-      localStorage.setItem("access_token", res.data.access);
-      console.log("Token refreshed silently");
+      const newAccess = res.data.access;
+      const newRefresh = res.data.refresh || refreshToken;
+
+      setTokens(newAccess, newRefresh);
+
+      console.log("Access token refreshed silently");
     } catch (err) {
-      console.log("Silent refresh stopped");
+      console.log("Silent refresh failed");
+
+      clearTokens();
       clearInterval(refreshInterval);
+
+      window.location.href = "/";
     }
-  }, 4 * 60 * 1000); // every 4 minutes
+  }, 4 * 60 * 1000);
 };
+
+// ---------------- REFRESH ON TAB FOCUS ----------------
+document.addEventListener("visibilitychange", async () => {
+  if (!document.hidden) {
+    const refreshToken = getRefreshToken();
+
+    if (!refreshToken) return;
+
+    try {
+      const res = await axios.post(BASE_URL + "token/refresh/", {
+        refresh: refreshToken,
+      });
+
+      const newAccess = res.data.access;
+      const newRefresh = res.data.refresh || refreshToken;
+
+      setTokens(newAccess, newRefresh);
+
+      console.log("Token refreshed on tab focus");
+    } catch (err) {
+      console.log("Focus refresh failed");
+
+      clearTokens();
+      window.location.href = "/";
+    }
+  }
+});

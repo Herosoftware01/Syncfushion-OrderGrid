@@ -1,4 +1,4 @@
-import { BrowserRouter,HashRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
 import { startSilentRefresh, getRefreshToken } from "./auth/auth";
 
@@ -11,19 +11,23 @@ import MenuPage from "./components/user_control/MenuPage";
 import SubMenuPermissionPage from "./components/user_control/SubMenuPermissionPage";
 
 function App() {
+
   useEffect(() => {
     const refreshToken = getRefreshToken();
+
     if (refreshToken) {
-      startSilentRefresh(); // ✅ important
+      startSilentRefresh(); // start refresh system when app loads
     }
   }, []);
 
   return (
-    
-     <HashRouter>
+    <HashRouter>
       <Routes>
+
+        {/* LOGIN */}
         <Route path="/" element={<Login />} />
 
+        {/* DASHBOARD */}
         <Route
           path="/dashboard"
           element={
@@ -35,6 +39,7 @@ function App() {
           }
         />
 
+        {/* USER LIST */}
         <Route
           path="/user-list"
           element={
@@ -46,6 +51,7 @@ function App() {
           }
         />
 
+        {/* MENU CONTROL */}
         <Route
           path="/menu-control"
           element={
@@ -57,6 +63,7 @@ function App() {
           }
         />
 
+        {/* SUBMENU CONTROL */}
         <Route
           path="/submenu-control"
           element={
@@ -67,9 +74,9 @@ function App() {
             </ProtectedRoute>
           }
         />
+
       </Routes>
-      </HashRouter>
-    
+    </HashRouter>
   );
 }
 
