@@ -11,6 +11,9 @@ export default defineConfig({
     VitePWA({
   registerType: 'autoUpdate',
   includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
+  workbox: {
+        maximumFileSizeToCacheInBytes: 5000000, // Increases limit to 5MB
+      },
   manifest: {
     name: 'HF APP',
     short_name: 'HF APP',

@@ -9,6 +9,7 @@ import User_list from "./components/user_control/User_list";
 import ProtectedLayout from "./ProtectedLayout";
 import MenuPage from "./components/user_control/MenuPage";
 import SubMenuPermissionPage from "./components/user_control/SubMenuPermissionPage";
+import Syncfushion from "./components/syncfushion/main/home"
 
 function App() {
 
@@ -70,6 +71,17 @@ function App() {
             <ProtectedRoute>
               <ProtectedLayout>
                 <SubMenuPermissionPage />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/sy-order/*"
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <Syncfushion />
               </ProtectedLayout>
             </ProtectedRoute>
           }

@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^1.0.6",
+    "@syncfusion/ej2-react-grids": "^32.2.8",
     "@tailwindcss/vite": "^4.2.1",
     "axios": "^1.13.5",
     "jwt-decode": "^4.0.0",
