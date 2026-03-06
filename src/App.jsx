@@ -9,6 +9,8 @@ import User_list from "./components/user_control/User_list";
 import ProtectedLayout from "./ProtectedLayout";
 import MenuPage from "./components/user_control/MenuPage";
 import SubMenuPermissionPage from "./components/user_control/SubMenuPermissionPage";
+import QualityApp from "./components/quality_app/main/Quality_main"
+import Qc_entry from "./components/quality_app/quality/Qc"
 
 function App() {
 
@@ -70,6 +72,28 @@ function App() {
             <ProtectedRoute>
               <ProtectedLayout>
                 <SubMenuPermissionPage />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/qc-admin/*"
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <QualityApp />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/qc-entry/*"
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <Qc_entry />
               </ProtectedLayout>
             </ProtectedRoute>
           }
