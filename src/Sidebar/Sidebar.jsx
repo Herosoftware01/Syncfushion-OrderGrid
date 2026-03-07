@@ -154,7 +154,6 @@ function Sidebar() {
               <div className="flex flex-col overflow-hidden">
                 <span className="text-[12px] font-bold truncate">{userName}</span>
                 <span className="text-[9px] text-emerald-200 uppercase font-black">Online</span>
-
               
               </div>
               <div>
