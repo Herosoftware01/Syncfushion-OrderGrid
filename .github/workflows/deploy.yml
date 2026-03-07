@@ -11,51 +11,69 @@ jobs:
 
     steps:
 
-    # 1️⃣ Checkout repo in a unique folder per run
+    # 1️⃣ Checkout repo in a unique folder per run to avoid locked file issues
     - name: Checkout Repository
       uses: actions/checkout@v4
       with:
-        path: HF_APP_build_${{ github.run_id }}  # unique folder
+        path: HF_APP_build_${{ github.run_id }}
 
-    # 2️⃣ Kill lingering Node processes (unlock native modules)
+    # 2️⃣ Kill any lingering Node processes to release native modules
     - name: Kill Node processes
+      shell: powershell
       run: |
-        taskkill /F /IM node.exe || echo "No node processes running"
+        try {
+            Stop-Process -Name "node" -Force -ErrorAction Stop
+            Write-Host "Killed Node processes"
+        } catch {
+            Write-Host "No node processes running"
+        }
 
-    # 3️⃣ Install dependencies fresh
+    # 3️⃣ Install dependencies cleanly
     - name: Install Dependencies
+      shell: powershell
       run: |
-        cd HF_APP_build_${{ github.run_id }}
+        Set-Location HF_APP_build_${{ github.run_id }}
         npm ci
 
     # 4️⃣ Build React app
     - name: Build React App
+      shell: powershell
       run: |
-        cd HF_APP_build_${{ github.run_id }}
+        Set-Location HF_APP_build_${{ github.run_id }}
         npm run build
 
     # 5️⃣ Copy web.config into build folder
     - name: Copy web.config
+      shell: powershell
       run: |
-        copy HF_APP_build_${{ github.run_id }}\web.config HF_APP_build_${{ github.run_id }}\build\web.config
+        Copy-Item HF_APP_build_${{ github.run_id }}\web.config HF_APP_build_${{ github.run_id }}\build\web.config -Force
 
-    # 6️⃣ Stop IIS App Pool
+    # 6️⃣ Stop IIS App Pool before deploying
     - name: Stop IIS App Pool
+      shell: powershell
       run: |
         Import-Module WebAdministration
         Stop-WebAppPool -Name "HF_FRONTEND"
 
-    # 7️⃣ Deploy build to IIS
+    # 7️⃣ Deploy build to IIS folder
     - name: Deploy Build
+      shell: powershell
       run: |
         $dest = "D:\PRODUCTION_SOFTWEARE\frontend\dist"
         if (Test-Path $dest) {
-          Remove-Item $dest -Recurse -Force -ErrorAction SilentlyContinue
+            Remove-Item $dest -Recurse -Force -ErrorAction SilentlyContinue
         }
-        Copy-Item HF_APP_build_${{ github.run_id }}\build $dest -Recurse
+        Copy-Item HF_APP_build_${{ github.run_id }}\build $dest -Recurse -Force
 
-    # 8️⃣ Start IIS App Pool
+    # 8️⃣ Start IIS App Pool after deployment
     - name: Start IIS App Pool
+      shell: powershell
       run: |
         Import-Module WebAdministration
         Start-WebAppPool -Name "HF_FRONTEND"
+
+    # 9️⃣ Optional: Clean up old build folder
+    - name: Clean up build folder
+      shell: powershell
+      run: |
+        Remove-Item HF_APP_build_${{ github.run_id }} -Recurse -Force -ErrorAction SilentlyContinue
