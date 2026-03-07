@@ -138,7 +138,7 @@ const HrReportGrid: React.FC = () => {
   const updateCounts = () => {
     if (gridRef.current) {
       const records = gridRef.current.getFilteredRecords();
-      setShowingCount(records ? records.length : 0);
+      setShowingCount(records ? (records as object[]).length : 0);
     }
   };
 
