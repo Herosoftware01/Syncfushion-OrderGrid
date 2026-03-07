@@ -301,7 +301,6 @@ const HeroFashionGrid13: React.FC = () => {
         <div className="header-left">
           {showingCount} / {totalCount} Records
         </div>
-<<<<<<< HEAD
           <div className="header-center">
           HERO FASHION - ORDER DASHBOARD
         </div>
@@ -314,9 +313,6 @@ const HeroFashionGrid13: React.FC = () => {
             className="search-input"
           />
         </div>
-=======
-
->>>>>>> 40e3e23eb0b50924f0730f4c529e20527fd4d064
         {/* Center: Title */}
         <div className="header-center">
           HERO FASHION - ORDER DASHBOARD
@@ -365,11 +361,7 @@ const HeroFashionGrid13: React.FC = () => {
             <ColumnDirective field="img_fpath" headerText="AOP" width="90" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('img_fpath')} />
             <ColumnDirective field="prnclr" type="string" headerText="PRN COL" width="100" template={genericHighlighter('prnclr')}   />
 
-<<<<<<< HEAD
             <ColumnDirective field="u25" headerText="25 week"   width="90" template={genericHighlighter('u25')} />
-=======
-            <ColumnDirective field="u25" headerText="U25" width="90" template={genericHighlighter('u25')} />
->>>>>>> 40e3e23eb0b50924f0730f4c529e20527fd4d064
             <ColumnDirective field="abc" headerText="ABC" width="85" template={genericHighlighter('abc')} />
             <ColumnDirective field="u46" headerText="46 EMPTY" width="85" template={genericHighlighter('u46')} />
             <ColumnDirective field="production_type_inside_outside" headerText="pr type" width="85" template={genericHighlighter('production_type_inside_outside')} />

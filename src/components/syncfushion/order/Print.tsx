@@ -79,18 +79,11 @@ const PrnReportGrid: React.FC = () => {
   const [searchKey, setSearchKey] = useState<string>('');
 
   const gridRef = useRef<GridComponent>(null);
-  const searchTimeout = useRef<any>(null);
-
-  const searchableFields = [
-    'jobno_joint', 'jobno_print_emb', 'print_type', 'print_description', 
-    'print_colours', 'print_colour_1', 'print_colour_2'
-  ];
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        // Using your endpoint (replace with the specific PRN endpoint if different)
         const response = await fetch('https://app.herofashion.com/PrintRgb/');
         const textData = await response.text();
         const fixedJson = textData.replace(/:\s*NaN\b/g, ': null');
@@ -122,27 +115,30 @@ const PrnReportGrid: React.FC = () => {
     );
   };
 
-  const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSearchKey(value);
-    if (searchTimeout.current) clearTimeout(searchTimeout.current);
-    searchTimeout.current = setTimeout(() => {
-      if (gridRef.current) gridRef.current.search(value);
-    }, 400);
-  };
-
   const updateCounts = () => {
     if (gridRef.current) {
-      const records = gridRef.current.getFilteredRecords();
+      const records = gridRef.current.getCurrentViewRecords();
       setShowingCount(records ? records.length : 0);
     }
   };
 
-  const genericHighlighter = (field: keyof PrnData) => (props: PrnData) => (
-    <>{highlightText(props[field])}</>
-  );
-
-  // --- Templates ---
+  // --- Dynamic Image Template ---
+  // This helper function allows the same template to work for different image fields
+  const createImageTemplate = (field: keyof PrnData) => (props: PrnData) => {
+    const url = props[field];
+    return (
+      <div style={{ textAlign: 'center', padding: '5px' }}>
+        {url ? (
+          <img 
+            src={String(url)} 
+            alt="Print" 
+            style={{ width: '80px', height: '80px', objectFit: 'contain', borderRadius: '4px', border: '1px solid #ddd', backgroundColor: '#fff' }} 
+            onError={(e) => (e.currentTarget.style.display = 'none')}
+          />
+        ) : <div style={{fontSize: '10px', color: '#ccc'}}>No Image</div>}
+      </div>
+    );
+  };
 
   const jobSummaryTemplate = (p: PrnData) => (
     <div style={{ fontSize: '11px', lineHeight: '1.4' }}>
@@ -153,126 +149,112 @@ const PrnReportGrid: React.FC = () => {
     </div>
   );
 
-  const imageTemplate = (p: PrnData) => (
-    <div style={{ textAlign: 'center' }}>
-      {p.img_fpath ? (
-        <img 
-          src={p.img_fpath} 
-          alt="Job" 
-          style={{ width: '80px', height: '80px', objectFit: 'contain', borderRadius: '4px', border: '1px solid #ddd' }} 
-        />
-      ) : <div style={{fontSize: '10px', color: '#ccc'}}>No Image</div>}
-    </div>
-  );
-
   const colorListTemplate = (p: PrnData) => {
-    // Collect all 8 colors
-    const colors = [
-      p.print_colour_1, p.print_colour_2, p.print_colour_3, p.print_colour_4,
-      p.print_colour_5, p.print_colour_6, p.print_colour_7, p.print_colour_8
-    ].filter(c => c && c.trim() !== "");
-
+    const colors = [p.print_colour_1, p.print_colour_2, p.print_colour_3, p.print_colour_4, p.print_colour_5, p.print_colour_6, p.print_colour_7, p.print_colour_8].filter(c => c && c.trim() !== "");
     return (
       <div style={{ fontSize: '10px', display: 'flex', flexDirection: 'column' }}>
         {colors.map((clr, idx) => (
-          <div key={idx} style={{ borderBottom: '1px solid #eee', padding: '1px 0' }}>
-            <span style={{ color: '#999', marginRight: '4px' }}>{idx + 1}.</span>
-            {highlightText(clr)}
-          </div>
+          <div key={idx}>{idx + 1}. {highlightText(clr)}</div>
         ))}
       </div>
     );
   };
 
   const conDetailsTemplate = (p: PrnData) => (
-    <div style={{ fontSize: '10px', whiteSpace: 'pre-line', color: '#555' }}>
+    <div style={{ fontSize: '10px', whiteSpace: 'pre-line', color: '#555', lineHeight: '1.3' }}>
       {highlightText(p.con_jobno_print)}
-      {highlightText(p.con_jobno_top_clr_siz)}
+      {p.con_jobno_top_clr_siz && `\n${highlightText(p.con_jobno_top_clr_siz)}`}
     </div>
   );
 
-  if (loading) return <div style={{ padding: '50px', textAlign: 'center' }}>Loading PRN Report...</div>;
-
   return (
-    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#fff' }}>
-      <div style={{
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        padding: '8px 20px', backgroundColor: '#f8f9fa', borderBottom: '1px solid #dee2e6'
+    /* MAIN WRAPPER: Use Flex to show Sidebar and Grid side-by-side */
+    <div style={{ display: 'flex', height: '100vh', width: '100%', overflow: 'hidden' }}>
+      
+      {/* 1. SIDEBAR: Increased width to 300px as requested */}
+    
+
+      {/* 2. MAIN CONTENT AREA */}
+      <div style={{ 
+        flex: 1, 
+        display: 'flex', 
+        flexDirection: 'column', 
+        minWidth: 0, // Critical: Allows the grid to shrink/fit correctly
+        backgroundColor: '#fff' 
       }}>
-        <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#d32f2f', minWidth: '80px', marginLeft: '30px' }}>
-          {showingCount} / {totalCount}
+        
+        {/* Header Bar */}
+        <div style={{
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          padding: '10px 20px', backgroundColor: '#fff', borderBottom: '1px solid #dee2e6'
+        }}>
+          <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#d32f2f' }}>
+            {showingCount} / {totalCount}
+          </div>
+          <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#333' }}>
+            PRINT & EMBROIDERY (PRN) PRODUCTION REPORT
+          </div>
+          <div style={{ width: '250px' }}>
+            <input
+              type="text"
+              placeholder="Search..."
+              onChange={(e) => gridRef.current?.search(e.target.value)}
+              style={{ width: '100%', padding: '6px 15px', borderRadius: '20px', border: '1px solid #ccc', outline: 'none' }}
+            />
+          </div>
         </div>
-        <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#333' }}>
-          PRINT & EMBROIDERY (PRN) REPORT
-        </div>
-        <div style={{ width: '300px' }}>
-          <input
-            type="text"
-            placeholder="Search Job No, Type, Color..."
-            value={searchKey}
-            onChange={onSearchChange}
-            style={{
-              width: '100%', padding: '6px 15px', borderRadius: '20px',
-              border: '1px solid #ccc', outline: 'none', fontSize: '13px'
-            }}
-          />
-        </div>
-      </div>
 
-      <div style={{ flex: 1, overflow: 'hidden' }}>
-        <style>{`
-          .custom-highlight { background-color: #fff9c4 !important; color: #d32f2f !important; font-weight: bold; }
-          .e-rowcell { vertical-align: top !important; font-size: 11px !important; line-height: 1.3 !important; padding-top: 8px !important; }
-          .e-headercell { background-color: #f1f1f1 !important; font-weight: bold !important; }
-        `}</style>
+        {/* Grid Container */}
+        <div style={{ flex: 1, overflow: 'hidden' }}>
+          <style>{`
+            .custom-highlight { background-color: #fff9c4 !important; color: #d32f2f !important; font-weight: bold; }
+            .e-rowcell { vertical-align: top !important; font-size: 11px !important; padding: 10px !important; }
+            .e-headercell { background-color: #f8f9fa !important; font-weight: bold !important; }
+            .e-grid { border: none !important; }
+          `}</style>
 
-        <GridComponent
-          ref={gridRef}
-          dataSource={dataSource}
-          dataBound={updateCounts}
-          height="100%"
-          enableVirtualization={true}
-          rowHeight={120}
-          allowSorting={true}
-          allowFiltering={true}
-          allowResizing={true}
-          filterSettings={{ type: 'Excel' }}
-          gridLines="Both"
-        >
-          <ColumnsDirective>
-            {/* Image and Job Identification */}
-            <ColumnDirective field="img_fpath" headerText="IMAGE" width="100" textAlign="Center" template={imageTemplate} allowFiltering={false} />
-            <ColumnDirective field="jobno_joint" headerText="JOB INFO" width="150" template={jobSummaryTemplate} />
-            
-            {/* Core Print Details */}
-            <ColumnDirective field="print_description" headerText="DESCRIPTION" width="150" template={genericHighlighter('print_description')} />
-            <ColumnDirective field="print_colours" headerText="CLR TOTAL" width="100" template={genericHighlighter('print_colours')} />
-            
-            {/* Detailed Color List (1-8) */}
-            <ColumnDirective headerText="COLOUR LIST (1-8)" width="160" template={colorListTemplate} />
-            
-            {/* Technical Specifications */}
-            <ColumnDirective field="screen_number" headerText="SCREEN #" width="90" textAlign="Center" template={genericHighlighter('screen_number')} />
-            <ColumnDirective field="print_screen_1" headerText="S1" width="80" template={genericHighlighter('print_screen_1')} />
-            <ColumnDirective field="print_screen_2" headerText="S2" width="80" template={genericHighlighter('print_screen_2')} />
-            
-            {/* Consolidated/Multi-line Fields */}
-            <ColumnDirective headerText="CONSOLIDATED" width="180" template={conDetailsTemplate} />
-            
-            {/* Other Metadata (Requested all fields) */}
-            <ColumnDirective field="prnclr" headerText="PRN CLR" width="100" template={genericHighlighter('prnclr')} />
-            <ColumnDirective field="print_emb_ground_colour" headerText="GRND CLR" width="100" template={genericHighlighter('print_emb_ground_colour')} />
-            <ColumnDirective field="individual_part_print_emb" headerText="INDV PART" width="100" />
-            <ColumnDirective field="print_emb_outside_supplier" headerText="SUPPLIER" width="120" />
-            <ColumnDirective field="inside_outside_print_emb" headerText="IN/OUT" width="90" />
-            <ColumnDirective field="print_size_details" headerText="SIZE DTLS" width="120" />
-            <ColumnDirective field="hex" headerText="HEX" width="80" />
-            <ColumnDirective field="prnfile1" headerText="FILE 1" width="120" />
-            <ColumnDirective field="prnfile2" headerText="FILE 2" width="120" />
-            <ColumnDirective field="print_img_pen" headerText="IMG PEN" width="100" />
-          </ColumnsDirective>
-          <Inject services={[Sort, Filter, Group, Reorder, Search, VirtualScroll, Resize]} />
-        </GridComponent>
+          {loading ? (
+            <div style={{ padding: '50px', textAlign: 'center' }}>Loading PRN Data...</div>
+          ) : (
+            <GridComponent
+              ref={gridRef}
+              dataSource={dataSource}
+              dataBound={updateCounts}
+              height="100%"
+              enableVirtualization={true}
+              rowHeight={130}
+              allowSorting={true}
+              allowFiltering={true}
+              allowResizing={true}
+              filterSettings={{ type: 'Excel' }}
+              gridLines="Both"
+            >
+              <ColumnsDirective>
+                {/* Image columns using specific templates for each field */}
+                <ColumnDirective field="jobno_joint" headerText="JOB INFO" width="150" template={jobSummaryTemplate} />
+                <ColumnDirective field="prnfile1" headerText="PRN 1" width="100" textAlign="Center" template={createImageTemplate('prnfile1')} />
+                <ColumnDirective field="prnfile2" headerText="PRN 2" width="100" textAlign="Center" template={createImageTemplate('prnfile2')} />
+                <ColumnDirective field="img_fpath" headerText="AOP" width="100" textAlign="Center" template={createImageTemplate('img_fpath')} />
+                
+                {/* <ColumnDirective field="jobno_joint" headerText="JOB INFO" width="150" template={jobSummaryTemplate} /> */}
+                <ColumnDirective field="print_description" headerText="DESCRIPTION" width="140" />
+                <ColumnDirective field="print_colours" headerText="CLR" width="70" textAlign="Center" />
+                <ColumnDirective headerText="COLOUR LIST (1-8)" width="180" template={colorListTemplate} />
+                <ColumnDirective field="screen_number" headerText="SCR #" width="80" textAlign="Center" />
+                <ColumnDirective field="print_screen_1" headerText="S1" width="80" />
+                <ColumnDirective field="print_screen_2" headerText="S2" width="80" />
+                <ColumnDirective headerText="CONSOLIDATED" width="170" template={conDetailsTemplate} />
+                <ColumnDirective field="prnclr" headerText="PRN CLR" width="110" />
+                <ColumnDirective field="print_emb_ground_colour" headerText="GRND CLR" width="110" />
+                <ColumnDirective field="individual_part_print_emb" headerText="INDV PART" width="110" />
+                <ColumnDirective field="print_emb_outside_supplier" headerText="SUPPLIER" width="120" />
+                <ColumnDirective field="inside_outside_print_emb" headerText="IN/OUT" width="90" />
+                <ColumnDirective field="print_size_details" headerText="SIZE DTLS" width="120" />
+              </ColumnsDirective>
+              <Inject services={[Sort, Filter, Group, Reorder, Search, VirtualScroll, Resize]} />
+            </GridComponent>
+          )}
+        </div>
       </div>
     </div>
   );
