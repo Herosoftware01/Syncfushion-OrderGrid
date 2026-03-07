@@ -137,17 +137,35 @@ function Sidebar() {
 
       {/* --- DESKTOP SIDEBAR --- */}
       <aside className={`hidden lg:flex flex-col h-full bg-emerald-600 text-white transition-all duration-300 relative z-50 shadow-2xl ${sidebarOpen ? "w-64" : "w-20"}`}>
-        <button
+        {/* <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
           className="absolute -right-3 top-10 bg-white text-emerald-600 p-1.5 rounded-full shadow-lg z-50 hover:scale-110 transition-transform"
         >
           {sidebarOpen ? <X size={14} /> : <Menu size={14} />}
-        </button>
+        </button> */}
 
-        <div className="h-20 flex items-center px-6 mb-2">
+        {/* <div className="h-20 flex items-center px-6 mb-2">
           <div className="min-w-[32px] h-8 bg-white/20 rounded flex items-center justify-center font-black text-xs border border-white/10">HF</div>
           {sidebarOpen && <span className="ml-3 text-sm font-black tracking-widest uppercase">Hero Fashion</span>}
-        </div>
+        </div> */}
+
+        <div className="h-20 flex items-center px-6 mb-2 gap-3">
+  
+        {/* Sidebar Toggle Button */}
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition"
+        >
+          {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
+
+        {sidebarOpen && (
+          <span className="text-sm font-black tracking-widest uppercase">
+            Hero Fashion
+          </span>
+        )}
+
+      </div>
 
         <MenuContent />
 
@@ -175,7 +193,7 @@ function Sidebar() {
 
       {/* --- CONTENT AREA --- */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden pt-16 lg:pt-0">
-        <main className="flex-1 overflow-y-auto p-2 md:p-2 pt-20 lg:pt-8 no-scrollbar">
+        <main className="flex-1 overflow-y-auto pt-20 lg:pt-8 no-scrollbar">
            {/* Your Content Here */}
         </main>
       </div>

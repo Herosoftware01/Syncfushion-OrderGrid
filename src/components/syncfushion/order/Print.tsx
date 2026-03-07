@@ -149,16 +149,32 @@ const PrnReportGrid: React.FC = () => {
     </div>
   );
 
-  const colorListTemplate = (p: PrnData) => {
-    const colors = [p.print_colour_1, p.print_colour_2, p.print_colour_3, p.print_colour_4, p.print_colour_5, p.print_colour_6, p.print_colour_7, p.print_colour_8].filter(c => c && c.trim() !== "");
-    return (
-      <div style={{ fontSize: '10px', display: 'flex', flexDirection: 'column' }}>
-        {colors.map((clr, idx) => (
-          <div key={idx}>{idx + 1}. {highlightText(clr)}</div>
-        ))}
-      </div>
-    );
-  };
+ const colorListTemplate = (p: PrnData) => {
+  const colors =[
+    p.print_colour_1, p.print_colour_2, p.print_colour_3, p.print_colour_4, 
+    p.print_colour_5, p.print_colour_6, p.print_colour_7, p.print_colour_8
+  ].filter(c => c && c.trim() !== "");
+
+  return (
+    // Changed to display: block instead of flex
+    <div style={{ fontSize: '11px', display: 'block', width: '100%', padding: '5px 0' }}>
+      {colors.map((clr, idx) => (
+        <div 
+          key={idx} 
+          style={{ 
+            display: 'block',             /* Forces standard vertical stacking */
+            marginBottom: '6px',          /* Adds spacing between colors */
+            lineHeight: '1.4',            /* Prevents text from squishing vertically */
+            whiteSpace: 'normal',         /* Allows long text to wrap to the next line */
+            wordBreak: 'break-word' 
+          }}
+        >
+          <span style={{ fontWeight: 'bold' }}>{idx + 1}.</span> {highlightText(clr)}
+        </div>
+      ))}
+    </div>
+  );
+};
 
   const conDetailsTemplate = (p: PrnData) => (
     <div style={{ fontSize: '10px', whiteSpace: 'pre-line', color: '#555', lineHeight: '1.3' }}>
