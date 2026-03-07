@@ -12,6 +12,7 @@ import SubMenuPermissionPage from "./components/user_control/SubMenuPermissionPa
 import QualityApp from "./components/quality_app/main/Quality_main"
 import Qc_entry from "./components/quality_app/quality/Qc"
 import Syncfushion from "./components/syncfushion/main/home"
+import OrdPagination from "./components/syncfushion/order/ord_pagination";
 
 function App() {
 
@@ -84,6 +85,17 @@ function App() {
             <ProtectedRoute>
               <ProtectedLayout>
                 <Syncfushion />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/ord_page/*"
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <OrdPagination />
               </ProtectedLayout>
             </ProtectedRoute>
           }
