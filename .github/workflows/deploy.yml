@@ -11,7 +11,7 @@ jobs:
 
     steps:
 
-    # 1️⃣ Checkout repo in a clean separate folder
+    # 1️⃣ Checkout repo in separate folder
     - name: Checkout Repository
       uses: actions/checkout@v4
       with:
@@ -33,27 +33,22 @@ jobs:
     - name: Copy web.config
       run: copy HF_APP_build\web.config HF_APP_build\dist\web.config
 
-    # 5️⃣ Stop IIS App Pool (Admin-required)
+    # 5️⃣ Stop IIS App Pool
     - name: Stop IIS App Pool
       run: |
         Import-Module WebAdministration
         Stop-WebAppPool -Name "HF_FRONTEND"
-      shell: powershell
-      continue-on-error: true  # fail-safe in case permission issue
 
-    # 6️⃣ Deploy build to IIS folder
-    - name: Deploy Build to IIS
+    # 6️⃣ Deploy Build to IIS
+    - name: Deploy Build
       run: |
-        $iisDist = "D:\PRODUCTION_SOFTWEARE\frontend\dist"
-        if (Test-Path $iisDist) {
-          Remove-Item $iisDist -Recurse -Force -ErrorAction SilentlyContinue
+        if (Test-Path "D:\PRODUCTION_SOFTWEARE\frontend\dist") {
+          Remove-Item "D:\PRODUCTION_SOFTWEARE\frontend\dist" -Recurse -Force -ErrorAction SilentlyContinue
         }
-        Copy-Item HF_APP_build\dist $iisDist -Recurse
+        Copy-Item HF_APP_build\dist "D:\PRODUCTION_SOFTWEARE\frontend\dist" -Recurse
 
     # 7️⃣ Start IIS App Pool
     - name: Start IIS App Pool
       run: |
         Import-Module WebAdministration
         Start-WebAppPool -Name "HF_FRONTEND"
-      shell: powershell
-      continue-on-error: true  # fail-safe
