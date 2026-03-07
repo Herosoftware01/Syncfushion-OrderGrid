@@ -43,10 +43,16 @@ jobs:
         npm run build
 
     # 5️⃣ Copy web.config into build folder
-    - name: Copy web.config
+   
+    - name: Copy web.config into build folder
       shell: powershell
       run: |
-        Copy-Item HF_APP_build_${{ github.run_id }}\web.config HF_APP_build_${{ github.run_id }}\build\web.config -Force
+          $buildPath = "HF_APP_build_${{ github.run_id }}\build"
+          # Create build folder if it doesn't exist
+          if (-not (Test-Path $buildPath)) {
+              New-Item -ItemType Directory -Path $buildPath | Out-Null
+          }
+          Copy-Item "HF_APP_build_${{ github.run_id }}\web.config" "$buildPath\web.config" -Force
 
     # 6️⃣ Stop IIS App Pool before deploying
     - name: Stop IIS App Pool
