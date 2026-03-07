@@ -75,7 +75,7 @@ const PrnReportGrid: React.FC = () => {
   const [dataSource, setDataSource] = useState<PrnData[]>([]);
   const [totalCount, setTotalCount] = useState<number>(0);
   const [showingCount, setShowingCount] = useState<number>(0);
-  const [loading, setLoading] = useState(true);
+  const[loading, setLoading] = useState(true);
   const [searchKey, setSearchKey] = useState<string>('');
 
   const gridRef = useRef<GridComponent>(null);
@@ -98,7 +98,7 @@ const PrnReportGrid: React.FC = () => {
       }
     };
     fetchData();
-  }, []);
+  },[]);
 
   const highlightText = (text: any) => {
     if (!searchKey || text === undefined || text === null || text === "") return text;
@@ -115,15 +115,20 @@ const PrnReportGrid: React.FC = () => {
     );
   };
 
+  // --- UPDATED updateCounts FUNCTION ---
   const updateCounts = () => {
     if (gridRef.current) {
-      const records = gridRef.current.getCurrentViewRecords();
-      setShowingCount(records ? records.length : 0);
+      const gridObj = gridRef.current;
+      // Get the actual filtered total count from pageSettings, not just DOM elements
+      let currentTotal = gridObj.pageSettings?.totalRecordsCount;
+      if (currentTotal === undefined || currentTotal === null) {
+        // Fallback to absolute total if no filters applied yet
+        currentTotal = gridObj.dataSource ? (gridObj.dataSource as any[]).length : 0;
+      }
+      setShowingCount(currentTotal);
     }
   };
 
-  // --- Dynamic Image Template ---
-  // This helper function allows the same template to work for different image fields
   const createImageTemplate = (field: keyof PrnData) => (props: PrnData) => {
     const url = props[field];
     return (
@@ -156,16 +161,15 @@ const PrnReportGrid: React.FC = () => {
   ].filter(c => c && c.trim() !== "");
 
   return (
-    // Changed to display: block instead of flex
     <div style={{ fontSize: '11px', display: 'block', width: '100%', padding: '5px 0' }}>
       {colors.map((clr, idx) => (
         <div 
           key={idx} 
           style={{ 
-            display: 'block',             /* Forces standard vertical stacking */
-            marginBottom: '6px',          /* Adds spacing between colors */
-            lineHeight: '1.4',            /* Prevents text from squishing vertically */
-            whiteSpace: 'normal',         /* Allows long text to wrap to the next line */
+            display: 'block',             
+            marginBottom: '6px',          
+            lineHeight: '1.4',            
+            whiteSpace: 'normal',         
             wordBreak: 'break-word' 
           }}
         >
@@ -184,18 +188,13 @@ const PrnReportGrid: React.FC = () => {
   );
 
   return (
-    /* MAIN WRAPPER: Use Flex to show Sidebar and Grid side-by-side */
     <div style={{ display: 'flex', height: '100vh', width: '100%', overflow: 'hidden' }}>
       
-      {/* 1. SIDEBAR: Increased width to 300px as requested */}
-    
-
-      {/* 2. MAIN CONTENT AREA */}
       <div style={{ 
         flex: 1, 
         display: 'flex', 
         flexDirection: 'column', 
-        minWidth: 0, // Critical: Allows the grid to shrink/fit correctly
+        minWidth: 0, 
         backgroundColor: '#fff' 
       }}>
         
@@ -214,7 +213,10 @@ const PrnReportGrid: React.FC = () => {
             <input
               type="text"
               placeholder="Search..."
-              onChange={(e) => gridRef.current?.search(e.target.value)}
+              onChange={(e) => {
+                setSearchKey(e.target.value); // UPDATED: Set search key so highlighting triggers
+                gridRef.current?.search(e.target.value);
+              }}
               style={{ width: '100%', padding: '6px 15px', borderRadius: '20px', border: '1px solid #ccc', outline: 'none' }}
             />
           </div>
@@ -222,10 +224,19 @@ const PrnReportGrid: React.FC = () => {
 
         {/* Grid Container */}
         <div style={{ flex: 1, overflow: 'hidden' }}>
+          {/* UPDATED CSS: Added white-space: normal and line-height normal to prevent overlapping text! */}
           <style>{`
             .custom-highlight { background-color: #fff9c4 !important; color: #d32f2f !important; font-weight: bold; }
-            .e-rowcell { vertical-align: top !important; font-size: 11px !important; padding: 10px !important; }
+            .e-rowcell { 
+                vertical-align: top !important; 
+                font-size: 11px !important; 
+                padding: 10px !important; 
+                white-space: normal !important; 
+                word-wrap: break-word !important; 
+                line-height: normal !important;
+            }
             .e-headercell { background-color: #f8f9fa !important; font-weight: bold !important; }
+            .e-headercelldiv { white-space: normal !important; }
             .e-grid { border: none !important; }
           `}</style>
 
@@ -236,6 +247,7 @@ const PrnReportGrid: React.FC = () => {
               ref={gridRef}
               dataSource={dataSource}
               dataBound={updateCounts}
+              actionComplete={updateCounts} // UPDATED: Triggers count update on filter/search
               height="100%"
               enableVirtualization={true}
               rowHeight={130}
@@ -246,13 +258,10 @@ const PrnReportGrid: React.FC = () => {
               gridLines="Both"
             >
               <ColumnsDirective>
-                {/* Image columns using specific templates for each field */}
                 <ColumnDirective field="jobno_joint" headerText="JOB INFO" width="150" template={jobSummaryTemplate} />
                 <ColumnDirective field="prnfile1" headerText="PRN 1" width="100" textAlign="Center" template={createImageTemplate('prnfile1')} />
                 <ColumnDirective field="prnfile2" headerText="PRN 2" width="100" textAlign="Center" template={createImageTemplate('prnfile2')} />
                 <ColumnDirective field="img_fpath" headerText="AOP" width="100" textAlign="Center" template={createImageTemplate('img_fpath')} />
-                
-                {/* <ColumnDirective field="jobno_joint" headerText="JOB INFO" width="150" template={jobSummaryTemplate} /> */}
                 <ColumnDirective field="print_description" headerText="DESCRIPTION" width="140" />
                 <ColumnDirective field="print_colours" headerText="CLR" width="70" textAlign="Center" />
                 <ColumnDirective headerText="COLOUR LIST (1-8)" width="180" template={colorListTemplate} />
