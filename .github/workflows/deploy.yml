@@ -11,39 +11,54 @@ jobs:
 
     steps:
 
-    # 1️⃣ Checkout repo in a separate folder, skip folder cleanup to avoid EPERM
+    # 0️⃣ Kill any running Node processes (Admin required) to avoid file locks
+    - name: Kill Node Processes
+      run: |
+        Get-Process node -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+      shell: powershell
+
+    # 1️⃣ Remove old build folder safely
+    - name: Delete old build folder
+      run: |
+        $folder = "D:\PRODUCTION_SOFTWEARE\actions-runner\_work\HF_APP\HF_APP_build"
+        if (Test-Path $folder) {
+          Remove-Item $folder -Recurse -Force -ErrorAction SilentlyContinue
+        }
+      shell: powershell
+
+    # 2️⃣ Checkout repository into a fresh folder
     - name: Checkout Repository
       uses: actions/checkout@v4
       with:
         path: HF_APP_build
         persist-credentials: false
-        clean: false  # avoid deleting locked files
+        clean: false
 
-    # 2️⃣ Install dependencies (clean install)
+    # 3️⃣ Install dependencies
     - name: Install Dependencies
       run: |
         cd HF_APP_build
         npm ci
 
-    # 3️⃣ Build React app
+    # 4️⃣ Build React app
     - name: Build React App
       run: |
         cd HF_APP_build
         npm run build
 
-    # 4️⃣ Copy web.config to build folder
+    # 5️⃣ Copy web.config into dist
     - name: Copy web.config
       run: copy HF_APP_build\web.config HF_APP_build\dist\web.config
 
-    # 5️⃣ Stop IIS App Pool (Admin / Local System required)
+    # 6️⃣ Stop IIS App Pool (requires Admin / Local System)
     - name: Stop IIS App Pool
       run: |
         Import-Module WebAdministration
         Stop-WebAppPool -Name "HF_FRONTEND"
       shell: powershell
-      continue-on-error: true  # fail-safe if runner not Admin
+      continue-on-error: true
 
-    # 6️⃣ Deploy build to IIS folder
+    # 7️⃣ Deploy build to IIS folder
     - name: Deploy Build
       run: |
         $iisDist = "D:\PRODUCTION_SOFTWEARE\frontend\dist"
@@ -51,11 +66,12 @@ jobs:
           Remove-Item $iisDist -Recurse -Force -ErrorAction SilentlyContinue
         }
         Copy-Item HF_APP_build\dist $iisDist -Recurse
+      shell: powershell
 
-    # 7️⃣ Start IIS App Pool
+    # 8️⃣ Start IIS App Pool
     - name: Start IIS App Pool
       run: |
         Import-Module WebAdministration
         Start-WebAppPool -Name "HF_FRONTEND"
       shell: powershell
-      continue-on-error: true  # fail-safe
+      continue-on-error: true
