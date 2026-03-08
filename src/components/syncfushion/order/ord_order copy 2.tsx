@@ -90,7 +90,6 @@ const HeroFashionGrid13: React.FC = () => {
       try {
         setLoading(true); setError(null);
         const [orderResponse, printResponse] = await Promise.all([
-          fetch('https://app.herofashion.com/order_panda'),
           fetch('https://app.herofashion.com/PrintRgb/')
         ]);
         if (!orderResponse.ok || !printResponse.ok) throw new Error("Failed to fetch data from APIs");

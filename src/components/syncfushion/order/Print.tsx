@@ -16,6 +16,73 @@ import { registerLicense } from '@syncfusion/ej2-base';
 
 registerLicense('Ngo9BigBOggjHTQxAR8/V1JGaF5cXGpCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdlWX1cdHRUQ2ddUkV3XUpWYEs=');
 
+// Define Order Data Interface for the join
+interface OrderData {
+  jobno_oms: string;
+
+  company_name?: string;
+  buyer1?: string;
+  reference?: string;
+  merch?: string; 
+  director_sample_order?: string;
+
+  // Style & Design
+  stylename?: string;
+  styleno?: string;
+  styledesc?: string;
+  mainimagepath?: string;
+  img_fpath?: string;
+  prnclr?: string | null; 
+  prnfile1?: string;
+  prnfile2?: string;
+
+  // Production Details
+  production_type_inside_outside?: string;
+  uom?: string; 
+  quantity?: string;
+  printing_R?: string;
+  Fdt?: string;
+  Emb?: string; 
+  abc?: string;
+  quality_controller?: string;
+  punit_sh?: string;
+
+  // Logistics & Dates
+  podate?: string;
+  pono?: string;
+  slno?: string;
+  date?: string;
+  insdate?: string;
+  insdatenew?: string;
+  insdateyear?: string;
+  actdaten?: string;
+  actyeardate?: string;
+  vessel_dt?: string;
+  vessel_yr?: string;
+  final_delivery_date?: string;
+  finaldelvdate?: string;
+  ourdelvdate?: string;
+  order_follow_up?: string;
+  shipment_complete?: string;
+
+  // Utility/Custom Fields
+  u7?: string;
+  u8?: string;
+  u14?: string;
+  u15?: string;
+  u25?: string;
+  u31?: string;
+  u36?: string;
+  u37?: string;
+  u45?: string;
+  u46?: string;
+  u141?: string;
+
+  [key: string]: any; 
+}
+
+
+// Extended PrnData to include potential Order fields
 interface PrnData {
   jobno_joint: string | null;
   prnclr: string | null;
@@ -69,28 +136,67 @@ interface PrnData {
   print_colour_rgb_6: string | null;
   print_colour_rgb_7: string | null;
   print_colour_rgb_8: string | null;
+  // Joined Fields from Order
+  final_delivery_date?: string;
+  fdt?: string;
+  mainimagepath?: string | null; // Added mainimagepath
 }
 
 const PrnReportGrid: React.FC = () => {
   const [dataSource, setDataSource] = useState<PrnData[]>([]);
   const [totalCount, setTotalCount] = useState<number>(0);
   const [showingCount, setShowingCount] = useState<number>(0);
-  const[loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [searchKey, setSearchKey] = useState<string>('');
 
   const gridRef = useRef<GridComponent>(null);
+  const searchTimeout = useRef<any>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch('https://app.herofashion.com/PrintRgb/');
-        const textData = await response.text();
-        const fixedJson = textData.replace(/:\s*NaN\b/g, ': null');
-        const data: PrnData[] = JSON.parse(fixedJson);
 
-        setDataSource(data);
-        setTotalCount(data.length);
+        // 1. Fetch both APIs simultaneously
+        const [printResponse, orderResponse] = await Promise.all([
+          fetch('https://app.herofashion.com/PrintRgb/'),
+          fetch('https://app.herofashion.com/order_panda/')
+        ]);
+
+        // 2. Process Print Data (Fix NaN)
+        const textData = await printResponse.text();
+        const fixedJson = textData.replace(/:\s*NaN\b/g, ': null');
+        const printData: PrnData[] = JSON.parse(fixedJson);
+
+        // 3. Process Order Data
+        const orderData: OrderData[] = await orderResponse.json();
+
+        // 4. Create a Map for Order Data for efficient lookup
+        const orderMap: Record<string, OrderData> = {};
+        orderData.forEach(item => {
+          if (item.jobno_oms) {
+            orderMap[item.jobno_oms] = item;
+          }
+        });
+
+        // 5. Join Data: Add Order fields to Print Data
+        const mergedData = printData.map(printItem => {
+          const matchingOrder = orderMap[printItem.jobno_joint || ''];
+          
+          // Parse date for styling
+          let formattedDate = matchingOrder?.final_delivery_date || matchingOrder?.fdt || '';
+          
+          return {
+            ...printItem,
+            // Add merged fields
+            final_delivery_date: formattedDate,
+            fdt: matchingOrder?.fdt || formattedDate,
+            mainimagepath: matchingOrder?.mainimagepath || null // Mapping mainimagepath
+          };
+        });
+
+        setDataSource(mergedData);
+        setTotalCount(mergedData.length);
         setLoading(false);
       } catch (error) {
         console.error("Fetch error:", error);
@@ -98,7 +204,9 @@ const PrnReportGrid: React.FC = () => {
       }
     };
     fetchData();
-  },[]);
+  }, []);
+
+  // --- Helpers & Templates ---
 
   const highlightText = (text: any) => {
     if (!searchKey || text === undefined || text === null || text === "") return text;
@@ -115,18 +223,43 @@ const PrnReportGrid: React.FC = () => {
     );
   };
 
-  // --- UPDATED updateCounts FUNCTION ---
+  const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchKey(value);
+    if (searchTimeout.current) clearTimeout(searchTimeout.current);
+    searchTimeout.current = setTimeout(() => {
+      if (gridRef.current) gridRef.current.search(value);
+    }, 400);
+  };
+
   const updateCounts = () => {
     if (gridRef.current) {
-      const gridObj = gridRef.current;
-      // Get the actual filtered total count from pageSettings, not just DOM elements
-      let currentTotal = gridObj.pageSettings?.totalRecordsCount;
-      if (currentTotal === undefined || currentTotal === null) {
-        // Fallback to absolute total if no filters applied yet
-        currentTotal = gridObj.dataSource ? (gridObj.dataSource as any[]).length : 0;
-      }
-      setShowingCount(currentTotal);
+      const records = gridRef.current.getCurrentViewRecords();
+      setShowingCount(records ? records.length : 0);
     }
+  };
+
+  const parseDate = (dateStr: string) => {
+    if (!dateStr) return null;
+    const parts = dateStr.split(/[-/]/);
+    if (parts.length !== 3) return null;
+    let day, month, year;
+    if (parts[0].length === 4) { [year, month, day] = parts.map(Number); }
+    else { [day, month, year] = parts.map(Number); }
+    return new Date(year, month - 1, day);
+  };
+
+  const getDateStyle = (dateStr: string) => {
+    const targetDate = parseDate(dateStr);
+    if (!targetDate) return { color: 'inherit' };
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); targetDate.setHours(0, 0, 0, 0);
+    const diffTime = targetDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays < 0) return { backgroundColor: '#ffebee', color: '#c62828', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold', display: 'inline-block' };
+    if (diffDays === 0) return { backgroundColor: '#fff3e0', color: '#ef6c00', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold', display: 'inline-block' };
+    if (diffDays > 0 && diffDays <= 3) return { backgroundColor: '#e3f2fd', color: '#1565c0', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold', display: 'inline-block' };
+    return { color: '#2e7d32', fontWeight: '500' };
   };
 
   const createImageTemplate = (field: keyof PrnData) => (props: PrnData) => {
@@ -154,26 +287,43 @@ const PrnReportGrid: React.FC = () => {
     </div>
   );
 
- const colorListTemplate = (p: PrnData) => {
-  const colors =[
-    p.print_colour_1, p.print_colour_2, p.print_colour_3, p.print_colour_4, 
+  const jobno_prnsc = (p: PrnData) => (
+    <div style={{ fontSize: '11px', lineHeight: '1.4' }}>
+      <b style={{color: '#d32f2f'}}>Joint:</b> {highlightText(p.jobno_joint)}<br />
+      <b>Print Scr 1:</b> {highlightText(p.print_screen_1)}<br />
+      <b>Print Scr 2:</b> {highlightText(p.print_screen_2)}<br />
+      <b>Screen #:</b> {highlightText(p.screen_number)}
+    </div>
+  );
+
+  // const colorListTemplate = (p: PrnData) => {
+  //   const colors = [p.print_colour_1, p.print_colour_2, p.print_colour_3, p.print_colour_4, p.print_colour_5, p.print_colour_6, p.print_colour_7, p.print_colour_8].filter(c => c && c.trim() !== "");
+  //   return (
+  //     <div style={{ fontSize: '10px', display: 'flex', flexDirection: 'column' }}>
+  //       {colors.map((clr, idx) => (
+  //         <div key={idx}>{idx + 1}. {highlightText(clr)}</div>
+  //       ))}
+  //     </div>
+  //   );
+  // };
+const colorListTemplate = (p: PrnData) => {
+  // Extract and filter valid colors
+  const colors = [
+    p.print_colour_1, p.print_colour_2, p.print_colour_3, p.print_colour_4,
     p.print_colour_5, p.print_colour_6, p.print_colour_7, p.print_colour_8
   ].filter(c => c && c.trim() !== "");
 
   return (
-    <div style={{ fontSize: '11px', display: 'block', width: '100%', padding: '5px 0' }}>
+    <div style={{ 
+      fontSize: '11px', 
+      display: 'flex', 
+      flexDirection: 'column', 
+      gap: '10px' // Adds spacing between each color
+    }}>
       {colors.map((clr, idx) => (
-        <div 
-          key={idx} 
-          style={{ 
-            display: 'block',             
-            marginBottom: '6px',          
-            lineHeight: '1.4',            
-            whiteSpace: 'normal',         
-            wordBreak: 'break-word' 
-          }}
-        >
-          <span style={{ fontWeight: 'bold' }}>{idx + 1}.</span> {highlightText(clr)}
+        <div key={idx} style={{ borderBottom: '1px solid #eee', paddingBottom: '2px' }}>
+          <span style={{ fontWeight: 'bold', marginRight: '5px' }}>{idx + 1}.</span>
+          {highlightText(clr)}
         </div>
       ))}
     </div>
@@ -187,99 +337,126 @@ const PrnReportGrid: React.FC = () => {
     </div>
   );
 
+  // Template for Delivery Date
+  const deliveryDateTemplate = (p: PrnData) => {
+    const dateStr = p.fdt || p.final_delivery_date;
+    return (
+      <div style={{ fontSize: '11px', lineHeight: '1.4' }}>
+        <b>Fdt:</b> <span style={getDateStyle(dateStr || '')}>{highlightText(dateStr)}</span>
+      </div>
+    );
+  };
+
   return (
-    <div style={{ display: 'flex', height: '100vh', width: '100%', overflow: 'hidden' }}>
+    /* CONTAINER: minWidth: 0 fixes sidebar issues */
+    <div style={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden', backgroundColor: '#fff' }}>
       
-      <div style={{ 
-        flex: 1, 
-        display: 'flex', 
-        flexDirection: 'column', 
-        minWidth: 0, 
-        backgroundColor: '#fff' 
-      }}>
+      <style>{`
+        .custom-highlight { background-color: #fff9c4 !important; color: #d32f2f !important; font-weight: bold; }
+        .e-rowcell { vertical-align: top !important; font-size: 11px !important; padding: 10px !important; }
+        .e-headercell { background-color: #f8f9fa !important; font-weight: bold !important; }
+        .e-grid { border: none !important; min-width: 0 !important; }
+
+        /* --- Desktop Layout --- */
+        .dashboard-header {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+          padding: 10px 20px;
+          background-color: #fff;
+          border-bottom: 1px solid #dee2e6;
+          flex-shrink: 0;
+        }
         
-        {/* Header Bar */}
-        <div style={{
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          padding: '10px 20px', backgroundColor: '#fff', borderBottom: '1px solid #dee2e6'
-        }}>
-          <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#d32f2f' }}>
-            {showingCount} / {totalCount}
-          </div>
-          <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#333' }}>
-            PRINT & EMBROIDERY (PRN) PRODUCTION REPORT
-          </div>
-          <div style={{ width: '250px' }}>
-            <input
-              type="text"
-              placeholder="Search..."
-              onChange={(e) => {
-                setSearchKey(e.target.value); // UPDATED: Set search key so highlighting triggers
-                gridRef.current?.search(e.target.value);
-              }}
-              style={{ width: '100%', padding: '6px 15px', borderRadius: '20px', border: '1px solid #ccc', outline: 'none' }}
-            />
-          </div>
-        </div>
+        .header-title { font-size: 16px; font-weight: bold; color: #333; margin-right: 20px; }
+        .header-controls { display: flex; flex-direction: row; align-items: center; gap: 15px; }
+        .search-input { padding: 8px 16px; border-radius: 4px; border: 1px solid #ccc; outline: none; width: 250px; }
+        .search-input:focus { borderColor: #d32f2f; boxShadow: 0 0 0 2px rgba(211, 47, 47, 0.2); }
+        .count-display { background: #ffebee; color: #d32f2f; padding: 8px 12px; border-radius: 4px; font-weight: bold; font-size: 14px; white-space: nowrap; border: 1px solid #ffcdd2; }
 
-        {/* Grid Container */}
-        <div style={{ flex: 1, overflow: 'hidden' }}>
-          {/* UPDATED CSS: Added white-space: normal and line-height normal to prevent overlapping text! */}
-          <style>{`
-            .custom-highlight { background-color: #fff9c4 !important; color: #d32f2f !important; font-weight: bold; }
-            .e-rowcell { 
-                vertical-align: top !important; 
-                font-size: 11px !important; 
-                padding: 10px !important; 
-                white-space: normal !important; 
-                word-wrap: break-word !important; 
-                line-height: normal !important;
-            }
-            .e-headercell { background-color: #f8f9fa !important; font-weight: bold !important; }
-            .e-headercelldiv { white-space: normal !important; }
-            .e-grid { border: none !important; }
-          `}</style>
+        /* --- Mobile Layout --- */
+        @media (max-width: 768px) {
+            .dashboard-header { flex-direction: column; padding: 15px; align-items: stretch; gap: 10px; }
+            .header-title { text-align: center; margin-right: 0; margin-bottom: 5px; order: 1; }
+            .header-controls { flex-direction: column; width: 100%; gap: 10px; order: 2; }
+            .search-input { width: 100%; }
+            .count-display { width: 100%; textAlign: center; display: block; boxSizing: border-box; }
+        }
+      `}</style>
 
-          {loading ? (
-            <div style={{ padding: '50px', textAlign: 'center' }}>Loading PRN Data...</div>
-          ) : (
-            <GridComponent
-              ref={gridRef}
-              dataSource={dataSource}
-              dataBound={updateCounts}
-              actionComplete={updateCounts} // UPDATED: Triggers count update on filter/search
-              height="100%"
-              enableVirtualization={true}
-              rowHeight={130}
-              allowSorting={true}
-              allowFiltering={true}
-              allowResizing={true}
-              filterSettings={{ type: 'Excel' }}
-              gridLines="Both"
-            >
-              <ColumnsDirective>
-                <ColumnDirective field="jobno_joint" headerText="JOB INFO" width="150" template={jobSummaryTemplate} />
-                <ColumnDirective field="prnfile1" headerText="PRN 1" width="100" textAlign="Center" template={createImageTemplate('prnfile1')} />
-                <ColumnDirective field="prnfile2" headerText="PRN 2" width="100" textAlign="Center" template={createImageTemplate('prnfile2')} />
-                <ColumnDirective field="img_fpath" headerText="AOP" width="100" textAlign="Center" template={createImageTemplate('img_fpath')} />
-                <ColumnDirective field="print_description" headerText="DESCRIPTION" width="140" />
-                <ColumnDirective field="print_colours" headerText="CLR" width="70" textAlign="Center" />
-                <ColumnDirective headerText="COLOUR LIST (1-8)" width="180" template={colorListTemplate} />
-                <ColumnDirective field="screen_number" headerText="SCR #" width="80" textAlign="Center" />
-                <ColumnDirective field="print_screen_1" headerText="S1" width="80" />
-                <ColumnDirective field="print_screen_2" headerText="S2" width="80" />
-                <ColumnDirective headerText="CONSOLIDATED" width="170" template={conDetailsTemplate} />
-                <ColumnDirective field="prnclr" headerText="PRN CLR" width="110" />
-                <ColumnDirective field="print_emb_ground_colour" headerText="GRND CLR" width="110" />
-                <ColumnDirective field="individual_part_print_emb" headerText="INDV PART" width="110" />
-                <ColumnDirective field="print_emb_outside_supplier" headerText="SUPPLIER" width="120" />
-                <ColumnDirective field="inside_outside_print_emb" headerText="IN/OUT" width="90" />
-                <ColumnDirective field="print_size_details" headerText="SIZE DTLS" width="120" />
-              </ColumnsDirective>
-              <Inject services={[Sort, Filter, Group, Reorder, Search, VirtualScroll, Resize]} />
-            </GridComponent>
-          )}
-        </div>
+      {/* Header Section */}
+      <div className="dashboard-header">
+          <div className="header-title">
+              PRINT & EMBROIDERY (PRN) REPORT
+          </div>
+          
+          <div className="header-controls">
+              <input
+                type="text"
+                placeholder="Search job details..."
+                value={searchKey}
+                onChange={onSearchChange}
+                className="search-input"
+              />
+              
+              <div className="count-display">
+                  {showingCount} / {totalCount} Records
+              </div>
+          </div>
+      </div>
+
+      {/* Grid Container */}
+      <div style={{ flex: 1, overflow: 'hidden' }}>
+        {loading ? (
+          <div style={{ padding: '50px', textAlign: 'center' }}>Loading Data...</div>
+        ) : (
+          <GridComponent
+            ref={gridRef}
+            dataSource={dataSource}
+            dataBound={updateCounts}
+            height="100%"
+            // enableVirtualization={true}
+            rowHeight={130}
+            allowSorting={true}
+            allowFiltering={true}
+            allowResizing={true}
+            filterSettings={{ type: 'Excel' }}
+            gridLines="Both"
+          >
+            <ColumnsDirective>
+              <ColumnDirective field="jobno_joint" headerText="JOB INFO" width="150" template={jobSummaryTemplate} />
+              <ColumnDirective field="jobno_joint" headerText="jobno_joint" width="70" textAlign="Center" />
+              {/* Joined Delivery Date Column */}
+              <ColumnDirective field="final_delivery_date" headerText="DEL DATE" width="100" template={deliveryDateTemplate} />
+
+              <ColumnDirective field="print_screen_1" headerText="PRN SC" width="150" template={jobno_prnsc} />
+              
+              {/* NEW: Order Main Image Column */}
+              <ColumnDirective field="mainimagepath" headerText="ORD IMG" width="100" textAlign="Center" template={createImageTemplate('mainimagepath')} />
+               <ColumnDirective field="printing_R" headerText="1 print" width="70" textAlign="Center" />
+               <ColumnDirective field="Emb" headerText="Emb" width="70" textAlign="Center" />
+              <ColumnDirective field="prnfile1" headerText="PRN 1" width="100" textAlign="Center" template={createImageTemplate('prnfile1')} />
+              <ColumnDirective field="prnfile2" headerText="PRN 2" width="100" textAlign="Center" template={createImageTemplate('prnfile2')} />
+              <ColumnDirective field="img_fpath" headerText="AOP" width="100" textAlign="Center" template={createImageTemplate('img_fpath')} />
+              
+              <ColumnDirective field="print_description" headerText="DESCRIPTION" width="140" template={(p: PrnData) => highlightText(p.print_description)} />
+              <ColumnDirective field="print_colours" headerText="CLR" width="70" textAlign="Center" />
+              <ColumnDirective headerText="COLOUR LIST (1-8)" width="180" template={colorListTemplate} />
+              {/* <ColumnDirective field="screen_number" headerText="SCR #" width="80" textAlign="Center" /> */}
+              <ColumnDirective field="print_screen_1" headerText="S1" width="80" />
+              <ColumnDirective field="print_screen_2" headerText="S2" width="80" />
+              <ColumnDirective headerText="CONSOLIDATED" width="170" template={conDetailsTemplate} />
+              <ColumnDirective field="prnclr" headerText="PRN CLR" width="110" />
+              <ColumnDirective field="print_emb_ground_colour" headerText="GRND CLR" width="110" />
+              <ColumnDirective field="individual_part_print_emb" headerText="INDV PART" width="110" />
+              <ColumnDirective field="print_emb_outside_supplier" headerText="SUPPLIER" width="120" />
+              <ColumnDirective field="inside_outside_print_emb" headerText="IN/OUT" width="90" />
+              <ColumnDirective field="print_size_details" headerText="SIZE DTLS" width="120" />
+            </ColumnsDirective>
+            <Inject services={[Sort, Filter, Group, Reorder, Search, Resize]} />
+          </GridComponent>
+        )}
       </div>
     </div>
   );
