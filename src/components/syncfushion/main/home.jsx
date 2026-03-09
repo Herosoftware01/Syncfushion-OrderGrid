@@ -6,6 +6,7 @@ import OrdPagination from "../order/ord_pagination.tsx"
 import PrnReportGrid from "../order/print.tsx"
 
 
+
 import '../../../../node_modules/@syncfusion/ej2-base/styles/material.css';
 import '../../../../node_modules/@syncfusion/ej2-buttons/styles/material.css';
 import '../../../../node_modules/@syncfusion/ej2-calendars/styles/material.css';
@@ -20,6 +21,7 @@ import CardGrid from '../order/Card.jsx';
 import '../../../../node_modules/@syncfusion/ej2-grids/styles/material.css';
 import Card1 from '../card/Card.jsx';
 import Card2 from '../card/Card2.jsx';
+import { App } from '../order/SyncGrid.tsx';
 
 // import '../css/style.css'
 
@@ -37,6 +39,7 @@ function Home() {
          <Route path="/PrnReportGrid" element={<PrnReportGrid />} /> 
          <Route path="/card1" element={<Card1 />} /> 
          <Route path="/card2" element={<Card2 />} /> 
+         <Route path="/sync" element={<App />} /> 
         
     </Routes>
   );
