@@ -1,10 +1,15 @@
 import {  Routes, Route, } from 'react-router-dom';
-import HeroFashionGrid13 from "../order/ord_order.tsx"
-import HrReportGrid from "../order/ord1 ok.tsx"
-import TallyBalanceReport from "../order/tally.tsx"
-import OrdPagination from "../order/ord_pagination.tsx"
-import PrnReportGrid from "../order/print.tsx"
+import React, { Suspense, lazy } from "react";
 
+const HeroFashionGrid13 = lazy(() => import("../order/ord_order.tsx"));
+const HrReportGrid = lazy(() => import("../order/ord1 ok.tsx"));
+const TallyBalanceReport = lazy(() => import("../order/tally.tsx"));
+const OrdPagination = lazy(() => import("../order/ord_pagination.tsx"));
+const PrnReportGrid = lazy(() => import("../order/print.tsx"));
+const CardGrid = lazy(() => import("../order/Card.jsx"));
+const SyncApp = lazy(() => import("../order/SyncGrid.tsx"));
+const Card1 = lazy(() => import("../card/Card.jsx"));
+const Card2 = lazy(() => import("../card/Card2.jsx"));
 
 
 import '../../../../node_modules/@syncfusion/ej2-base/styles/material.css';
@@ -14,34 +19,26 @@ import '../../../../node_modules/@syncfusion/ej2-dropdowns/styles/material.css';
 import '../../../../node_modules/@syncfusion/ej2-inputs/styles/material.css';
 import '../../../../node_modules/@syncfusion/ej2-navigations/styles/material.css';
 import '../../../../node_modules/@syncfusion/ej2-popups/styles/material.css';
-
 import '../../../../node_modules/@syncfusion/ej2-react-grids/styles/material.css';
-import CardGrid from '../order/Card.jsx';
-// @import '@syncfusion/ej2-grids/styles/material.css';
 import '../../../../node_modules/@syncfusion/ej2-grids/styles/material.css';
-import Card1 from '../card/Card.jsx';
-import Card2 from '../card/Card2.jsx';
-import { App } from '../order/SyncGrid.tsx';
 
-// import '../css/style.css'
 
 function Home() {
   return (
-    <Routes>
+    <Suspense fallback={<div>Loading...</div>}>
+      <Routes>
         <Route path="/" element={<CardGrid />} />
         <Route path="/order" element={<HeroFashionGrid13 />} />
-        <Route path="god/" element={<h1>Good</h1> } />
-         <Route path="/HrReportGrid" element={<HrReportGrid />} /> 
-         <Route path="/OrdPagination" element={<OrdPagination />} /> 
-         {/* <Route path='/store' element= {<StoreGrid />} /> */}
-         <Route path="/TallyBalanceReport" element={<TallyBalanceReport />} /> 
-         <Route path="/OrdPagination" element={<OrdPagination />} /> 
-         <Route path="/PrnReportGrid" element={<PrnReportGrid />} /> 
-         <Route path="/card1" element={<Card1 />} /> 
-         <Route path="/card2" element={<Card2 />} /> 
-         <Route path="/sync" element={<App />} /> 
-        
-    </Routes>
+        <Route path="/god" element={<h1>Good</h1>} />
+        <Route path="/HrReportGrid" element={<HrReportGrid />} />
+        <Route path="/OrdPagination" element={<OrdPagination />} />
+        <Route path="/TallyBalanceReport" element={<TallyBalanceReport />} />
+        <Route path="/PrnReportGrid" element={<PrnReportGrid />} />
+        <Route path="/card1" element={<Card1 />} />
+        <Route path="/card2" element={<Card2 />} />
+        <Route path="/sync" element={<SyncApp />} />
+      </Routes>
+    </Suspense>
   );
 }
 

@@ -3557,7 +3557,7 @@ export const App = () => {
         // groupSettings={gridProperties.groupOptions}
         // contextMenuItems={gridProperties.contextMenuOptions}
         // sortSettings={gridProperties.sortingOptions}
-        // selectionSettings={gridProperties.columnSelection}
+        selectionSettings={gridProperties.columnSelection}
         // actionBegin={handleGridEvent.actionBegin}
         // excelQueryCellInfo={handleGridEvent.excelPdfQueryCellInfo}
         // pdfQueryCellInfo={handleGridEvent.excelPdfQueryCellInfo}
@@ -3573,6 +3573,11 @@ export const App = () => {
       >
 
           <ColumnsDirective>
+
+            <ColumnDirective 
+                type='checkbox' width="90"
+            />
+            
             <ColumnDirective 
             headerTemplate= {gridCommonTemplates.columnMenuFormatSettings}
             field="jobno_oms" freeze='Left' headerText="ORDER INFO" width="120" 
