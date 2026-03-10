@@ -4,6 +4,11 @@ import HrReportGrid from "../order/ord1 ok.tsx"
 import TallyBalanceReport from "../order/tally.tsx"
 import OrdPagination from "../order/ord_pagination.tsx"
 import PrnReportGrid from "../order/print.tsx"
+import CardGrid from '../order/Card.jsx';
+import { App } from '../order/SyncGrid.tsx';
+import Card1 from '../card/Card.jsx';
+import Card2 from '../card/Card2.jsx';
+
 
 
 import '../../../../node_modules/@syncfusion/ej2-base/styles/material.css';
@@ -13,15 +18,9 @@ import '../../../../node_modules/@syncfusion/ej2-dropdowns/styles/material.css';
 import '../../../../node_modules/@syncfusion/ej2-inputs/styles/material.css';
 import '../../../../node_modules/@syncfusion/ej2-navigations/styles/material.css';
 import '../../../../node_modules/@syncfusion/ej2-popups/styles/material.css';
-
 import '../../../../node_modules/@syncfusion/ej2-react-grids/styles/material.css';
-import CardGrid from '../order/Card.jsx';
-// @import '@syncfusion/ej2-grids/styles/material.css';
 import '../../../../node_modules/@syncfusion/ej2-grids/styles/material.css';
-import Card1 from '../card/Card.jsx';
-import Card2 from '../card/Card2.jsx';
 
-// import '../css/style.css'
 
 function Home() {
   return (
@@ -37,6 +36,7 @@ function Home() {
          <Route path="/PrnReportGrid" element={<PrnReportGrid />} /> 
          <Route path="/card1" element={<Card1 />} /> 
          <Route path="/card2" element={<Card2 />} /> 
+         <Route path="/sync" element={<App />} /> 
         
     </Routes>
   );
