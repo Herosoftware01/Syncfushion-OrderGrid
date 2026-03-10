@@ -23,6 +23,7 @@ import { registerLicense } from '@syncfusion/ej2-base';
 registerLicense('Ngo9BigBOggjHTQxAR8/V1JGaF5cXGpCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdlWX1cdHRUQ2ddUkV3XUpWYEs=');
 
 interface OrderData {
+  slno1?: number; // Added SL No field
   jobno_oms: string; company_name: string; buyer1: string; stylename: string; uom: string;
   final_delivery_date: string; merch: string; punit_sh: string; styleno: string;
   production_type_inside_outside: string; quantity: string; director_sample_order: string;
@@ -31,7 +32,7 @@ interface OrderData {
   date: string; ourdelvdate: string; podate: string; vessel_dt: string; vessel_yr: string;
   shipment_complete: string; u7: string; u141: string; u45: string; u36: string; u31: string;
   u15: string; u14: string; u8: string; u25: string; insdate: string; insdateyear: string;
-  actdaten: string; actyeardate: string; pono: string; slno: string; u46: string; u37: string;
+  actdaten: string; actyeardate: string; pono: string; u46: string; u37: string;
   mainimagepath: string; finaldelvdate: string; prnclr?: string | null; prnfile1?: string; prnfile2?: string; img_fpath?: string
 }
 
@@ -92,6 +93,7 @@ const HeroFashionGrid13: React.FC = () => {
         const [orderResponse, printResponse] = await Promise.all([
           fetch('https://app.herofashion.com/order_panda'),
           fetch('https://app.herofashion.com/PrintRgb/')
+         
         ]);
         if (!orderResponse.ok || !printResponse.ok) throw new Error("Failed to fetch data from APIs");
 
@@ -132,7 +134,12 @@ const HeroFashionGrid13: React.FC = () => {
             const dateA = new Date(a.finaldelvdate || a.final_delivery_date || 0).getTime();
             const dateB = new Date(b.finaldelvdate || b.final_delivery_date || 0).getTime();
             return dateA - dateB;
-          });
+          })
+          // --- FRONTEND SLNO GENERATION ---
+          .map((item, index) => ({
+            ...item,
+            slno1: index + 1
+          }));
 
         setDataSource(processedData);
         setTotalCount(processedData.length);
@@ -207,9 +214,6 @@ const HeroFashionGrid13: React.FC = () => {
   );
 
   return (
-    /* 
-       FIX: minWidth: 0 and overflow: hidden prevent the grid from pushing the sidebar.
-    */
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#fff', minWidth: 0, overflow: 'hidden' }}>
       
       {/* Global Styles */}
@@ -223,13 +227,13 @@ const HeroFashionGrid13: React.FC = () => {
         .dashboard-header {
           display: flex;
           flex-direction: row;
-          justify-content: space-between; /* Title Left, Controls Right */
+          justify-content: space-between;
           align-items: center;
           padding: 10px 20px;
           background-color: #f8f9fa;
           border-bottom: 1px solid #dee2e6;
           flex-shrink: 0;
-          flex-wrap: wrap; /* Allow wrapping if needed on medium screens */
+          flex-wrap: wrap; 
         }
         
         .header-title {
@@ -239,12 +243,11 @@ const HeroFashionGrid13: React.FC = () => {
           margin-right: 20px;
         }
         
-        /* Container for Filter and Count (Grouped Together) */
         .header-controls {
           display: flex;
-          flex-direction: row; /* Filter and Count side-by-side */
+          flex-direction: row;
           align-items: center;
-          gap: 15px; /* Space between filter and count */
+          gap: 15px;
         }
         
         .search-input {
@@ -275,25 +278,25 @@ const HeroFashionGrid13: React.FC = () => {
         /* --- Mobile Layout --- */
         @media (max-width: 768px) {
             .dashboard-header {
-                flex-direction: column; /* Stack everything */
+                flex-direction: column;
                 padding: 15px;
-                align-items: stretch; /* Full width children */
+                align-items: stretch;
                 gap: 10px;
             }
             .header-title {
                 text-align: center;
                 margin-right: 0;
                 margin-bottom: 5px;
-                order: 1; /* Title first */
+                order: 1;
             }
             .header-controls {
-                flex-direction: column; /* Stack filter and count */
+                flex-direction: column;
                 width: 100%;
                 gap: 10px;
                 order: 2;
             }
             .search-input {
-                width: 100%; /* Full width search */
+                width: 100%;
             }
             .count-display {
                 width: 100%;
@@ -303,29 +306,25 @@ const HeroFashionGrid13: React.FC = () => {
             }
         }
       `}</style>
-       <div className="header-controls">
+    <div className="header-controls">
               <input
                 type="text"
                 placeholder="Search all columns..."
                 value={searchKey}
                 onChange={onSearchChange}
                 className="search-input"
-              /> <div className="count-display">
-                          {showingCount} / {totalCount} Records
-                      </div></div>
-                      {/* <div className="count-display">
-                          {showingCount} / {totalCount} Records
-                      </div> */}
-              
+              />
+              <div className="count-display">
+                  {showingCount} / {totalCount} Records
+              </div>
+          </div>
       {/* Header Section */}
       <div className="dashboard-header">
-        
           <div className="header-title">
               HERO FASHION - ORDER DASHBOARD
               
           </div>
           
-          {/* Filter and Count Grouped - Desktop: Beside Title | Mobile: Below Title */}
           <div className="header-controls">
               <input
                 type="text"
@@ -334,7 +333,6 @@ const HeroFashionGrid13: React.FC = () => {
                 onChange={onSearchChange}
                 className="search-input"
               />
-              
               <div className="count-display">
                   {showingCount} / {totalCount} Records
               </div>
@@ -364,10 +362,21 @@ const HeroFashionGrid13: React.FC = () => {
             searchSettings={{ fields: searchableFields, operator: 'contains', ignoreCase: true }}
           >
             <ColumnsDirective>
+              {/* --- SL NO COLUMN ADDED HERE --- */}
+              <ColumnDirective 
+                field="slno1" 
+                headerText="SL NO" 
+                width="60" 
+                textAlign="Center" 
+                freeze='Left' 
+                isPrimaryKey={true}
+              />
+
               <ColumnDirective field="mainimagepath" headerText="IMG" width="85" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('mainimagepath')} />
               <ColumnDirective field="jobno_oms" headerText="ORDER INFO" width="130" freeze='Left' template={orderSummaryTemplate} />
+             
               <ColumnDirective field="Fdt" headerText="DELIVERY INFO" width="130" template={deliveryInfoTemplate} />
-              
+   
               <ColumnDirective field="prnfile1" headerText="PRN IMG" width="85" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('prnfile1')} />
               <ColumnDirective field="prnfile2" headerText="MEAS IMG" width="85" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('prnfile2')} />
               <ColumnDirective field="img_fpath" headerText="AOP" width="85" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('img_fpath')} />
