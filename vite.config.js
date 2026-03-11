@@ -9,36 +9,6 @@ export default defineConfig({
     react(),
     tailwindcss(),
     VitePWA({
-<<<<<<< HEAD
-    registerType: 'autoUpdate',
-    includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
-    workbox: {
-          maximumFileSizeToCacheInBytes: 10000000, // Increases limit to 5MB
-        },
-    manifest: {
-      name: 'HF APP',
-      short_name: 'HF APP',
-      start_url: '/',
-      display: 'standalone',
-      background_color: '#ffffff',
-      theme_color: '#42b883',
-      lang: 'en',
-      scope: '/',
-      description: 'A progressive web app built with React and Vite',
-      icons: [
-        {
-          src: '/icons/application.png',
-          sizes: '192x192',
-          type: 'image/png',
-        },
-        {
-          src: '/icons/application.png',
-          sizes: '512x512',
-          type: 'image/png',
-        },
-      ],
-    },
-=======
   registerType: 'autoUpdate',
   includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
   workbox: {
@@ -67,7 +37,6 @@ export default defineConfig({
       },
     ],
   },
->>>>>>> 8576b71c2eb06f5c474f941aba547e37c359f0f1
 })
   ],
   server: {
