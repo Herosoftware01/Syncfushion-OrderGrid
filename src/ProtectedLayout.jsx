@@ -3,9 +3,9 @@ import Sidebar from "./Sidebar/Sidebar";
 export default function ProtectedLayout({ children }) {
   return (
     <div className="flex">
-      <Sidebar /> {/* Always visible */}
+      <Sidebar /> 
       <div className="flex-1">
-        {children} {/* Page content goes here */}
+        {children} 
       </div>
     </div>
   );

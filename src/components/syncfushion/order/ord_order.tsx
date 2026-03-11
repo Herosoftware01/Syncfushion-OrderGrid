@@ -16,9 +16,16 @@ import {
   Page,
   Toolbar,
   ColumnChooser,
-  Freeze
+  Freeze,
+  Edit,
+  AddEventArgs,
+  SaveEventArgs,
+  EditEventArgs,
+  DeleteEventArgs,
+  ActionEventArgs,
+  
 } from '@syncfusion/ej2-react-grids';
-import { registerLicense } from '@syncfusion/ej2-base';
+import { Ajax, registerLicense } from '@syncfusion/ej2-base';
 
 registerLicense('Ngo9BigBOggjHTQxAR8/V1JGaF5cXGpCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdlWX1cdHRUQ2ddUkV3XUpWYEs=');
 
@@ -193,6 +200,52 @@ const HeroFashionGrid13: React.FC = () => {
     return <img src={p[field]} alt="img" style={{ width: '70px', height: '70px', objectFit: 'contain', border: '1px solid #eee' }} />;
   };
 
+
+ 
+  let serverUpdated = false;
+  let newPrimaryKey:number | null = null;
+  const actionBegin = (args: AddEventArgs|SaveEventArgs|EditEventArgs|DeleteEventArgs|ActionEventArgs) => {
+    const ajax = new Ajax({
+      onSuccess: function (response: string) {
+        serverUpdated = true;
+        newPrimaryKey = JSON.parse(response).id;
+        gridRef.current?.endEdit();
+      },
+      onFailure: function (xhr: XMLHttpRequest) {
+        gridRef.current?.closeEdit();
+      },
+    });
+    
+    if (args.requestType === 'save') {
+      if ((args as any).action === 'edit') {
+        console.log(args)
+        if (!serverUpdated) {
+          args.cancel = true;
+          ajax.url =
+            'https://app.herofashion.com/order_list_proc/';
+          ajax.type = 'POST';
+          ajax.data = JSON.stringify((args as any).data);
+          ajax.send();
+        }
+      }
+    }
+  };
+  const actionComplete = (args: AddEventArgs|SaveEventArgs|EditEventArgs|DeleteEventArgs|ActionEventArgs) => {
+    if (args.requestType === 'beginEdit') {
+      // buyerIdVal = args.rowData['buyerid_id'];
+    }
+    if (args.requestType === 'save') {
+       // integrate your WhatsApp Integration code logic here
+      serverUpdated = false;
+      newPrimaryKey = null;
+    }
+  };
+
+
+
+
+
+
   const orderSummaryTemplate = (p: OrderData) => (
     <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
       <b>OR:</b> {highlightText(p.jobno_oms)}<br />
@@ -360,6 +413,14 @@ const HeroFashionGrid13: React.FC = () => {
             filterSettings={{ type: 'Excel' }}
             gridLines="Both"
             searchSettings={{ fields: searchableFields, operator: 'contains', ignoreCase: true }}
+            editSettings={{
+                    allowDeleting: true,
+                    allowEditing: true,
+                    allowAdding: true,
+                }}
+            actionBegin={actionBegin}
+            actionComplete={actionComplete}
+
           >
             <ColumnsDirective>
               {/* --- SL NO COLUMN ADDED HERE --- */}
@@ -369,13 +430,14 @@ const HeroFashionGrid13: React.FC = () => {
                 width="60" 
                 textAlign="Center" 
                 freeze='Left' 
-                isPrimaryKey={true}
+                
               />
 
               <ColumnDirective field="mainimagepath" headerText="IMG" width="85" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('mainimagepath')} />
-              <ColumnDirective field="jobno_oms" headerText="ORDER INFO" width="130" freeze='Left' template={orderSummaryTemplate} />
+              <ColumnDirective isPrimaryKey={true} field="jobno_oms" headerText="ORDER INFO" width="130" freeze='Left' template={orderSummaryTemplate} />
              
               <ColumnDirective field="Fdt" headerText="DELIVERY INFO" width="130" template={deliveryInfoTemplate} />
+              <ColumnDirective field="reference" headerText="reference" width="130" template={genericHighlighter('reference')} />
    
               <ColumnDirective field="prnfile1" headerText="PRN IMG" width="85" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('prnfile1')} />
               <ColumnDirective field="prnfile2" headerText="MEAS IMG" width="85" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('prnfile2')} />
@@ -407,7 +469,7 @@ const HeroFashionGrid13: React.FC = () => {
               <ColumnDirective field="quantity" headerText="QTY" width="80" textAlign="Right" template={genericHighlighter('quantity')} />
               <ColumnDirective field="company_name" headerText="COMPANY" width="120" template={genericHighlighter('company_name')} />
             </ColumnsDirective>
-            <Inject services={[Sort, Filter, Group, Reorder, Search, VirtualScroll, Freeze, Resize, ContextMenu, Page, Toolbar, ColumnChooser, ColumnMenu]} />
+            <Inject services={[Sort,Edit, Filter, Group, Reorder, Search, VirtualScroll, Freeze, Resize, ContextMenu, Page, Toolbar, ColumnChooser, ColumnMenu]} />
           </GridComponent>
         )}
       </div>
