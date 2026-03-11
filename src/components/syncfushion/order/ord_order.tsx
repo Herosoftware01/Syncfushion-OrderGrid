@@ -91,14 +91,91 @@ interface OrderData {
   mainimagepath: string; finaldelvdate: string; prnclr?: string | null; prnfile1?: string; prnfile2?: string; img_fpath?: string
 }
 
-const HeroFashionGrid13: React.FC = () => {
-  const [dataSource, setDataSource] = useState<OrderData[]>([]);
-  const [totalCount, setTotalCount] = useState<number>(0);
-  const [showingCount, setShowingCount] = useState<number>(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [searchKey, setSearchKey] = useState<string>('');
+  const steps = [
+    {
+      selector: '#walk_property_settings',
+      arrowPosition: 'top-right',
+      content:
+        (
+          <div>
+            <strong>Grid Customizer Hub</strong> <br /> <br />
+            Click to open Grid settings. Instantly adjust layout, columns, filtering, and editing options—no coding needed.
+          </div>
+        )
+    },
+    {
+      selector: '.search-container',
+      arrowPosition: 'top-left-center',
+      content: (
+        <div>
+          <strong>Rapid & Customizable Search</strong><br /><br />
+          Use the toolbar search to quickly find records. Enable case sensitivity or accent handling for accurate results.
+        </div>
+      )
+    },
+    {
+      selector: '#walk_property_Column_Date',
+      arrowPosition: 'top-left',
+      content:
+        (
+          <div>
+            <strong>Smart Column Editor </strong><br /><br />
+            Click to open column settings. Modify visibility, width, and formatting with real-time updates.
+          </div>
+        ),
+    },
+    {
+      selector: '.e-toolbar-left',
+      arrowPosition: 'top-right',
+      content: (
+        <div>
+          <strong>Action Quickbar</strong><br /> <br />
+          Add custom toolbar buttons to trigger actions like clear filters, expand rows, or export data—outside the Grid.
+        </div>
+      ),
+    },
+    {
+      selector: '#aggregate-menu',
+      arrowPosition: 'right-center',
+      content: (
+        <div>
+          <strong>Concise Data Aggregation </strong><br /> <br />
+          View and switch between aggregate types (Sum, Avg, Count) in the footer.
+        </div>
+      ),
+    }
+  ];
 
+  const HeroFashionGrid13: React.FC = () => {
+    const [dataSource, setDataSource] = useState<OrderData[]>([]);
+    const [totalCount, setTotalCount] = useState<number>(0);
+    const [showingCount, setShowingCount] = useState<number>(0);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [searchKey, setSearchKey] = useState<string>('');
+
+
+    // Toolbar Options
+  const toolbarOptions = ['Search', 'Print', 'Add', 'Edit', 'Delete', 'Update', 'Cancel'];
+  const editOptions = { allowEditing: true, allowAdding: true, allowDeleting: true };
+  const [message, setMessage] = useState('');
+  function toolbarClick(args:any) {
+        if (args.item.text === 'Add') { 
+            args.cancel = true;
+            const newRecord = {
+                OrderID: 10247,
+                CustomerID: 'TOMSP',
+                ShipName: 'Hanari Carnes',
+                ShipCity: 'Lyon',
+            };
+            grid.addRecord(newRecord);
+            setMessage('The default adding action is cancelled, and a new record is added using the addRecord method.');
+        }
+        else{
+            setMessage('');
+        }
+    }
+  
   const gridRef = useRef<GridComponent>(null);
   const searchTimeout = useRef<any>(null);
 
@@ -507,6 +584,9 @@ const actionBegin = (args:any) => {
           <GridComponent
             ref={gridRef}
             dataSource={dataSource}
+            toolbar={toolbarOptions}
+            editSettings={editOptions}
+            toolbarClick={toolbarClick}
             dataBound={updateCounts}
             height="100%"
             enableVirtualization={true}
@@ -518,6 +598,7 @@ const actionBegin = (args:any) => {
             allowResizing={true}
             showColumnChooser={true}
           allowReordering={true}
+          
             // allowFiltering={true}
             // allowPdfExport={true}
             // enableRtl={false}
@@ -533,11 +614,6 @@ const actionBegin = (args:any) => {
             filterSettings={{ type: 'Excel' }}
             gridLines="Both"
             searchSettings={{ fields: searchableFields, operator: 'contains', ignoreCase: true }}
-            editSettings={{
-                    allowDeleting: true,
-                    allowEditing: true,
-                    allowAdding: true,
-                }}
             actionBegin={actionBegin}
             actionComplete={actionComplete}
 
@@ -592,7 +668,7 @@ const actionBegin = (args:any) => {
               <ColumnDirective field="company_name" headerText="COMPANY" width="120" template={genericHighlighter('company_name')} />
             </ColumnsDirective>
             {/* <Inject services={[Sort,Edit, Filter, Group, Reorder, Search, VirtualScroll, Freeze, Resize, ContextMenu, Page, Toolbar, ColumnChooser, ColumnMenu]} /> */}
-            <Inject services={[Sort, CommandColumn, Aggregate, Edit, Group, RowDD, Freeze, VirtualScroll, ContextMenu, ColumnMenu, Filter, LazyLoadGroup, Page, PdfExport, InfiniteScroll, ExcelExport, Reorder, Resize, Toolbar, Search, ColumnChooser]} />
+            <Inject services={[Sort, CommandColumn, Aggregate, Edit, Group, RowDD, Freeze, VirtualScroll, ContextMenu, ColumnMenu, Filter, LazyLoadGroup, Page, PdfExport, InfiniteScroll, ExcelExport, Reorder, Resize, Toolbar, Edit, Search, ColumnChooser]} />
           </GridComponent>
         )}
       </div>
