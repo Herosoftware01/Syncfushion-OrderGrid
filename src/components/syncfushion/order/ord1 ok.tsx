@@ -12,7 +12,11 @@ import {
   Search,
   VirtualScroll,
 } from '@syncfusion/ej2-react-grids';
+import { TextBoxComponent } from '@syncfusion/ej2-react-inputs';
+import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns';
+import { ButtonComponent } from '@syncfusion/ej2-react-buttons';
 import { registerLicense } from '@syncfusion/ej2-base';
+import "./style/style.css"
 
 registerLicense('Ngo9BigBOggjHTQxAR8/V1JGaF5cXGpCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdlWX1cdHRUQ2ddUkV3XUpWYEs=');
 
@@ -74,9 +78,13 @@ const HrReportGrid: React.FC = () => {
   const [showingCount, setShowingCount] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [searchKey, setSearchKey] = useState<string>('');
+  const [savedSettings, setSavedSettings] = useState<Array<{ name: string; data: any }>>([]);
+  const [selectedSetting, setSelectedSetting] = useState<string>('');
 
   const gridRef = useRef<GridComponent>(null);
   const searchTimeout = useRef<any>(null);
+  const settingNameRef = useRef<TextBoxComponent>(null);
+  const dropdownRef = useRef<DropDownListComponent>(null);
 
   const searchableFields =[
     'code', 'name', 'dept', 'category', 'mobile', 
@@ -108,7 +116,118 @@ const HrReportGrid: React.FC = () => {
     };
 
     fetchData();
+    // Load saved settings from localStorage on mount
+    loadSettingsFromStorage();
   },[]);
+
+  const STORAGE_KEY = 'hrGridSavedSettings';
+
+  const loadSettingsFromStorage = () => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) {
+        setSavedSettings([]);
+        return;
+      }
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        setSavedSettings(parsed);
+      } else {
+        setSavedSettings([]);
+      }
+    } catch (e) {
+      console.error('Failed to load saved grid settings', e);
+      setSavedSettings([]);
+    }
+  };
+
+  const saveSetting = () => {
+    const name = (settingNameRef.current?.value || '').trim();
+    if (!name) {
+      alert('Please enter a name for the setting');
+      return;
+    }
+    if (!gridRef.current) return;
+    try {
+      // Get the persisted data (column width, order, sorting, filtering, etc.)
+      const persist = gridRef.current.getPersistData();
+      let persistedSettings: any = persist;
+      try { persistedSettings = JSON.parse(persist); } catch (e) { /* keep as-is if not JSON */ }
+
+      // Clone the grid columns to preserve templates, header templates, and custom properties
+      const gridColumns = Object.assign([], (gridRef.current as any).getColumns());
+      
+      // Manually attach templates and header templates to persisted column data
+      if (persistedSettings.columns && Array.isArray(persistedSettings.columns)) {
+        persistedSettings.columns.forEach((persistedColumn: any) => {
+          const column = gridColumns.find((col: any) => col.field === persistedColumn.field);
+          if (column) {
+            // Preserve template, headerTemplate, and other custom properties
+            persistedColumn.template = column.template;
+            persistedColumn.headerTemplate = column.headerTemplate;
+            persistedColumn.formatter = column.formatter;
+            persistedColumn.valueAccessor = column.valueAccessor;
+          }
+        });
+      }
+
+      const existingSettings = savedSettings.filter(s => s.name !== name);
+      const newSetting = { name, data: persistedSettings };
+      const updatedSettings = [...existingSettings, newSetting];
+      
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedSettings));
+      setSavedSettings(updatedSettings);
+      setSelectedSetting(name);
+      if (settingNameRef.current) {
+        settingNameRef.current.value = '';
+      }
+      alert('Setting saved with column templates');
+    } catch (err) {
+      console.error('Save error', err);
+      alert('Failed to save setting');
+    }
+  };
+
+  const applySetting = () => {
+    const key = dropdownRef.current?.value as string;
+    if (!key) return alert('Select a saved setting to apply');
+    const settingData = savedSettings.find(s => s.name === key);
+    if (!settingData) return alert('Setting not found');
+    if (!gridRef.current) return;
+    try {
+      // Parse the persisted data if it's a string
+      let persistedState: any = settingData.data;
+      if (typeof persistedState === 'string') {
+        persistedState = JSON.parse(persistedState);
+      }
+      
+      // Apply the persisted state to the grid
+      // This includes column width, order, sorting, filtering, AND the preserved templates
+      (gridRef.current as any).setProperties(persistedState, true);
+      
+      setTimeout(() => {
+        if (gridRef.current) {
+          (gridRef.current as any).freezeRefresh();
+        }
+        alert('Setting applied successfully');
+      }, 500);
+    } catch (e) {
+      console.error('Apply error', e);
+      alert('Failed to apply setting');
+    }
+  };
+
+  const deleteSetting = () => {
+    const key = dropdownRef.current?.value as string;
+    if (!key) return alert('Select a saved setting to delete');
+    const next = savedSettings.filter(s => s.name !== key);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    setSavedSettings(next);
+    if (dropdownRef.current) {
+      dropdownRef.current.value = null;
+    }
+    setSelectedSetting('');
+  };
 
   // --- Highlighting Logic ---
   const highlightText = (text: any) => {
@@ -225,6 +344,54 @@ const HrReportGrid: React.FC = () => {
           .e-rowcell { vertical-align: top !important; font-size: 12px !important; line-height: 1.3 !important; padding-top: 8px !important; }
           .e-filter-popup { z-index: 10000001 !important; }
         `}</style>
+
+        <div style={{ padding: '12px 20px', borderBottom: '1px solid #eee', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <label style={{ fontSize: '13px', fontWeight: '500', color: '#333', whiteSpace: 'nowrap' }}>Setting Name:</label>
+            <TextBoxComponent
+              ref={settingNameRef}
+              placeholder="Enter setting name"
+              style={{ width: '180px' }}
+            />
+          </div>
+
+          <ButtonComponent
+            onClick={saveSetting}
+            cssClass="e-primary"
+            style={{ padding: '6px 14px', fontSize: '13px' }}
+          >
+            Save
+          </ButtonComponent>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <label style={{ fontSize: '13px', fontWeight: '500', color: '#333', whiteSpace: 'nowrap' }}>Saved Settings:</label>
+            <DropDownListComponent
+              ref={dropdownRef}
+              id="settings-dropdown"
+              dataSource={savedSettings.map(s => ({ text: s.name, value: s.name }))}
+              fields={{ text: 'text', value: 'value' }}
+              placeholder="Select setting..."
+              style={{ width: '180px' }}
+              change={() => setSelectedSetting(dropdownRef.current?.value as string)}
+            />
+          </div>
+
+          <ButtonComponent
+            onClick={applySetting}
+            cssClass="e-outline"
+            style={{ padding: '6px 14px', fontSize: '13px' }}
+          >
+            Apply
+          </ButtonComponent>
+
+          <ButtonComponent
+            onClick={deleteSetting}
+            cssClass="e-outline e-danger"
+            style={{ padding: '6px 14px', fontSize: '13px' }}
+          >
+            Delete
+          </ButtonComponent>
+        </div>
 
         <GridComponent
           ref={gridRef}

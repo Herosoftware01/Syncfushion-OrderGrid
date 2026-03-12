@@ -7,7 +7,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 p-10">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 p-5">
 
       <ol className="flex items-center whitespace-nowrap p-6">
         <li className="inline-flex items-center">
@@ -122,7 +122,7 @@ const Dashboard = () => {
         
         {/* Card 5 */}
         <div
-          onClick={() => navigate("PrnReportGrid")}
+          // onClick={() => navigate("PrnReportGrid")}
           className="group cursor-pointer bg-white rounded-2xl shadow-lg p-6 relative overflow-hidden 
           transform hover:scale-105 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300"
         >
@@ -232,8 +232,6 @@ const Dashboard = () => {
           </p>
         </div> */}
 
-
-
         {/* Card 10 */}
         {/* <div
           onClick={() => navigate("Autofit")}
@@ -255,8 +253,6 @@ const Dashboard = () => {
             Auto Fit order Details
           </p>
         </div> */}
-
-
 
         {/* Card 11 */}
         {/* <div
@@ -303,9 +299,6 @@ const Dashboard = () => {
             Auto Fit order Details
           </p>
         </div> */}
-
-
-
 
       </div>
 
