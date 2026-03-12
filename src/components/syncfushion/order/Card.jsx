@@ -208,6 +208,8 @@ const Dashboard = () => {
           </p>
         </div>
 
+
+
         {/* Card 9 */}
         <div
           onClick={() => navigate("Autofit")}
@@ -273,6 +275,8 @@ const Dashboard = () => {
             Auto Fit order Details
           </p>
         </div>
+
+
 
         {/* Card 12 */}
         <div
