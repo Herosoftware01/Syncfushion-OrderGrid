@@ -7,9 +7,9 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 p-10">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 p-5">
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-10">
 
         {/* Card 1 */}
         <div
@@ -104,7 +104,7 @@ const Dashboard = () => {
         
         {/* Card 5 */}
         <div
-          onClick={() => navigate("PrnReportGrid")}
+          // onClick={() => navigate("PrnReportGrid")}
           className="group cursor-pointer bg-white rounded-2xl shadow-lg p-6 relative overflow-hidden 
           transform hover:scale-105 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300"
         >

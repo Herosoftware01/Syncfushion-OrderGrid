@@ -98,3 +98,12 @@
 .e-icons.profile::before        { content: "👤"; }
 .e-icons.views::before          { content: "👁"; }
 .e-icons::before { font-size: 18px; line-height: 1; }
+
+
+      ::highlight(search) {
+
+            background-color: yellow;
+
+            color: inherit;
+
+        }
