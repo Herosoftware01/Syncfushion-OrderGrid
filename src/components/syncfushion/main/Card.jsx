@@ -211,8 +211,8 @@ const Dashboard = () => {
 
 
         {/* Card 9 */}
-        <div
-          onClick={() => navigate("fabric")}
+        {/* <div
+          onClick={() => navigate("Autofit")}
           className="group cursor-pointer bg-white rounded-2xl shadow-lg p-6 relative overflow-hidden 
           transform hover:scale-105 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300"
         >
@@ -230,10 +230,10 @@ const Dashboard = () => {
           <p className="text-gray-500 text-sm mt-1">
             Fabric Alias Form
           </p>
-        </div>
+        </div> */}
 
         {/* Card 10 */}
-        <div
+        {/* <div
           onClick={() => navigate("Autofit")}
           className="group cursor-pointer bg-white rounded-2xl shadow-lg p-6 relative overflow-hidden 
           transform hover:scale-105 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300"
@@ -252,10 +252,10 @@ const Dashboard = () => {
           <p className="text-gray-500 text-sm mt-1">
             Auto Fit order Details
           </p>
-        </div>
+        </div> */}
 
         {/* Card 11 */}
-        <div
+        {/* <div
           onClick={() => navigate("Autofit")}
           className="group cursor-pointer bg-white rounded-2xl shadow-lg p-6 relative overflow-hidden 
           transform hover:scale-105 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300"
@@ -274,12 +274,12 @@ const Dashboard = () => {
           <p className="text-gray-500 text-sm mt-1">
             Auto Fit order Details
           </p>
-        </div>
+        </div> */}
 
 
 
         {/* Card 12 */}
-        <div
+        {/* <div
           onClick={() => navigate("Autofit")}
           className="group cursor-pointer bg-white rounded-2xl shadow-lg p-6 relative overflow-hidden 
           transform hover:scale-105 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300"
@@ -298,12 +298,12 @@ const Dashboard = () => {
           <p className="text-gray-500 text-sm mt-1">
             Auto Fit order Details
           </p>
-        </div>
+        </div> */}
 
       </div>
 
     </div>
   );
-};
+};     
 
 export default Dashboard;
