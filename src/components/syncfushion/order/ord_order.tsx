@@ -23,10 +23,10 @@ import {
   EditEventArgs,
   DeleteEventArgs,
   ActionEventArgs,
-  
-} 
 
-from '@syncfusion/ej2-react-grids';
+}
+
+  from '@syncfusion/ej2-react-grids';
 import { Ajax, registerLicense } from '@syncfusion/ej2-base';
 import { TextBoxComponent } from '@syncfusion/ej2-react-inputs';
 import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns';
@@ -56,11 +56,11 @@ const HeroFashionGrid13: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchKey, setSearchKey] = useState<string>('');
-    const [savedSettings, setSavedSettings] = useState<Array<{ name: string; data: any }>>([]);
-    const [selectedSetting, setSelectedSetting] = useState<string>('');
+  const [savedSettings, setSavedSettings] = useState<Array<{ name: string; data: any }>>([]);
+  const [selectedSetting, setSelectedSetting] = useState<string>('');
 
-      const settingNameRef = useRef<TextBoxComponent>(null);
-      const dropdownRef = useRef<DropDownListComponent>(null);
+  const settingNameRef = useRef<TextBoxComponent>(null);
+  const dropdownRef = useRef<DropDownListComponent>(null);
 
   const gridRef = useRef<GridComponent>(null);
   const searchTimeout = useRef<any>(null);
@@ -111,7 +111,7 @@ const HeroFashionGrid13: React.FC = () => {
         const [orderResponse, printResponse] = await Promise.all([
           fetch('https://app.herofashion.com/order_panda'),
           fetch('https://app.herofashion.com/PrintRgb/')
-         
+
         ]);
         if (!orderResponse.ok || !printResponse.ok) throw new Error("Failed to fetch data from APIs");
 
@@ -170,7 +170,7 @@ const HeroFashionGrid13: React.FC = () => {
     loadSettingsFromStorage();
   }, []);
 
-   const STORAGE_KEY = 'MainSettings';
+  const STORAGE_KEY = 'MainSettings';
 
   const loadSettingsFromStorage = () => {
     try {
@@ -206,7 +206,7 @@ const HeroFashionGrid13: React.FC = () => {
 
       // Clone the grid columns to preserve templates, header templates, and custom properties
       const gridColumns = Object.assign([], (gridRef.current as any).getColumns());
-      
+
       // Manually attach templates and header templates to persisted column data
       if (persistedSettings.columns && Array.isArray(persistedSettings.columns)) {
         persistedSettings.columns.forEach((persistedColumn: any) => {
@@ -224,7 +224,7 @@ const HeroFashionGrid13: React.FC = () => {
       const existingSettings = savedSettings.filter(s => s.name !== name);
       const newSetting = { name, data: persistedSettings };
       const updatedSettings = [...existingSettings, newSetting];
-      
+
       localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedSettings));
       setSavedSettings(updatedSettings);
       setSelectedSetting(name);
@@ -250,11 +250,11 @@ const HeroFashionGrid13: React.FC = () => {
       if (typeof persistedState === 'string') {
         persistedState = JSON.parse(persistedState);
       }
-      
+
       // Apply the persisted state to the grid
       // This includes column width, order, sorting, filtering, AND the preserved templates
       (gridRef.current as any).setProperties(persistedState, true);
-      
+
       setTimeout(() => {
         if (gridRef.current) {
           (gridRef.current as any).freezeRefresh();
@@ -295,10 +295,10 @@ const HeroFashionGrid13: React.FC = () => {
     );
   };
 
-  
+
   const created = () => {
-    document.getElementById(gridRef.current?.element.id + "_searchbar")?.addEventListener('keyup', (event:any) => {
-        gridRef.current?.search(event.target?.value);
+    document.getElementById(gridRef.current?.element.id + "_searchbar")?.addEventListener('keyup', (event: any) => {
+      gridRef.current?.search(event.target?.value);
     });
   };
 
@@ -322,10 +322,10 @@ const HeroFashionGrid13: React.FC = () => {
   };
 
 
- 
+
   let serverUpdated = false;
-  let newPrimaryKey:number | null = null;
-  const actionBegin = (args: AddEventArgs|SaveEventArgs|EditEventArgs|DeleteEventArgs|ActionEventArgs) => {
+  let newPrimaryKey: number | null = null;
+  const actionBegin = (args: AddEventArgs | SaveEventArgs | EditEventArgs | DeleteEventArgs | ActionEventArgs) => {
     const ajax = new Ajax({
       onSuccess: function (response: string) {
         serverUpdated = true;
@@ -336,14 +336,14 @@ const HeroFashionGrid13: React.FC = () => {
         gridRef.current?.closeEdit();
       },
     });
-    
+
     if (args.requestType === 'save') {
       if ((args as any).action === 'edit') {
         console.log(args)
         if (!serverUpdated) {
           args.cancel = true;
           ajax.url =
-            'https://app.herofashion.com/order_list_proc/';
+            'https://app.herofashion.com/udf7_update/';
           ajax.type = 'POST';
           ajax.data = JSON.stringify((args as any).data);
           ajax.send();
@@ -352,15 +352,12 @@ const HeroFashionGrid13: React.FC = () => {
     }
   };
 
-
-
-  
-  const actionComplete = (args: AddEventArgs|SaveEventArgs|EditEventArgs|DeleteEventArgs|ActionEventArgs) => {
+  const actionComplete = (args: AddEventArgs | SaveEventArgs | EditEventArgs | DeleteEventArgs | ActionEventArgs) => {
     if (args.requestType === 'beginEdit') {
       // buyerIdVal = args.rowData['buyerid_id'];
     }
     if (args.requestType === 'save') {
-       // integrate your WhatsApp Integration code logic here
+      // integrate your WhatsApp Integration code logic here
       serverUpdated = false;
       newPrimaryKey = null;
     }
@@ -386,28 +383,28 @@ const HeroFashionGrid13: React.FC = () => {
     </div>
   );
 
-    const toolbarOptions: any[] = [
+  const toolbarOptions: any[] = [
     "Search",
     { text: '', prefixIcon: 'e-add', id: 'add_icon', tooltipText: 'Add Records' },
-      'Edit',
-      'Delete',
-      'Update',
-      'Cancel',
-      { type: 'Separator' },
-      { text: '', prefixIcon: 'sf-icon-expand-collapse', id: 'expand_icon', tooltipText: 'Expand/Collapse' },
-      { text: '', prefixIcon: 'sf-icon-clear-sorting', id: 'clearsorting_icon', tooltipText: 'Clear Sorting' },
-      { text: '', prefixIcon: 'e-filter-clear icon', id: 'clearfilter_icon', tooltipText: 'Clear Filtering' },
-      { type: 'Separator' },
-      { text: '', prefixIcon: 'sf-icon-clear-selection', id: 'clear_selection', tooltipText: 'Clear Selection' },
-      { text: '', prefixIcon: 'sf-icon-row-clear', id: 'clear_row_selection', tooltipText: 'Clear Row Selection' },
-      { text: '', prefixIcon: 'sf-icon-column-clear', id: 'clear_column_selection', tooltipText: 'Clear Column Selection' },
-      { text: '', prefixIcon: 'sf-icon-clear-cell', id: 'clear_cell_selection', tooltipText: 'Clear Cell Selection' },
-      { type: 'Separator' },
-      { type: 'Separator' },
-      { text: '', prefixIcon: 'e-csvexport', id: 'export_csv', tooltipText: 'Export CSV' },
-      { text: '', prefixIcon: 'e-excelexport', id: 'export_excel', tooltipText: 'Export Excel' },
-      { text: '', prefixIcon: 'e-pdfexport', id: 'export_pdf', tooltipText: 'Export PDF' },
-      'ColumnChooser',
+    'Edit',
+    'Delete',
+    'Update',
+    'Cancel',
+    { type: 'Separator' },
+    { text: '', prefixIcon: 'sf-icon-expand-collapse', id: 'expand_icon', tooltipText: 'Expand/Collapse' },
+    { text: '', prefixIcon: 'sf-icon-clear-sorting', id: 'clearsorting_icon', tooltipText: 'Clear Sorting' },
+    { text: '', prefixIcon: 'e-filter-clear icon', id: 'clearfilter_icon', tooltipText: 'Clear Filtering' },
+    { type: 'Separator' },
+    { text: '', prefixIcon: 'sf-icon-clear-selection', id: 'clear_selection', tooltipText: 'Clear Selection' },
+    { text: '', prefixIcon: 'sf-icon-row-clear', id: 'clear_row_selection', tooltipText: 'Clear Row Selection' },
+    { text: '', prefixIcon: 'sf-icon-column-clear', id: 'clear_column_selection', tooltipText: 'Clear Column Selection' },
+    { text: '', prefixIcon: 'sf-icon-clear-cell', id: 'clear_cell_selection', tooltipText: 'Clear Cell Selection' },
+    { type: 'Separator' },
+    { type: 'Separator' },
+    { text: '', prefixIcon: 'e-csvexport', id: 'export_csv', tooltipText: 'Export CSV' },
+    { text: '', prefixIcon: 'e-excelexport', id: 'export_excel', tooltipText: 'Export Excel' },
+    { text: '', prefixIcon: 'e-pdfexport', id: 'export_pdf', tooltipText: 'Export PDF' },
+    'ColumnChooser',
   ];
 
   const searchHighlightText = (key: string | undefined, gridElement: Node) => {
@@ -488,7 +485,7 @@ const HeroFashionGrid13: React.FC = () => {
 
   };
 
- 
+
 
   const clearHighlights = () => {
 
@@ -497,7 +494,7 @@ const HeroFashionGrid13: React.FC = () => {
   };
 
   const dataBound = () => {
-     if (gridRef.current) {
+    if (gridRef.current) {
       const records = gridRef.current.getFilteredRecords();
       setShowingCount(records ? (records as object[]).length : 0);
       searchHighlightText(gridRef.current?.searchSettings?.key, gridRef.current?.element);
@@ -507,75 +504,56 @@ const HeroFashionGrid13: React.FC = () => {
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#fff', minWidth: 0, overflow: 'hidden' }}>
 
-      <ol className="flex items-center whitespace-nowrap p-6">
-      <li className="inline-flex items-center">
-        <a className="flex items-center text-sm text-muted-foreground-1 hover:text-primary-focus focus:outline-hidden focus:text-primary-focus" href="/#/dashboard">
-          <svg className="shrink-0 me-3 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          Dashboard
-        </a>
-        <svg className="shrink-0 mx-2 size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-      </li>
-      <li className="inline-flex items-center">
-        <a className="flex items-center text-sm text-muted-foreground-1 hover:text-primary-focus focus:outline-hidden focus:text-primary-focus" href="/#/sy-order">
-          <svg className="shrink-0 me-3 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="14" y="3" rx="1"/><path d="M10 21V8a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1H3"/></svg>
-          Order
-          <svg className="shrink-0 mx-2 size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-        </a>
-      </li>
-      <li className="inline-flex items-center text-sm font-semibold text-foreground truncate" aria-current="page">
-        Order Table
-      </li>
-    </ol>
-      
+
       {/* Global Styles */}
       <style>{`
         .custom-highlight { background-color: #fff9c4 !important; color: #d32f2f !important; font-weight: bold; }
         .e-rowcell { vertical-align: top !important; font-size: 12px !important; line-height: 1.3 !important; padding-top: 8px !important; }
         .e-filter-popup { z-index: 10000001 !important; }
         .e-grid { min-width: 0 !important; }
-
+        
         /* --- Desktop Layout --- */
         .dashboard-header {
           display: flex;
           flex-direction: row;
           justify-content: space-between;
           align-items: center;
-          padding: 10px 20px;
-          background-color: #f8f9fa;
+          padding: 5px 10px;
+          background-color: #0ff180;
           border-bottom: 1px solid #dee2e6;
           flex-shrink: 0;
           flex-wrap: wrap; 
-        }
-        
-        .header-title {
-          font-size: 16px;
-          font-weight: bold;
-          color: #333;
-          margin-right: 20px;
-        }
-        
-        .header-controls {
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          gap: 15px;
-        }
-        
-        .search-input {
+          }
+          
+          .header-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-right: 20px;
+            }
+            
+            .header-controls {
+              display: flex;
+              flex-direction: row;
+              align-items: center;
+              gap: 15px;
+              }
+              
+              .search-input {
           padding: 8px 16px;
           border-radius: 4px;
           border: 1px solid #ced4da;
           outline: none;
           width: 250px;
           transition: width 0.3s;
-        }
-
-        .search-input:focus {
+          }
+          
+          .search-input:focus {
           border-color: #007bff;
           box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
-        }
-        
-        .count-display {
+          }
+          
+          .count-display {
             background: #e9ecef;
             color: #007bff;
             padding: 8px 12px;
@@ -584,126 +562,183 @@ const HeroFashionGrid13: React.FC = () => {
             font-size: 14px;
             white-space: nowrap;
             border: 1px solid #dce1e6;
-        }
+            }
 
-        /* --- Mobile Layout --- */
-        @media (max-width: 768px) {
-            .dashboard-header {
+                      .count-display1 {
+            background: #e9ecef;
+            color: #007bff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+            white-space: nowrap;
+            border: 1px solid #dce1e6;
+            display: none
+            }
+            
+            /* --- Mobile Layout --- */
+            @media (max-width: 768px) {
+              .dashboard-header {
                 flex-direction: column;
-                padding: 15px;
+                padding: 10px;
                 align-items: stretch;
                 gap: 10px;
+                }
+
+                .breadcromp{
+                width:80%;
+                font-size:50px;
+                }
+                 
+        
+                          .count-display {
+            background: #e9ecef;
+            color: #007bff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+            white-space: nowrap;
+            border: 1px solid #dce1e6;
+            display:none
             }
-            .header-title {
-                text-align: center;
-                margin-right: 0;
-                margin-bottom: 5px;
-                order: 1;
+                          .count-display1 {
+            background: #e9ecef;
+            color: #007bff;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+            white-space: nowrap;
+            border: 1px solid #dce1e6;
+            display:block;
+            width: 60px;
+            float: right;
             }
-            .header-controls {
-                flex-direction: column;
-                width: 100%;
-                gap: 10px;
-                order: 2;
+            .count{
+              margin-top: -30px;
+              margin-left: 30px
             }
+                .header-title {
+                  text-align: center;
+                  margin-right: 0;
+                  margin-bottom: 5px;
+                  order: 1;
+                  }
+                  .header-controls {
+                    flex-direction: column;
+                    width: 100%;
+                    gap: 10px;
+                    order: 2;
+                    }
             .search-input {
-                width: 100%;
-            }
-            .count-display {
+              width: 100%;
+              }
+              .count-display {
                 width: 100%;
                 textAlign: 'center';
                 display: 'block';
                 boxSizing: 'border-box';
-            }
-        }
-      `}</style>
-    <div className="header-controls">
-              <input
-                type="text"
-                placeholder="Search all columns..."
-                value={searchKey}
-                onChange={onSearchChange}
-                className="search-input"
-              />
-              <div className="count-display">
-                  {showingCount} / {totalCount} Records
-              </div>
-          </div>
-      {/* Header Section */}
-      <div className="dashboard-header">
-          <div className="header-title">
-              HERO FASHION - ORDER DASHBOARD
-              
-          </div>
-          
-          <div className="header-controls">
-              <input
-                type="text"
-                placeholder="Search all columns..."
-                value={searchKey}
-                onChange={onSearchChange}
-                className="search-input"
-              />
-              <div className="count-display">
-                  {showingCount} / {totalCount} Records
-              </div>
-          </div>
-      </div>
-      <div style={{ padding: '12px 20px', borderBottom: '1px solid #eee', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <label style={{ fontSize: '13px', fontWeight: '500', color: '#333', whiteSpace: 'nowrap' }}>Setting Name:</label>
-                  <TextBoxComponent
-                    ref={settingNameRef}
-                    placeholder="Enter setting name"
-                    style={{ width: '180px' }}
-                  />
-                </div>
-      
-                <ButtonComponent
-                  onClick={saveSetting}
-                  cssClass="e-primary"
-                  style={{ padding: '6px 14px', fontSize: '13px' }}
-                >
-                  Save
-                </ButtonComponent>
-      
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <label style={{ fontSize: '13px', fontWeight: '500', color: '#333', whiteSpace: 'nowrap' }}>Saved Settings:</label>
-                  <DropDownListComponent
-                    ref={dropdownRef}
-                    id="settings-dropdown"
-                    dataSource={savedSettings.map(s => ({ text: s.name, value: s.name }))}
-                    fields={{ text: 'text', value: 'value' }}
-                    placeholder="Select setting..."
-                    style={{ width: '180px' }}
-                    change={() => setSelectedSetting(dropdownRef.current?.value as string)}
-                  />
-                </div>
-      
-                <ButtonComponent
-                  onClick={applySetting}
-                  cssClass="e-outline"
-                  style={{ padding: '6px 14px', fontSize: '13px' }}
-                >
-                  Apply
-                </ButtonComponent>
-      
-                <ButtonComponent
-                  onClick={deleteSetting}
-                  cssClass="e-outline e-danger"
-                  style={{ padding: '6px 14px', fontSize: '13px' }}
-                >
-                  Delete
-                </ButtonComponent>
-              </div>
+                }
+                }
+                `}
+      </style>
 
+      {/* Header contenyt */}
+      <div className="dashboard-header">
+        <div className="count-display">
+          {showingCount} / {totalCount}
+        </div>
+
+        <ol className="flex items-center whitespace-nowrap breadcromp">
+          <li className="inline-flex items-center">
+            <a className="flex items-center text-xs md:text-sm text-lg text-muted-foreground-1 hover:text-primary-focus focus:outline-hidden focus:text-primary-focus" href="/#/dashboard">
+              <svg className="shrink-0 me-3 size-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
+              Dashboard
+            </a>
+            <svg className="shrink-0 mx-2 size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+          </li>
+          <li className="inline-flex items-center">
+            <a className="flex items-center text-xs md:text-sm text-muted-foreground-1 hover:text-primary-focus focus:outline-hidden focus:text-primary-focus" href="/#/sy-order">
+              <svg className="shrink-0 me-3 size-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="14" y="3" rx="1" /><path d="M10 21V8a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1H3" /></svg>
+              Order
+              <svg className="shrink-0 mx-2 size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+            </a>
+          </li>
+          <li className="inline-flex items-center text-xs md:text-sm font-semibold text-foreground truncate" aria-current="page">
+            Order Table
+          </li>
+        </ol>
+        <div className='count'>
+
+          <div className="count-display1">
+            {showingCount} / {totalCount}
+          </div>
+        </div>
+        <div className="header-controls bg-white">
+          <input
+            type="text"
+            placeholder="Search all columns..."
+            value={searchKey}
+            onChange={onSearchChange}
+            className="search-input"
+          />
+        </div>
+        <div style={{ padding: '12px 18px', borderBottom: '1px solid #eee', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            {/* <label style={{ fontSize: '13px', fontWeight: '500', color: '#333', whiteSpace: 'nowrap' }}>Setting Name:</label> */}
+            <TextBoxComponent
+              ref={settingNameRef}
+              placeholder="Enter setting name"
+              style={{ width: '80px' }}
+            />
+          </div>
+
+          <ButtonComponent
+            onClick={saveSetting}
+            cssClass="e-primary"
+            style={{ padding: '6px 12px', fontSize: '13px', border: "2px" }}
+          >
+            💾
+          </ButtonComponent>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            {/* <label style={{ fontSize: '13px', fontWeight: '500', color: '#333', whiteSpace: 'nowrap' }}>Saved Settings:</label> */}
+            <DropDownListComponent
+              ref={dropdownRef}
+              id="settings-dropdown"
+              dataSource={savedSettings.map(s => ({ text: s.name, value: s.name }))}
+              fields={{ text: 'text', value: 'value' }}
+              placeholder="Select setting..."
+              style={{ width: '50px' }}
+              change={() => setSelectedSetting(dropdownRef.current?.value as string)}
+            />
+          </div>
+
+          <ButtonComponent
+            onClick={applySetting}
+            cssClass="e-outline"
+            style={{ padding: '6px 12px', fontSize: '13px' }}
+          >
+           ✔
+          </ButtonComponent>
+
+          <ButtonComponent
+            onClick={deleteSetting}
+            cssClass="e-outline e-danger"
+            style={{ padding: '6px 12px', fontSize: '13px' }}
+          >
+            🗑
+          </ButtonComponent>
+        </div>
+      </div>
 
       {/* Grid Container */}
       <div style={{ flex: 1, overflow: 'hidden' }}>
         {loading ? (
-           <div style={{ padding: '50px', textAlign: 'center' }}>Loading Data...</div>
+          <div style={{ padding: '50px', textAlign: 'center' }}>Loading Data...</div>
         ) : error ? (
-           <div style={{ padding: '50px', textAlign: 'center', color: 'red' }}>Error: {error}</div>
+          <div style={{ padding: '50px', textAlign: 'center', color: 'red' }}>Error: {error}</div>
         ) : (
           <GridComponent
             ref={gridRef}
@@ -716,7 +751,7 @@ const HeroFashionGrid13: React.FC = () => {
             allowFiltering={true}
             allowGrouping={true}
             allowTextWrap={true}
-            showColumnChooser={true}            
+            showColumnChooser={true}
             allowReordering={true}
             allowResizing={true}
             filterSettings={{ type: 'Excel' }}
@@ -724,11 +759,11 @@ const HeroFashionGrid13: React.FC = () => {
             searchSettings={{ operator: 'contains', ignoreCase: true }}
             toolbar={toolbarOptions}
             editSettings={{
-                    allowDeleting: true,
-                    allowEditing: true,
-                    allowEditOnDblClick:false,
-                    allowAdding: true,
-                }}
+              allowDeleting: true,
+              allowEditing: true,
+              allowEditOnDblClick: false,
+              allowAdding: true,
+            }}
             actionBegin={actionBegin}
             actionComplete={actionComplete}
             created={created}
@@ -737,18 +772,18 @@ const HeroFashionGrid13: React.FC = () => {
           >
             <ColumnsDirective>
               {/* --- SL NO COLUMN ADDED HERE --- */}
-              <ColumnDirective 
-                field="slno1" 
-                headerText="SL NO" 
-                width="60" 
-                textAlign="Center" 
-                freeze='Left' 
-                
+              <ColumnDirective
+                field="slno1"
+                headerText="SL NO"
+                width="60"
+                textAlign="Center"
+                freeze='Left'
+
               />
 
               <ColumnDirective field="mainimagepath" headerText="IMG" width="150" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('mainimagepath')} />
               <ColumnDirective isPrimaryKey={true} field="jobno_oms" headerText="ORDER INFO" width="130" freeze='Left' template={orderSummaryTemplate} />
-             
+
               <ColumnDirective field="Fdt" headerText="DELIVERY INFO" width="200" template={deliveryInfoTemplate} />
               <ColumnDirective field="reference" headerText="reference" width="200" template={genericHighlighter('reference')} />
               <ColumnDirective field="quality_controller" headerText="QC" width="90" template={genericHighlighter('quality_controller')} />
@@ -758,7 +793,7 @@ const HeroFashionGrid13: React.FC = () => {
               <ColumnDirective field="u7" headerText="udf allow 7" width="100" template={genericHighlighter('u7')} />
               <ColumnDirective field="prnfile2" headerText="MEAS IMG" width="200" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('prnfile2')} />
               <ColumnDirective field="img_fpath" headerText="AOP" width="200" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('img_fpath')} />
-             
+
               <ColumnDirective field="prnclr" headerText="PRN COL" width="200" template={genericHighlighter('prnclr')} />
               <ColumnDirective field="u25" headerText="25 WEEK" width="200" template={genericHighlighter('u25')} />
               <ColumnDirective field="abc" headerText="ABC" width="150" template={genericHighlighter('abc')} />
@@ -778,12 +813,12 @@ const HeroFashionGrid13: React.FC = () => {
               <ColumnDirective field="styleno" headerText="STYLE NO" width="110" template={genericHighlighter('styleno')} />
               <ColumnDirective field="director_sample_order" headerText="DIR S/O" width="100" template={genericHighlighter('director_sample_order')} />
               <ColumnDirective field="order_follow_up" headerText="ORD FOLLOW UP" width="130" template={genericHighlighter('order_follow_up')} />
-             
+
               <ColumnDirective field="styledesc" headerText="DESC" width="160" template={genericHighlighter('styledesc')} />
               <ColumnDirective field="quantity" headerText="QTY" width="80" textAlign="Right" template={genericHighlighter('quantity')} />
               <ColumnDirective field="company_name" headerText="COMPANY" width="120" template={genericHighlighter('company_name')} />
             </ColumnsDirective>
-            <Inject services={[Sort,Edit, Filter, Group, Reorder, Search, VirtualScroll, Freeze, Resize, ContextMenu, Page, Toolbar, ColumnChooser, ColumnMenu]} />
+            <Inject services={[Sort, Edit, Filter, Group, Reorder, Search, VirtualScroll, Freeze, Resize, ContextMenu, Page, Toolbar, ColumnChooser, ColumnMenu]} />
           </GridComponent>
         )}
       </div>
