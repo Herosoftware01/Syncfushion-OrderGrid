@@ -18,8 +18,8 @@ export default function FabricForm() {
 
     try {
 
-      const master = await axios.get("http://127.0.0.1:8000/fablist/");
-      const alias = await axios.get("http://127.0.0.1:8000/fabaligs/");
+      const master = await axios.get("https://app.herofashion.com/fablist/");
+      const alias = await axios.get("https://app.herofashion.com/fabaligs/");
 
       const masterData = master.data;
       const aliasData = alias.data;
@@ -65,7 +65,7 @@ export default function FabricForm() {
     try {
 
       await axios.post(
-        "http://127.0.0.1:8000/fabaligs/",
+        "https://app.herofashion.com/fabaligs/",
         formData
       );
 

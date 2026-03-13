@@ -401,6 +401,8 @@ const HrReportGrid: React.FC = () => {
           enableVirtualization={true}
           rowHeight={95}
           allowSorting={true}
+          enableAdaptiveUI={true}
+          adaptiveUIMode = {'Mobile'}          
           allowFiltering={true}
           allowGrouping={true}
           filterSettings={{ type: 'Excel' }}

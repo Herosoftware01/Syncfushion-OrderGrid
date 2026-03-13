@@ -43,7 +43,7 @@ const Dashboard = () => {
           </div>
 
           <h2 className="text-lg font-semibold text-gray-800 group-hover:text-orange-600 transition">
-            Order syncfushion - B,K
+            Order syncfushion - B,K,D
           </h2>
 
           <p className="text-gray-500 text-sm mt-1">
@@ -211,30 +211,30 @@ const Dashboard = () => {
 
 
         {/* Card 9 */}
-        {/* <div
-          onClick={() => navigate("Autofit")}
+        <div
+          onClick={() => navigate("fabric")}
           className="group cursor-pointer bg-white rounded-2xl shadow-lg p-6 relative overflow-hidden 
           transform hover:scale-105 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300"
         >
-          <div className="absolute -top-10 -right-10 w-32 h-32 bg-rose-200 rounded-full opacity-40 group-hover:scale-150 transition duration-500"></div>
+          <div className="absolute -top-10 -right-10 w-32 h-32 bg-emerald-200 rounded-full opacity-40 group-hover:scale-150 transition duration-500"></div>
 
-          <div className="w-14 h-14 flex items-center justify-center bg-rose-100 rounded-xl mb-4 
+          <div className="w-14 h-14 flex items-center justify-center bg-emerald-100 rounded-xl mb-4 
           group-hover:rotate-12 transition duration-300">
-            <FaMixcloud className="text-rose-500 text-2xl" />
+            <FaMixcloud className="text-emerald-500 text-2xl" />
           </div>
 
-          <h2 className="text-lg font-semibold text-gray-800 group-hover:text-rose-600 transition">
+          <h2 className="text-lg font-semibold text-gray-800 group-hover:text-emerald-600 transition">
             Fabric - K 
           </h2>
 
           <p className="text-gray-500 text-sm mt-1">
             Fabric Alias Form
           </p>
-        </div> */}
+        </div>
 
         {/* Card 10 */}
-        {/* <div
-          onClick={() => navigate("Autofit")}
+        <div
+          onClick={() => navigate()}
           className="group cursor-pointer bg-white rounded-2xl shadow-lg p-6 relative overflow-hidden 
           transform hover:scale-105 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300"
         >
@@ -246,13 +246,13 @@ const Dashboard = () => {
           </div>
 
           <h2 className="text-lg font-semibold text-gray-800 group-hover:text-indigo-600 transition">
-            Auto Fit 2
+            Waiting...
           </h2>
 
           <p className="text-gray-500 text-sm mt-1">
-            Auto Fit order Details
+            ...
           </p>
-        </div> */}
+        </div>
 
         {/* Card 11 */}
         {/* <div
