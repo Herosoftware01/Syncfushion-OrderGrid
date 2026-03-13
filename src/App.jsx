@@ -12,8 +12,7 @@ import SubMenuPermissionPage from "./components/user_control/SubMenuPermissionPa
 import QualityApp from "./components/quality_app/main/Quality_main"
 import Qc_entry from "./components/quality_app/quality/Qc"
 import Syncfushion from "./components/syncfushion/main/home"
-import OrdPagination from "./components/syncfushion/order/ord_pagination";
-import FabricForm from "./components/syncfushion/fabric/Fabric";
+import HeroFashionGrid13 from "./components/syncfushion/order/ord_order";
 
 function App() {
 
@@ -96,21 +95,12 @@ function App() {
           element={
             <ProtectedRoute>
               <ProtectedLayout>
-                <OrdPagination />
+                <HeroFashionGrid13 />
               </ProtectedLayout>
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/ord_page/*"
-          element={
-            <ProtectedRoute>
-              <ProtectedLayout>
-                <Syncfushion />
-              </ProtectedLayout>
-            </ProtectedRoute>
-          }
-        />
+
         <Route
           path="/qc-admin/*"
           element={
@@ -132,16 +122,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/alias"
-          element={
-            <ProtectedRoute>
-              <ProtectedLayout>
-                <FabricForm />
-              </ProtectedLayout>
-            </ProtectedRoute>
-          }
-        />
+
       </Routes>
     </HashRouter>
   );
