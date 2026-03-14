@@ -11,7 +11,7 @@ import Card2 from '../card/Card2.jsx';
 import Sample from '../order/Sample.tsx';
 import StoreGrid from '../order/StoreGrid.tsx';
 import FabricForm from '../fabric/Fabric.jsx';
-
+import Signin1 from '../layout/Signup.tsx';
 
 function Home() {
   return (
@@ -30,6 +30,7 @@ function Home() {
          <Route path="/sync" element={<App />} /> 
          <Route path="/sample" element={<Sample />} /> 
          <Route path="/fabric" element={<FabricForm />} /> 
+         <Route path='/signup' element={<Signin1 />} />
 
     </Routes>
   );

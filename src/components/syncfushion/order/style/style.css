@@ -104,10 +104,13 @@
  
 
 
-      ::highlight(search) {
+::highlight(search) {
 
-            background-color: yellow;
+  background-color: yellow;
+  color: inherit;
+  }
 
-            color: inherit;
-
-        }
+.e-grid .e-headertext {
+  color: black;
+  font-weight: 900;
+}

@@ -1261,7 +1261,7 @@ export const App = () => {
     getCountryMessage: (shipCountry: string) => {
       switch (shipCountry) {
         case 'France':
-          return France;
+          return "France";
         case 'Germany':
           return 'https://ej2.syncfusion.com/javascript/demos/src/tree-grid/images/Germany.png';
         case 'Brazil':

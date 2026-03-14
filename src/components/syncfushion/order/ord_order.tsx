@@ -27,14 +27,15 @@ import {
   AggregateColumnsDirective,
   AggregateColumnDirective,
   AggregateDirective,
-  AggregatesDirective
+  AggregatesDirective,
+  PdfExport,
 }from '@syncfusion/ej2-react-grids';
+import { TooltipComponent } from '@syncfusion/ej2-react-popups';
 import { Ajax, registerLicense } from '@syncfusion/ej2-base';
 import { TextBoxComponent } from '@syncfusion/ej2-react-inputs';
 import { DropDownListComponent, MultiSelect } from '@syncfusion/ej2-react-dropdowns';
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import "../../../App.css"
-import { Bold } from 'lucide-react';
 
 registerLicense('Ngo9BigBOggjHTQxAR8/V1JGaF5cXGpCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdlWX1cdHRUQ2ddUkV3XUpWYEs=');
 
@@ -65,7 +66,7 @@ const HeroFashionGrid13: React.FC = () => {
 
   const settingNameRef = useRef<TextBoxComponent>(null);
   const dropdownRef = useRef<DropDownListComponent>(null);
-
+  const tooltipRef = useRef<TooltipComponent>(null);  
   const gridRef = useRef<GridComponent>(null);
   const searchTimeout = useRef<any>(null);
 
@@ -411,7 +412,7 @@ const HeroFashionGrid13: React.FC = () => {
     { text: '', prefixIcon: 'e-csvexport', id: 'export_csv', tooltipText: 'Export CSV' },
     { text: '', prefixIcon: 'e-excelexport', id: 'export_excel', tooltipText: 'Export Excel' },
     { text: '', prefixIcon: 'e-pdfexport', id: 'export_pdf', tooltipText: 'Export PDF' },
-    'ColumnChooser',
+    'ColumnChooser'
   ];
 
   const searchHighlightText = (key: string | undefined, gridElement: Node) => {
@@ -505,6 +506,7 @@ const HeroFashionGrid13: React.FC = () => {
       const records = gridRef.current.getFilteredRecords();
       setShowingCount(records ? (records as object[]).length : 0);
       searchHighlightText(gridRef.current?.searchSettings?.key, gridRef.current?.element);
+      searchHighlightText(gridRef.current?.searchSettings?.key, gridRef.current?.element);
     }
   };
 
@@ -554,6 +556,25 @@ const HeroFashionGrid13: React.FC = () => {
       multiSelect.appendTo(args.element);
     }
   };
+
+  const tooltipOpen = (args: any) => {
+    let img = args.target.querySelector('img')
+    if (img) {
+      (tooltipRef.current as TooltipComponent).content = args.target.innerHTML
+    }
+    else {
+      (tooltipRef.current as TooltipComponent).content = args.target.innerText;
+    }
+  }
+
+  // const toolbarClick = (args: any) => {
+  //   if (gridRef && args.item.id === 'export_pdf') { // 'Grid_pdfexport' -> Grid component id + _ + toolbar item name
+  //     const exportProperties = {
+  //       exportType: 'CurrentPage'
+  //     };
+  //     gridRef.pdfExport(exportProperties);
+  //   }
+  // }
 
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#fff', minWidth: 0, overflow: 'hidden' }}>
@@ -795,6 +816,7 @@ const HeroFashionGrid13: React.FC = () => {
         ) : error ? (
           <div style={{ padding: '50px', textAlign: 'center', color: 'red' }}>Error: {error}</div>
         ) : (
+          <><div><TooltipComponent ref={tooltipRef} target=".e-rowcell" beforeOpen={tooltipOpen}>
           <GridComponent
             id="default-aggregate-grid"
             ref={gridRef}
@@ -813,6 +835,7 @@ const HeroFashionGrid13: React.FC = () => {
             adaptiveUIMode = {'Mobile'}      
             allowReordering={true}
             allowResizing={true}
+            allowPdfExport={true}
             // filterSettings={{ type: 'Excel' }}
             gridLines="Both"
             searchSettings={{ fields:["jobno_oms", "quality_controller"], operator: 'contains', ignoreCase: true }}
@@ -827,8 +850,7 @@ const HeroFashionGrid13: React.FC = () => {
             actionBegin={actionBegin}
             actionComplete={actionComplete}
             created={created}
-
-
+            // toolbarClick={toolbarClick}
           >
             <ColumnsDirective>
 
@@ -877,8 +899,8 @@ const HeroFashionGrid13: React.FC = () => {
                 </AggregateColumnsDirective>
               </AggregateDirective>
             </AggregatesDirective>
-            <Inject services={[Sort, Edit, Filter, Group, Reorder, Search, VirtualScroll, Freeze, Resize, ContextMenu, Page, Toolbar, ColumnChooser, ColumnMenu, Aggregate]} />
-          </GridComponent>
+            <Inject services={[Sort, Edit, Filter, Group, Reorder, Search, VirtualScroll, Freeze, Resize, ContextMenu, Page, Toolbar, ColumnChooser, ColumnMenu, Aggregate, PdfExport]} />
+          </GridComponent></TooltipComponent></div></>
         )}
       </div>
     </div>
