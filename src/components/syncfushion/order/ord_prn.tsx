@@ -76,7 +76,7 @@ const PRN: React.FC = () => {
   //   'jobno_oms', 'print_ty', 'print_des', 'clrcomb', 'sup', 'groundclr', 'in_out', 'clr'
   // ];
  const searchableFields = [
-    'jobno','print_ty'
+    'jobno','print_ty','merch'
  ]
   // --- Helpers ---
   const parseDate = (dateStr: string) => {
@@ -678,7 +678,7 @@ const PRN: React.FC = () => {
             style={{ padding: '6px 12px', fontSize: '13px', border: "2px" }}
           >
             💾
-            
+
           </ButtonComponent>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
