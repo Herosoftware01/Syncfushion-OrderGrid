@@ -234,7 +234,7 @@ const Dashboard = () => {
 
         {/* Card 10 */}
         <div
-          onClick={() => navigate(order_oms)}
+          onClick={() => navigate(Excel)}
           className="group cursor-pointer bg-white rounded-2xl shadow-lg p-6 relative overflow-hidden 
           transform hover:scale-105 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300"
         >
@@ -255,8 +255,8 @@ const Dashboard = () => {
         </div>
 
         {/* Card 11 */}
-        {/* <div
-          onClick={() => navigate("Autofit")}
+        <div
+          onClick={() => navigate("PRN")}
           className="group cursor-pointer bg-white rounded-2xl shadow-lg p-6 relative overflow-hidden 
           transform hover:scale-105 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300"
         >
@@ -268,19 +268,19 @@ const Dashboard = () => {
           </div>
 
           <h2 className="text-lg font-semibold text-gray-800 group-hover:text-indigo-600 transition">
-            Auto Fit 3
+            Prn Details
           </h2>
 
           <p className="text-gray-500 text-sm mt-1">
-            Auto Fit order Details
+            Print order Details
           </p>
-        </div> */}
+        </div>
 
 
 
         {/* Card 12 */}
-        {/* <div
-          onClick={() => navigate("Autofit")}
+        <div
+          onClick={() => navigate("order_oms")}
           className="group cursor-pointer bg-white rounded-2xl shadow-lg p-6 relative overflow-hidden 
           transform hover:scale-105 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300"
         >
@@ -292,13 +292,13 @@ const Dashboard = () => {
           </div>
 
           <h2 className="text-lg font-semibold text-gray-800 group-hover:text-indigo-600 transition">
-            Auto Fit 4
+            Order Oms1
           </h2>
 
           <p className="text-gray-500 text-sm mt-1">
-            Auto Fit order Details
+            Order detail using store procedure
           </p>
-        </div> */}
+        </div>
 
       </div>
 
