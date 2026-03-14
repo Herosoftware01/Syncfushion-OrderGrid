@@ -27,14 +27,15 @@ import {
   AggregateColumnsDirective,
   AggregateColumnDirective,
   AggregateDirective,
-  AggregatesDirective
+  AggregatesDirective,
+  PdfExport,
 }from '@syncfusion/ej2-react-grids';
+import { TooltipComponent } from '@syncfusion/ej2-react-popups';
 import { Ajax, registerLicense } from '@syncfusion/ej2-base';
 import { TextBoxComponent } from '@syncfusion/ej2-react-inputs';
-import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns';
+import { DropDownListComponent, MultiSelect } from '@syncfusion/ej2-react-dropdowns';
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import "../../../App.css"
-import { Bold } from 'lucide-react';
 
 registerLicense('Ngo9BigBOggjHTQxAR8/V1JGaF5cXGpCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdlWX1cdHRUQ2ddUkV3XUpWYEs=');
 
@@ -61,10 +62,11 @@ const HeroFashionGrid13: React.FC = () => {
   const [searchKey, setSearchKey] = useState<string>('');
   const [savedSettings, setSavedSettings] = useState<Array<{ name: string; data: any }>>([]);
   const [selectedSetting, setSelectedSetting] = useState<string>('');
+  const [qualityControllers, setQualityControllers] = useState<any[]>([]);
 
   const settingNameRef = useRef<TextBoxComponent>(null);
   const dropdownRef = useRef<DropDownListComponent>(null);
-
+  const tooltipRef = useRef<TooltipComponent>(null);  
   const gridRef = useRef<GridComponent>(null);
   const searchTimeout = useRef<any>(null);
 
@@ -111,15 +113,17 @@ const HeroFashionGrid13: React.FC = () => {
     const fetchData = async () => {
       try {
         setLoading(true); setError(null);
-        const [orderResponse, printResponse] = await Promise.all([
+        const [orderResponse, printResponse, qcResponse] = await Promise.all([
           fetch('https://app.herofashion.com/order_panda'),
-          fetch('https://app.herofashion.com/PrintRgb/')
-
+          fetch('https://app.herofashion.com/PrintRgb/'),
+          fetch('https://app.herofashion.com/get_quality_controllers/')
         ]);
-        if (!orderResponse.ok || !printResponse.ok) throw new Error("Failed to fetch data from APIs");
+        if (!orderResponse.ok || !printResponse.ok || !qcResponse.ok) throw new Error("Failed to fetch data from APIs");
 
         const orderData: OrderData[] = await orderResponse.json();
         const printData: any[] = await printResponse.json();
+        const qcData : any[] = await qcResponse.json();
+
         const printMap: Record<string, any> = {};
         printData.forEach(item => { if (item.jobno_joint) printMap[item.jobno_joint] = item; });
 
@@ -165,6 +169,7 @@ const HeroFashionGrid13: React.FC = () => {
         setDataSource(processedData);
         setTotalCount(processedData.length);
         setShowingCount(processedData.length);
+        setQualityControllers(qcData.slice(0, 10));
       } catch (err: any) {
         console.error("Fetch error:", err); setError(err.message);
       } finally { setLoading(false); }
@@ -407,7 +412,7 @@ const HeroFashionGrid13: React.FC = () => {
     { text: '', prefixIcon: 'e-csvexport', id: 'export_csv', tooltipText: 'Export CSV' },
     { text: '', prefixIcon: 'e-excelexport', id: 'export_excel', tooltipText: 'Export Excel' },
     { text: '', prefixIcon: 'e-pdfexport', id: 'export_pdf', tooltipText: 'Export PDF' },
-    'ColumnChooser',
+    'ColumnChooser'
   ];
 
   const searchHighlightText = (key: string | undefined, gridElement: Node) => {
@@ -501,6 +506,7 @@ const HeroFashionGrid13: React.FC = () => {
       const records = gridRef.current.getFilteredRecords();
       setShowingCount(records ? (records as object[]).length : 0);
       searchHighlightText(gridRef.current?.searchSettings?.key, gridRef.current?.element);
+      searchHighlightText(gridRef.current?.searchSettings?.key, gridRef.current?.element);
     }
   };
 
@@ -514,6 +520,61 @@ const HeroFashionGrid13: React.FC = () => {
   const footerSum = (props: any) =>{
     return (<span className='font-bold'>Q: {props.Sum}</span>)
   }
+
+  const footerCount = (props: any) =>{
+    return (<span className='font-bold'>C: {props.Count}</span>)
+  }
+
+  const qualityControllerEdit = {
+    create: () => {
+      const elem = document.createElement('input');
+      return elem;
+    },
+    read: (elem: HTMLElement) => {
+      const multiSelectObj = (elem as any).ej2_instances[0];
+      return multiSelectObj.value ? multiSelectObj.value.join(',') : '';
+    },
+    destroy: () => {
+      // Cleanup if needed
+    },
+    write: (args: any) => {
+      const currentValue = args.rowData[args.column.field];
+      const valueArray = currentValue ? currentValue.split(',').map((v: string) => v.trim()).filter(Boolean) : [];
+
+      // Use vanilla JS MultiSelect instead of React component
+      const multiSelect = new MultiSelect({
+        dataSource: qualityControllers,
+        fields: { text: 'name', value: 'name' }, // Adjust based on your API response
+        value: valueArray,
+        placeholder: 'Select Quality Controllers',
+        mode: 'Box',
+        showDropDownIcon: true,
+        popupHeight: '200px',
+        allowFiltering: true,
+        filterBarPlaceholder: 'Search controllers...'
+      });
+      multiSelect.appendTo(args.element);
+    }
+  };
+
+  const tooltipOpen = (args: any) => {
+    let img = args.target.querySelector('img')
+    if (img) {
+      (tooltipRef.current as TooltipComponent).content = args.target.innerHTML
+    }
+    else {
+      (tooltipRef.current as TooltipComponent).content = args.target.innerText;
+    }
+  }
+
+  // const toolbarClick = (args: any) => {
+  //   if (gridRef && args.item.id === 'export_pdf') { // 'Grid_pdfexport' -> Grid component id + _ + toolbar item name
+  //     const exportProperties = {
+  //       exportType: 'CurrentPage'
+  //     };
+  //     gridRef.pdfExport(exportProperties);
+  //   }
+  // }
 
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#fff', minWidth: 0, overflow: 'hidden' }}>
@@ -755,6 +816,7 @@ const HeroFashionGrid13: React.FC = () => {
         ) : error ? (
           <div style={{ padding: '50px', textAlign: 'center', color: 'red' }}>Error: {error}</div>
         ) : (
+          <><div><TooltipComponent ref={tooltipRef} target=".e-rowcell" beforeOpen={tooltipOpen}>
           <GridComponent
             id="default-aggregate-grid"
             ref={gridRef}
@@ -773,6 +835,7 @@ const HeroFashionGrid13: React.FC = () => {
             adaptiveUIMode = {'Mobile'}      
             allowReordering={true}
             allowResizing={true}
+            allowPdfExport={true}
             // filterSettings={{ type: 'Excel' }}
             gridLines="Both"
             searchSettings={{ fields:["jobno_oms", "quality_controller"], operator: 'contains', ignoreCase: true }}
@@ -787,13 +850,13 @@ const HeroFashionGrid13: React.FC = () => {
             actionBegin={actionBegin}
             actionComplete={actionComplete}
             created={created}
-
-
+            // toolbarClick={toolbarClick}
           >
             <ColumnsDirective>
 
               <ColumnDirective isPrimaryKey={true} field="jobno_oms" headerText="ORDER INFO" width="120" maxWidth="120" freeze='Left' template={orderSummaryTemplate} allowEditing={false}/>
               <ColumnDirective field="mainimagepath" headerText="IMG" freeze='Left' width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('mainimagepath')} allowEditing={false} />
+              <ColumnDirective field="qltycontroller" headerText="QC-ms" width="100" template={genericHighlighter('qltycontroller')} edit={qualityControllerEdit} allowEditing={true} />
               <ColumnDirective field="Fdt" headerText="DELIVERY INFO" width="150" maxWidth="150" template={deliveryInfoTemplate} />
               <ColumnDirective headerText='fsn' width="90" textAlign="Center" allowFiltering={true} template={rollnoTemplate} allowEditing={false}/>
               <ColumnDirective field="prnfile1" headerText="PRN IMG" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('prnfile1')} />
@@ -819,25 +882,25 @@ const HeroFashionGrid13: React.FC = () => {
               <ColumnDirective field="director_sample_order" headerText="DIR S/O" width="100" template={genericHighlighter('director_sample_order')} />
               <ColumnDirective field="order_follow_up" headerText="ORD FOLLOW UP" width="100" template={genericHighlighter('order_follow_up')} />
               <ColumnDirective field="u7" headerText="U7" width="100" template={genericHighlighter('u7')} />
-              <ColumnDirective field="quality_controller" headerText="QC" width="90" template={genericHighlighter('quality_controller')} />
-              <ColumnDirective field="qltycontroller" headerText="QC-ms" width="100" template={genericHighlighter('qltycontroller')} />
+              <ColumnDirective field="quality_controller" headerText="QC" width="100" template={genericHighlighter('quality_controller')}/>
               <ColumnDirective field="slno1" headerText="No" width="90" textAlign="Center" />
               <ColumnDirective field="u14" headerText="14 DY" width="70" minWidth="90" template={genericHighlighter('u14')} />
               <ColumnDirective field="styledesc" headerText="DESC" width="160" template={genericHighlighter('styledesc')} />
               <ColumnDirective field="reference" headerText="reference" width="250" maxWidth="250" template={genericHighlighter('reference')} />
               <ColumnDirective field="quantity" headerText="QTY" width="90" textAlign="Right" template={genericHighlighter('quantity')} />
               <ColumnDirective field="company_name" headerText="COMPANY" width="90" template={genericHighlighter('company_name')} />
-              
+
             </ColumnsDirective>
             <AggregatesDirective>
               <AggregateDirective>
                 <AggregateColumnsDirective>
+                  <AggregateColumnDirective field='slno1'  type='Count' footerTemplate={footerCount} format='N'> </AggregateColumnDirective>
                   <AggregateColumnDirective field='quantity'  type='Sum' footerTemplate={footerSum} format='N'> </AggregateColumnDirective>
                 </AggregateColumnsDirective>
               </AggregateDirective>
             </AggregatesDirective>
-            <Inject services={[Sort, Edit, Filter, Group, Reorder, Search, VirtualScroll, Freeze, Resize, ContextMenu, Page, Toolbar, ColumnChooser, ColumnMenu, Aggregate]} />
-          </GridComponent>
+            <Inject services={[Sort, Edit, Filter, Group, Reorder, Search, VirtualScroll, Freeze, Resize, ContextMenu, Page, Toolbar, ColumnChooser, ColumnMenu, Aggregate, PdfExport]} />
+          </GridComponent></TooltipComponent></div></>
         )}
       </div>
     </div>

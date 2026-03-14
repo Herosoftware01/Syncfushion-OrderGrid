@@ -1,20 +1,21 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, } from "react";
 import {
   GridComponent,
   ColumnsDirective,
   ColumnDirective,
   Inject,
   Toolbar,
-  Sort,
   Filter,
   Group,
   Page,
+  Sort,
   Search,
   FilterSettingsModel,
   Edit,
   toolbarClick
 } from "@syncfusion/ej2-react-grids";
 import { DataManager, WebApiAdaptor, Query } from "@syncfusion/ej2-data";
+
 
 import "./style/style.css";
 import { ClickEventArgs } from "@syncfusion/ej2-react-navigations/src";
@@ -38,7 +39,6 @@ interface OrderRow {
   validationStatus?: "OK" | "Pending";
   validationNotes?: string;
 }
-
 // Fallback data if API fails
 const sampleDataRaw = [
   {
@@ -289,8 +289,8 @@ function Sample() {
         allowTextWrap={true}
         allowReordering={true}
         allowResizing={true}
-        showColumnChooser={true}        
         allowSorting={true}
+        showColumnChooser={true}      
         allowGrouping={true}
             editSettings={{
                     allowDeleting: true,
@@ -332,7 +332,7 @@ function Sample() {
           />
         </ColumnsDirective>
 
-        <Inject services={[Toolbar, Sort, Filter, Group, Page, Search, Edit]} />
+        <Inject services={[Toolbar, Filter, Group, Page, Search, Edit, Sort]} />
       </GridComponent>
     </div>
   );
