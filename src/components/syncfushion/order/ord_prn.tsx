@@ -762,20 +762,31 @@ const PRN: React.FC = () => {
              */}
               {/* <ColumnDirective field="Fdt" headerText="DELIVERY INFO" width="150" template={deliveryInfoTemplate} /> */}
               <ColumnDirective field="jobno" headerText="jobno" width="90" template={genericHighlighter('jobno')} />
-              <ColumnDirective field="clrcomb" headerText="clrcomb" width="50" template={genericHighlighter('clrcomb')} />
-              <ColumnDirective field="print_ty" headerText="print_ty" width="50" template={genericHighlighter('print_ty')} />
-              <ColumnDirective field="print_des" headerText="print_des" width="130" template={genericHighlighter('print_des')} />
-              <ColumnDirective field="part" headerText="part" width="50" template={genericHighlighter('part')} />
-              <ColumnDirective field="groundclr" headerText="groundclr" width="75" template={genericHighlighter('groundclr')} />
+              <ColumnDirective field="merch" headerText="merch" width="90" template={genericHighlighter('merch')} />
+              <ColumnDirective field="Buyer" headerText="Buyer" width="90" template={genericHighlighter('Buyer')} />
+              <ColumnDirective field="production_unit" headerText="p_unit" width="90" template={genericHighlighter('production_unit')} />
+              <ColumnDirective field="printing_r" headerText="print_r" width="90" template={genericHighlighter('printing_r')} />
+              <ColumnDirective field="number_03_emb" headerText="emb" width="80" template={genericHighlighter('number_03_emb')} />
+              <ColumnDirective field="u37" headerText="u37 aop" width="100" template={genericHighlighter('u37')} />
+
+              <ColumnDirective field="clrcomb" headerText="clrcomb" width="100" template={genericHighlighter('clrcomb')} />
+              <ColumnDirective field="print_ty" headerText="print_ty" width="100" template={genericHighlighter('print_ty')} />
+              <ColumnDirective field="print_des" headerText="print_des" width="100" template={genericHighlighter('print_des')} />
+              <ColumnDirective field="part" headerText="part" width="90" template={genericHighlighter('part')} />
+              <ColumnDirective field="groundclr" headerText="gclr" width="75" template={genericHighlighter('groundclr')} />
               <ColumnDirective field="clr" headerText="clr" width="145" template={genericHighlighter('clr')} />
               <ColumnDirective field="ordimg" headerText="ord_img" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('ordimg')} />
                <ColumnDirective field="tbimg" headerText="top_bot" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('tbimg')} />
               <ColumnDirective field="print_img" headerText="PRN IMG" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('print_img')} />
               <ColumnDirective field="prnmeaimg" headerText="PLT" width="80" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('prnmeaimg')} />
+
+              {/* <ColumnDirective field="prnmeaimg" headerText="PLT" width="80" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('prnmeaimg')} /> */}
               <ColumnDirective field="mpic" headerText="MMC" width="80" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('mpic')} />
               <ColumnDirective field="in_out" headerText="in_out" width="90" template={genericHighlighter('in_out')} />
               <ColumnDirective field="noclr" headerText="noclr" width="50" template={genericHighlighter('noclr')} />
               <ColumnDirective field="sup" headerText="sup" width="90" template={genericHighlighter('sup')} />
+               <ColumnDirective field="prnmeaimg" headerText="PLT" width="80" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('prnmeaimg')} />
+
               <ColumnDirective field="u7" headerText="udf allow 7" width="66" template={genericHighlighter('u7')} />
               <ColumnDirective headerText='Fsn' width="80" textAlign="Center" template={rollnoTemplate} allowEditing={false}/>
               {/* <ColumnDirective field="reference" headerText="reference" width="400" template={genericHighlighter('reference')} />
