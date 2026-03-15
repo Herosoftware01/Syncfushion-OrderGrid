@@ -50,7 +50,10 @@ interface OrderData {
   shipment_complete: string; u7: string; u141: string; u45: string; u36: string; u31: string;
   u15: string; u14: string; u8: string; u25: string; insdate: string; insdateyear: string;
   actdaten: string; actyeardate: string; pono: string; u46: string; u37: string; qltycontroller: string;
-  mainimagepath: string; finaldelvdate: string; prnclr?: string | null; prnfile1?: string; prnfile2?: string; img_fpath?: string
+  mainimagepath: string; finaldelvdate: string; prnclr?: string | null; prnfile1?: string; prnfile2?: string; img_fpath?: string;clr?:string;print_img?:string;
+  prnmeaimg?:String;mpic?:string;
+  
+
 }
 
 const HeroFashionGrid13: React.FC = () => {
@@ -115,7 +118,8 @@ const HeroFashionGrid13: React.FC = () => {
         setLoading(true); setError(null);
         const [orderResponse, printResponse, qcResponse] = await Promise.all([
           fetch('https://app.herofashion.com/order_panda'),
-          fetch('https://app.herofashion.com/PrintRgb/'),
+          // fetch('https://app.herofashion.com/PrintRgb/'),
+          fetch('https://app.herofashion.com/ord_prn/'),
           fetch('https://app.herofashion.com/get_quality_controllers/')
         ]);
         if (!orderResponse.ok || !printResponse.ok || !qcResponse.ok) throw new Error("Failed to fetch data from APIs");
@@ -125,16 +129,17 @@ const HeroFashionGrid13: React.FC = () => {
         const qcData : any[] = await qcResponse.json();
 
         const printMap: Record<string, any> = {};
-        printData.forEach(item => { if (item.jobno_joint) printMap[item.jobno_joint] = item; });
+        printData.forEach(item => { if (item.jobno) printMap[item.jobno] = item; });
 
         const mergedData = orderData.map((order) => {
           const matchingPrintData = printMap[order.jobno_oms] || {};
           return {
             ...order,
-            prnclr: matchingPrintData.prnclr || null,
-            prnfile1: matchingPrintData.prnfile1 || '',
-            prnfile2: matchingPrintData.prnfile2 || '',
-            img_fpath: matchingPrintData.img_fpath || ''
+            clr: matchingPrintData.clr || null,
+            print_img: matchingPrintData.print_img || '',
+            prnmeaimg: matchingPrintData.prnmeaimg || '',
+            mpic: matchingPrintData.mpic || '',
+            // img_fpath: matchingPrintData.img_fpath || ''
           };
         });
 
@@ -324,7 +329,7 @@ const HeroFashionGrid13: React.FC = () => {
   );
 
   // --- Templates ---
-  const imageFieldTemplate = (field: 'mainimagepath' | 'prnfile1' | 'prnfile2' | 'img_fpath') => (p: OrderData) => {
+  const imageFieldTemplate = (field: 'mainimagepath' | 'print_img' | 'prnmeaimg' | 'img_fpath') => (p: OrderData) => {
     if (!p[field]) return <div style={{ color: '#ccc', fontSize: '10px' }}>No Image</div>;
     return <img src={p[field]} alt="img" style={{ width: '70px', height: '70px', objectFit: 'contain', border: '1px solid #eee' }} />;
   };
@@ -827,6 +832,8 @@ const HeroFashionGrid13: React.FC = () => {
             rowHeight={95}
             allowSorting={true}
             allowFiltering={true}
+            allowMultiSorting={true}
+            filterSettings={{type:'CheckBox'}}
             allowGrouping={true}
             allowTextWrap={true}
             showColumnMenu={true}
@@ -859,9 +866,9 @@ const HeroFashionGrid13: React.FC = () => {
               <ColumnDirective field="qltycontroller" headerText="QC-ms" width="100" template={genericHighlighter('qltycontroller')} edit={qualityControllerEdit} allowEditing={true} />
               <ColumnDirective field="Fdt" headerText="DELIVERY INFO" width="150" maxWidth="150" template={deliveryInfoTemplate} />
               <ColumnDirective headerText='fsn' width="90" textAlign="Center" allowFiltering={true} template={rollnoTemplate} allowEditing={false}/>
-              <ColumnDirective field="prnfile1" headerText="PRN IMG" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('prnfile1')} />
-              <ColumnDirective field="prnfile2" headerText="MEAS IMG" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('prnfile2')} />
-              <ColumnDirective field="img_fpath" headerText="AOP" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('img_fpath')} />
+              <ColumnDirective field="print_img" headerText="PRN IMG" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('print_img')} />
+              <ColumnDirective field="prnmeaimg" headerText="MEAS IMG" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('prnmeaimg')} />
+              {/* <ColumnDirective field="img_fpath" headerText="AOP" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('img_fpath')} /> */}
               <ColumnDirective field="prnclr" headerText="PRN COL" width="100" template={genericHighlighter('prnclr')} />
               <ColumnDirective field="u25" headerText="25 WEEK" width="100" template={genericHighlighter('u25')} />
               <ColumnDirective field="abc" headerText="ABC" width="100" template={genericHighlighter('abc')} />
@@ -878,6 +885,9 @@ const HeroFashionGrid13: React.FC = () => {
               <ColumnDirective field="Emb" headerText="3 EMB" width="90" template={genericHighlighter('Emb')} />
               <ColumnDirective field="buyer1" headerText="BUYER" width="100" template={genericHighlighter('buyer1')} />
               <ColumnDirective field="merch" headerText="MERCH" width="100" template={genericHighlighter('merch')} />
+              <ColumnDirective field='punit_sh' headerText="punit_sh" width="100" template={genericHighlighter('punit_sh')} />
+
+
               <ColumnDirective field="styleno" headerText="STYLE NO" width="110" template={genericHighlighter('styleno')} />
               <ColumnDirective field="director_sample_order" headerText="DIR S/O" width="100" template={genericHighlighter('director_sample_order')} />
               <ColumnDirective field="order_follow_up" headerText="ORD FOLLOW UP" width="100" template={genericHighlighter('order_follow_up')} />
