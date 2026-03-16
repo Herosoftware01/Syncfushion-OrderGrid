@@ -135,7 +135,7 @@ function Quality_admin() {
 
                 <td className="px-4 py-2 justify-items-center">
                   <img
-                    src={`http://127.0.0.1:8000${item.image}`}
+                    src={`https://hfapi.herofashion.com${item.image}`}
                     alt={item.name}
                     className="w-12 h-12 object-cover rounded"
                   />
