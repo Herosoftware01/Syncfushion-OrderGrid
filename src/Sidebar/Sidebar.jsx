@@ -4,7 +4,7 @@ import { api } from "../auth/auth";
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../auth/auth";
 
-function Sidebar() {
+function Sidebar({ children }) {
   const [menus, setMenus] = useState([]);
   const [openMenus, setOpenMenus] = useState({});
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -174,10 +174,11 @@ function Sidebar() {
         {`.no-scrollbar::-webkit-scrollbar { display:none }`}
       </style>
 
-      {/* ---------------- MOBILE HEADER ---------------- */}
-
-      <header className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-emerald-600 text-white flex items-center justify-between px-5 z-[100] shadow-md flex-row-reverse">
+      {/* --- MOBILE TOP BAR (Fixed Header) --- */}
+     
+        <header className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-emerald-600 text-white flex items-center justify-between px-5 z-[100] shadow-md flex-row-reverse">
         <div className="flex items-center gap-6">
+         
           <input
             type="text"
             placeholder="Search..."
@@ -258,7 +259,7 @@ function Sidebar() {
               placeholder="Search menu..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-3 py-1.5 text-xs rounded-md text-black"
+              className="w-full px-3 py-1.5 text-xs rounded-md text-white border-2 border-white focus:outline-none focus:border-white"
             />
           </div>
         )}

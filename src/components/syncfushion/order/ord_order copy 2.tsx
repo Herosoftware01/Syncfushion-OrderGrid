@@ -1,84 +1,28 @@
 import React, { useEffect, useState, useRef } from 'react';
 import {
-  // GridComponent,
-  // ColumnsDirective,
-  // ColumnDirective,
-  // Sort,
-  // Inject,
-  // Resize,
-  // Filter,
-  // Group,
-  // Reorder,
-  // Search,
-  // VirtualScroll,
-  // ContextMenu,
-  // ColumnMenu,
-  // Page,
-  // Toolbar,
-  // ColumnChooser,
-  // Freeze,
-  // Edit,
-  // AddEventArgs,
-  // SaveEventArgs,
-  // EditEventArgs,
-  // DeleteEventArgs,
-  // ActionEventArgs,
-    GridComponent, Inject, ColumnMenu, ColumnChooser, RowDD, Freeze,
-  InfiniteScroll, CommandColumn, ContextMenu, VirtualScroll, Filter, Search, LazyLoadGroup, Reorder, Resize, Sort, PdfExport,
-  ExcelExport, Edit, Page, Toolbar, Group, ColumnsDirective, ColumnDirective,Aggregate,
-  ExcelQueryCellInfoEventArgs,
-  ContextMenuClickEventArgs,
-  QueryCellInfoEventArgs,
-  ColumnModel,
-  BeforePasteEventArgs,
-  CellSaveArgs,
-  FilterSettingsModel,
-  ToolbarItems,
-  EditMode,
-  ContextMenuItem,
-  ContextMenuItemModel,
-  SortSettingsModel,
-  SelectionSettingsModel,
-  parentsUntil,
-  CommandModel,
-  ValueType,
-  AggregateTemplateContext,
-  AggregateRowModel,
-  AggregateType,
-  CheckboxSelectionType,
-  SelectionType,
-  NewRowPosition,
-  FilterType,
-  FilterBarMode,
-  IndicatorType,
-  GridColumn,
-  PageEventArgs,
-  GroupEventArgs,
-  FilterEventArgs,
-  SearchEventArgs,
-  SortEventArgs,
-  AddEventArgs,
-  SaveEventArgs,
-  EditEventArgs,
-  DeleteEventArgs,
-  ActionEventArgs,
-  NotifyArgs,
-  ReorderEventArgs,
-  RowSelectEventArgs,
-  ColumnSelectEventArgs,
-  RowSelectingEventArgs,
-  Column,
-  RowDeselectEventArgs
-} 
-
-from '@syncfusion/ej2-react-grids';
-import { Ajax, registerLicense } from '@syncfusion/ej2-base';
-import "../../../App.css"
+  GridComponent,
+  ColumnsDirective,
+  ColumnDirective,
+  Sort,
+  Inject,
+  Resize,
+  Filter,
+  Group,
+  Reorder,
+  Search,
+  VirtualScroll,
+  ContextMenu,
+  ColumnMenu,
+  Page,
+  Toolbar,
+  ColumnChooser,
+  Freeze
+} from '@syncfusion/ej2-react-grids';
+import { registerLicense } from '@syncfusion/ej2-base';
 
 registerLicense('Ngo9BigBOggjHTQxAR8/V1JGaF5cXGpCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdlWX1cdHRUQ2ddUkV3XUpWYEs=');
 
 interface OrderData {
-  slno1?: number; // Added SL No field
   jobno_oms: string; company_name: string; buyer1: string; stylename: string; uom: string;
   final_delivery_date: string; merch: string; punit_sh: string; styleno: string;
   production_type_inside_outside: string; quantity: string; director_sample_order: string;
@@ -87,95 +31,18 @@ interface OrderData {
   date: string; ourdelvdate: string; podate: string; vessel_dt: string; vessel_yr: string;
   shipment_complete: string; u7: string; u141: string; u45: string; u36: string; u31: string;
   u15: string; u14: string; u8: string; u25: string; insdate: string; insdateyear: string;
-  actdaten: string; actyeardate: string; pono: string; u46: string; u37: string;
+  actdaten: string; actyeardate: string; pono: string; slno: string; u46: string; u37: string;
   mainimagepath: string; finaldelvdate: string; prnclr?: string | null; prnfile1?: string; prnfile2?: string; img_fpath?: string
 }
 
-  const steps = [
-    {
-      selector: '#walk_property_settings',
-      arrowPosition: 'top-right',
-      content:
-        (
-          <div>
-            <strong>Grid Customizer Hub</strong> <br /> <br />
-            Click to open Grid settings. Instantly adjust layout, columns, filtering, and editing options—no coding needed.
-          </div>
-        )
-    },
-    {
-      selector: '.search-container',
-      arrowPosition: 'top-left-center',
-      content: (
-        <div>
-          <strong>Rapid & Customizable Search</strong><br /><br />
-          Use the toolbar search to quickly find records. Enable case sensitivity or accent handling for accurate results.
-        </div>
-      )
-    },
-    {
-      selector: '#walk_property_Column_Date',
-      arrowPosition: 'top-left',
-      content:
-        (
-          <div>
-            <strong>Smart Column Editor </strong><br /><br />
-            Click to open column settings. Modify visibility, width, and formatting with real-time updates.
-          </div>
-        ),
-    },
-    {
-      selector: '.e-toolbar-left',
-      arrowPosition: 'top-right',
-      content: (
-        <div>
-          <strong>Action Quickbar</strong><br /> <br />
-          Add custom toolbar buttons to trigger actions like clear filters, expand rows, or export data—outside the Grid.
-        </div>
-      ),
-    },
-    {
-      selector: '#aggregate-menu',
-      arrowPosition: 'right-center',
-      content: (
-        <div>
-          <strong>Concise Data Aggregation </strong><br /> <br />
-          View and switch between aggregate types (Sum, Avg, Count) in the footer.
-        </div>
-      ),
-    }
-  ];
+const HeroFashionGrid13: React.FC = () => {
+  const [dataSource, setDataSource] = useState<OrderData[]>([]);
+  const [totalCount, setTotalCount] = useState<number>(0);
+  const [showingCount, setShowingCount] = useState<number>(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchKey, setSearchKey] = useState<string>('');
 
-  const HeroFashionGrid13: React.FC = () => {
-    const [dataSource, setDataSource] = useState<OrderData[]>([]);
-    const [totalCount, setTotalCount] = useState<number>(0);
-    const [showingCount, setShowingCount] = useState<number>(0);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [searchKey, setSearchKey] = useState<string>('');
-
-
-    // Toolbar Options
-  const toolbarOptions = ['Search', 'Print', 'Add', 'Edit', 'Delete', 'Update', 'Cancel'];
-  const editOptions = { allowEditing: true, allowAdding: true, allowDeleting: true };
-  const [message, setMessage] = useState('');
-  function toolbarClick(args:any) {
-        if (args.item.text === 'Add') { 
-            args.cancel = true;
-            const newRecord = {
-                OrderID: 10247,
-                CustomerID: 'TOMSP',
-                ShipName: 'Hanari Carnes',
-                ShipCity: 'Lyon',
-            };
-            grid.addRecord(newRecord);
-            setMessage('The default adding action is cancelled, and a new record is added using the addRecord method.');
-        }
-        else{
-            setMessage('');
-        }
-    }
-  
   const gridRef = useRef<GridComponent>(null);
   const searchTimeout = useRef<any>(null);
 
@@ -218,53 +85,63 @@ interface OrderData {
   };
 
   // --- Data Fetching ---
-  const fetchOrders = async () => {
-  try {
-    setLoading(true);
-    setError(null);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true); setError(null);
+        const [orderResponse, printResponse] = await Promise.all([
+          fetch('https://app.herofashion.com/PrintRgb/')
+        ]);
+        if (!orderResponse.ok || !printResponse.ok) throw new Error("Failed to fetch data from APIs");
 
-    const [orderResponse, printResponse] = await Promise.all([
-      fetch('https://app.herofashion.com/order_panda'),
-      fetch('https://app.herofashion.com/PrintRgb/')
-    ]);
+        const orderData: OrderData[] = await orderResponse.json();
+        const printData: any[] = await printResponse.json();
+        const printMap: Record<string, any> = {};
+        printData.forEach(item => { if (item.jobno_joint) printMap[item.jobno_joint] = item; });
 
-    if (!orderResponse.ok || !printResponse.ok)
-      throw new Error("Failed to fetch data");
+        const mergedData = orderData.map((order) => {
+          const matchingPrintData = printMap[order.jobno_oms] || {};
+          return {
+            ...order,
+            prnclr: matchingPrintData.prnclr || null,
+            prnfile1: matchingPrintData.prnfile1 || '',
+            prnfile2: matchingPrintData.prnfile2 || '',
+            img_fpath: matchingPrintData.img_fpath || ''
+          };
+        });
 
-    const orderData: OrderData[] = await orderResponse.json();
-    const printData: any[] = await printResponse.json();
+        const processedData = mergedData
+          .filter((item) => {
+            const dateStr = item.finaldelvdate || item.final_delivery_date;
+            if (!dateStr) return true;
+            const dateParts = dateStr.split(/[-/]/); let year = 0;
+            if (dateParts.length === 3) {
+              const p0 = parseInt(dateParts[0]); const p2 = parseInt(dateParts[2]);
+              year = p0 > 1000 ? p0 : (p2 < 100 ? 2000 + p2 : p2);
+            }
+            return year <= 2127;
+          })
+          .sort((a, b) => {
+            const typeA = (a.director_sample_order || '').toLowerCase();
+            const typeB = (b.director_sample_order || '').toLowerCase();
+            if (typeA !== typeB) {
+              if (typeA === 'sample') return -1; if (typeB === 'sample') return 1;
+              return typeA.localeCompare(typeB);
+            }
+            const dateA = new Date(a.finaldelvdate || a.final_delivery_date || 0).getTime();
+            const dateB = new Date(b.finaldelvdate || b.final_delivery_date || 0).getTime();
+            return dateA - dateB;
+          });
 
-    const printMap: Record<string, any> = {};
-    printData.forEach(item => {
-      if (item.jobno_joint) printMap[item.jobno_joint] = item;
-    });
-
-    const mergedData = orderData.map(order => {
-      const p = printMap[order.jobno_oms] || {};
-      return {
-        ...order,
-        prnclr: p.prnclr || null,
-        prnfile1: p.prnfile1 || '',
-        prnfile2: p.prnfile2 || '',
-        img_fpath: p.img_fpath || ''
-      };
-    });
-
-    setDataSource(mergedData);
-    setTotalCount(mergedData.length);
-    setShowingCount(mergedData.length);
-
-  } catch (err:any) {
-    console.error(err);
-    setError(err.message);
-  } finally {
-    setLoading(false);
-  }
-};
-
-useEffect(() => {
-  fetchOrders();
-}, []);
+        setDataSource(processedData);
+        setTotalCount(processedData.length);
+        setShowingCount(processedData.length);
+      } catch (err: any) {
+        console.error("Fetch error:", err); setError(err.message);
+      } finally { setLoading(false); }
+    };
+    fetchData();
+  }, []);
 
   // --- Search & Highlight Logic ---
   const highlightText = (text: any) => {
@@ -308,106 +185,6 @@ useEffect(() => {
     return <img src={p[field]} alt="img" style={{ width: '70px', height: '70px', objectFit: 'contain', border: '1px solid #eee' }} />;
   };
 
-
- 
-  let serverUpdated = false;
-  let newPrimaryKey:number | null = null;
-
-
-  // const actionBegin = (args: AddEventArgs|SaveEventArgs|EditEventArgs|DeleteEventArgs|ActionEventArgs) => {
-  //   const ajax = new Ajax({
-  //     onSuccess: function (response: string) {
-  //       serverUpdated = true;
-  //       newPrimaryKey = JSON.parse(response).id;
-  //       gridRef.current?.endEdit();
-  //     },
-  //     onFailure: function (xhr: XMLHttpRequest) {
-  //       gridRef.current?.closeEdit();
-  //     },
-  //   });
-    
-  //   if (args.requestType === 'save') {
-  //     if ((args as any).action === 'edit') {
-  //       console.log(args)
-  //       if (!serverUpdated) {
-  //         args.cancel = true;
-  //         ajax.url =
-  //           'https://app.herofashion.com/order_list_proc/';
-  //         ajax.type = 'POST';
-  //         ajax.data = JSON.stringify((args as any).data);
-  //         ajax.send();
-  //       }
-  //     }
-  //   }
-  // };
-
-
-const actionBegin = (args:any) => {
-
-  if (args.requestType === 'save') {
-
-    const data = args.data as OrderData;
-    const previous = args.previousData as OrderData;
-
-    args.cancel = true;
-
-    if (data.u7 !== previous?.u7) {
-
-      fetch('https://app.herofashion.com/udf7_update/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          jobno_oms: data.jobno_oms,
-          u7: data.u7
-        })
-      })
-      .then(res => res.json())
-      .then(() => {
-
-        fetchOrders();   // ✅ reload API
-        gridRef.current?.closeEdit();
-
-      });
-
-      return;
-    }
-
-    if (data.reference !== previous?.reference) {
-
-      fetch('https://app.herofashion.com/order_list_proc/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          jobno_oms: data.jobno_oms,
-          reference: data.reference
-        })
-      })
-      .then(res => res.json())
-      .then(() => {
-
-        fetchOrders();   // ✅ reload API
-        gridRef.current?.closeEdit();
-
-      });
-
-      return;
-    }
-
-  }
-};
-
-
-  const actionComplete = (args: AddEventArgs|SaveEventArgs|EditEventArgs|DeleteEventArgs|ActionEventArgs) => {
-    if (args.requestType === 'beginEdit') {
-      // buyerIdVal = args.rowData['buyerid_id'];
-    }
-    if (args.requestType === 'save') {
-       // integrate your WhatsApp Integration code logic here
-      serverUpdated = false;
-      newPrimaryKey = null;
-    }
-  };
-
   const orderSummaryTemplate = (p: OrderData) => (
     <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
       <b>OR:</b> {highlightText(p.jobno_oms)}<br />
@@ -429,27 +206,10 @@ const actionBegin = (args:any) => {
   );
 
   return (
+    /* 
+       FIX: minWidth: 0 and overflow: hidden prevent the grid from pushing the sidebar.
+    */
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#fff', minWidth: 0, overflow: 'hidden' }}>
-
-      <ol className="flex items-center whitespace-nowrap p-6">
-      <li className="inline-flex items-center">
-        <a className="flex items-center text-sm text-muted-foreground-1 hover:text-primary-focus focus:outline-hidden focus:text-primary-focus" href="/#/dashboard">
-          <svg className="shrink-0 me-3 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          Dashboard
-        </a>
-        <svg className="shrink-0 mx-2 size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-      </li>
-      <li className="inline-flex items-center">
-        <a className="flex items-center text-sm text-muted-foreground-1 hover:text-primary-focus focus:outline-hidden focus:text-primary-focus" href="/#/sy-order">
-          <svg className="shrink-0 me-3 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="14" y="3" rx="1"/><path d="M10 21V8a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1H3"/></svg>
-          Order
-          <svg className="shrink-0 mx-2 size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-        </a>
-      </li>
-      <li className="inline-flex items-center text-sm font-semibold text-foreground truncate" aria-current="page">
-        Order Table
-      </li>
-    </ol>
       
       {/* Global Styles */}
       <style>{`
@@ -462,13 +222,13 @@ const actionBegin = (args:any) => {
         .dashboard-header {
           display: flex;
           flex-direction: row;
-          justify-content: space-between;
+          justify-content: space-between; /* Title Left, Controls Right */
           align-items: center;
           padding: 10px 20px;
           background-color: #f8f9fa;
           border-bottom: 1px solid #dee2e6;
           flex-shrink: 0;
-          flex-wrap: wrap; 
+          flex-wrap: wrap; /* Allow wrapping if needed on medium screens */
         }
         
         .header-title {
@@ -478,11 +238,12 @@ const actionBegin = (args:any) => {
           margin-right: 20px;
         }
         
+        /* Container for Filter and Count (Grouped Together) */
         .header-controls {
           display: flex;
-          flex-direction: row;
+          flex-direction: row; /* Filter and Count side-by-side */
           align-items: center;
-          gap: 15px;
+          gap: 15px; /* Space between filter and count */
         }
         
         .search-input {
@@ -513,25 +274,25 @@ const actionBegin = (args:any) => {
         /* --- Mobile Layout --- */
         @media (max-width: 768px) {
             .dashboard-header {
-                flex-direction: column;
+                flex-direction: column; /* Stack everything */
                 padding: 15px;
-                align-items: stretch;
+                align-items: stretch; /* Full width children */
                 gap: 10px;
             }
             .header-title {
                 text-align: center;
                 margin-right: 0;
                 margin-bottom: 5px;
-                order: 1;
+                order: 1; /* Title first */
             }
             .header-controls {
-                flex-direction: column;
+                flex-direction: column; /* Stack filter and count */
                 width: 100%;
                 gap: 10px;
                 order: 2;
             }
             .search-input {
-                width: 100%;
+                width: 100%; /* Full width search */
             }
             .count-display {
                 width: 100%;
@@ -541,25 +302,29 @@ const actionBegin = (args:any) => {
             }
         }
       `}</style>
-    <div className="header-controls">
+       <div className="header-controls">
               <input
                 type="text"
                 placeholder="Search all columns..."
                 value={searchKey}
                 onChange={onSearchChange}
                 className="search-input"
-              />
-              <div className="count-display">
-                  {showingCount} / {totalCount} Records
-              </div>
-          </div>
+              /> <div className="count-display">
+                          {showingCount} / {totalCount} Records
+                      </div></div>
+                      {/* <div className="count-display">
+                          {showingCount} / {totalCount} Records
+                      </div> */}
+              
       {/* Header Section */}
       <div className="dashboard-header">
+        
           <div className="header-title">
               HERO FASHION - ORDER DASHBOARD
               
           </div>
           
+          {/* Filter and Count Grouped - Desktop: Beside Title | Mobile: Below Title */}
           <div className="header-controls">
               <input
                 type="text"
@@ -568,6 +333,7 @@ const actionBegin = (args:any) => {
                 onChange={onSearchChange}
                 className="search-input"
               />
+              
               <div className="count-display">
                   {showingCount} / {totalCount} Records
               </div>
@@ -584,59 +350,23 @@ const actionBegin = (args:any) => {
           <GridComponent
             ref={gridRef}
             dataSource={dataSource}
-            toolbar={toolbarOptions}
-            editSettings={editOptions}
-            toolbarClick={toolbarClick}
             dataBound={updateCounts}
             height="100%"
             enableVirtualization={true}
             rowHeight={95}
             allowSorting={true}
-            allowTextWrap={true}
             allowFiltering={true}
             allowGrouping={true}
             allowResizing={true}
-            showColumnChooser={true}
-          allowReordering={true}
-          
-            // allowFiltering={true}
-            // allowPdfExport={true}
-            // enableRtl={false}
-            // allowExcelExport={true}
-            // allowRowDragAndDrop={false}
-            // allowTextWrap={true}
-            // allowSorting={true}
-           allowSelection={true}
-        // allowGrouping={true}
-        // enableStickyHeader={false}
-        // allowResizing={true}
-        // filterSettings={gridProperties.filterOptions}
             filterSettings={{ type: 'Excel' }}
             gridLines="Both"
             searchSettings={{ fields: searchableFields, operator: 'contains', ignoreCase: true }}
-            actionBegin={actionBegin}
-            actionComplete={actionComplete}
-
           >
             <ColumnsDirective>
-              {/* --- SL NO COLUMN ADDED HERE --- */}
-              <ColumnDirective 
-                field="slno1" 
-                headerText="SL NO" 
-                width="60" 
-                textAlign="Center" 
-                freeze='Left' 
-                
-              />
-
               <ColumnDirective field="mainimagepath" headerText="IMG" width="85" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('mainimagepath')} />
-              <ColumnDirective isPrimaryKey={true} field="jobno_oms" headerText="ORDER INFO" width="130" freeze='Left' template={orderSummaryTemplate} />
-             
+              <ColumnDirective field="jobno_oms" headerText="ORDER INFO" width="130" freeze='Left' template={orderSummaryTemplate} />
               <ColumnDirective field="Fdt" headerText="DELIVERY INFO" width="130" template={deliveryInfoTemplate} />
-              <ColumnDirective field="reference" headerText="reference" width="130" template={genericHighlighter('reference')} />
-
-              <ColumnDirective field="u7" headerText="7" width="70" allowEditing={true} template={genericHighlighter('u7')} />
-   
+              
               <ColumnDirective field="prnfile1" headerText="PRN IMG" width="85" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('prnfile1')} />
               <ColumnDirective field="prnfile2" headerText="MEAS IMG" width="85" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('prnfile2')} />
               <ColumnDirective field="img_fpath" headerText="AOP" width="85" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('img_fpath')} />
@@ -651,7 +381,7 @@ const actionBegin = (args:any) => {
               <ColumnDirective field="u8" headerText="8 FAB" width="90" template={genericHighlighter('u8')} />
               <ColumnDirective field="u14" headerText="14 DY" width="90" template={genericHighlighter('u14')} />
               <ColumnDirective field="u36" headerText="36 FABIN" width="90" template={genericHighlighter('u36')} />
-              
+              <ColumnDirective field="u7" headerText="7" width="70" template={genericHighlighter('u7')} />
               <ColumnDirective field="u15" headerText="15" width="70" template={genericHighlighter('u15')} />
               <ColumnDirective field="u45" headerText="45 ORDER" width="90" template={genericHighlighter('u45')} />
               <ColumnDirective field="u31" headerText="31 ITS" width="80" template={genericHighlighter('u31')} />
@@ -667,8 +397,7 @@ const actionBegin = (args:any) => {
               <ColumnDirective field="quantity" headerText="QTY" width="80" textAlign="Right" template={genericHighlighter('quantity')} />
               <ColumnDirective field="company_name" headerText="COMPANY" width="120" template={genericHighlighter('company_name')} />
             </ColumnsDirective>
-            {/* <Inject services={[Sort,Edit, Filter, Group, Reorder, Search, VirtualScroll, Freeze, Resize, ContextMenu, Page, Toolbar, ColumnChooser, ColumnMenu]} /> */}
-            <Inject services={[Sort, CommandColumn, Aggregate, Edit, Group, RowDD, Freeze, VirtualScroll, ContextMenu, ColumnMenu, Filter, LazyLoadGroup, Page, PdfExport, InfiniteScroll, ExcelExport, Reorder, Resize, Toolbar, Edit, Search, ColumnChooser]} />
+            <Inject services={[Sort, Filter, Group, Reorder, Search, VirtualScroll, Freeze, Resize, ContextMenu, Page, Toolbar, ColumnChooser, ColumnMenu]} />
           </GridComponent>
         )}
       </div>
