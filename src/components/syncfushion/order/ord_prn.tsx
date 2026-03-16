@@ -27,36 +27,35 @@ import {
   AggregateColumnsDirective,
   AggregateColumnDirective,
   AggregateDirective,
-  AggregatesDirective,
-  PdfExport,
-}from '@syncfusion/ej2-react-grids';
-import { TooltipComponent } from '@syncfusion/ej2-react-popups';
+  AggregatesDirective
+} from '@syncfusion/ej2-react-grids';
 import { Ajax, registerLicense } from '@syncfusion/ej2-base';
 import { TextBoxComponent } from '@syncfusion/ej2-react-inputs';
-import { DropDownListComponent, MultiSelect } from '@syncfusion/ej2-react-dropdowns';
+import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns';
 import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import "../../../App.css"
 
 registerLicense('Ngo9BigBOggjHTQxAR8/V1JGaF5cXGpCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdlWX1cdHRUQ2ddUkV3XUpWYEs=');
 
 interface OrderData {
-  slno1?: number; // Added SL No field
-  jobno_oms: string; company_name: string; buyer1: string; stylename: string; uom: string;
-  final_delivery_date: string; merch: string; punit_sh: string; styleno: string;
-  production_type_inside_outside: string; quantity: string; director_sample_order: string;
-  printing_R: string; Fdt: string; Emb: string; abc: string; order_follow_up: string;
-  quality_controller: string; reference: string; insdatenew: string; styledesc: string;
-  date: string; ourdelvdate: string; podate: string; vessel_dt: string; vessel_yr: string;
-  shipment_complete: string; u7: string; u141: string; u45: string; u36: string; u31: string;
-  u15: string; u14: string; u8: string; u25: string; insdate: string; insdateyear: string;
-  actdaten: string; actyeardate: string; pono: string; u46: string; u37: string; qltycontroller: string;
-  mainimagepath: string; finaldelvdate: string; prnclr?: string | null; prnfile1?: string; prnfile2?: string; img_fpath?: string;clr?:string;print_img?:string;
-  prnmeaimg?:String;mpic?:string;
-  
-
+  slno1?: number;
+  jobno_oms: string; // Mapped from 'jobno' in print data
+  company_name?: string; buyer1?: string; stylename?: string; uom?: string;
+  final_delivery_date?: string; merch?: string; punit_sh?: string; styleno?: string;
+  production_type_inside_outside?: string; quantity?: string; director_sample_order?: string;
+  printing_R?: string; Fdt?: string; Emb?: string; abc?: string; order_follow_up?: string;
+  quality_controller?: string; reference?: string; insdatenew?: string; styledesc?: string;
+  date?: string; ourdelvdate?: string; podate?: string; vessel_dt?: string; vessel_yr?: string;
+  shipment_complete?: string; u7?: string; u141?: string; u45?: string; u36?: string; u31?: string;
+  u15?: string; u14?: string; u8?: string; u25?: string; insdate?: string; insdateyear?: string;
+  actdaten?: string; actyeardate?: string; pono?: string; u46?: string; u37?: string; qltycontroller?: string;
+  mainimagepath?: string; finaldelvdate?: string; 
+  clrcomb?: string | null; print_ty?: string; print_des?: string; part?: string;clr?:string;in_out?:string;noclr?:string;mpic?:string;sup?:string;print_img?:string;prnmeaimg?:string;groundclr?:string;
+  jobno?: string; // Original field from API
+  tbimg?: string;
 }
 
-const HeroFashionGrid13: React.FC = () => {
+const PRN: React.FC = () => {
   const [dataSource, setDataSource] = useState<OrderData[]>([]);
   const [totalCount, setTotalCount] = useState<number>(0);
   const [showingCount, setShowingCount] = useState<number>(0);
@@ -65,21 +64,20 @@ const HeroFashionGrid13: React.FC = () => {
   const [searchKey, setSearchKey] = useState<string>('');
   const [savedSettings, setSavedSettings] = useState<Array<{ name: string; data: any }>>([]);
   const [selectedSetting, setSelectedSetting] = useState<string>('');
-  const [qualityControllers, setQualityControllers] = useState<any[]>([]);
 
   const settingNameRef = useRef<TextBoxComponent>(null);
   const dropdownRef = useRef<DropDownListComponent>(null);
-  const tooltipRef = useRef<TooltipComponent>(null);  
+
   const gridRef = useRef<GridComponent>(null);
   const searchTimeout = useRef<any>(null);
 
-  const searchableFields = [
-    'jobno_oms', 'company_name', 'buyer1', 'stylename', 'merch',
-    'punit_sh', 'styleno', 'quantity', 'director_sample_order',
-    'printing_R', 'Emb', 'abc', 'u46', 'uom', 'final_delivery_date',
-    'production_type_inside_outside', 'prnclr'
-  ];
-
+  // Updated search fields to match Print Data
+  // const searchableFields = [
+  //   'jobno_oms', 'print_ty', 'print_des', 'clrcomb', 'sup', 'groundclr', 'in_out', 'clr'
+  // ];
+ const searchableFields = [
+    'jobno','print_ty','merch'
+ ]
   // --- Helpers ---
   const parseDate = (dateStr: string) => {
     if (!dateStr) return null;
@@ -116,65 +114,28 @@ const HeroFashionGrid13: React.FC = () => {
     const fetchData = async () => {
       try {
         setLoading(true); setError(null);
-        const [orderResponse, printResponse, qcResponse] = await Promise.all([
-          fetch('https://app.herofashion.com/order_panda'),
-          // fetch('https://app.herofashion.com/PrintRgb/'),
-          fetch('https://app.herofashion.com/ord_prn/'),
-          fetch('https://app.herofashion.com/get_quality_controllers/')
-        ]);
-        if (!orderResponse.ok || !printResponse.ok || !qcResponse.ok) throw new Error("Failed to fetch data from APIs");
+        
+        // ONLY FETCHING PRINT DATA (ord_prn)
+        const response = await fetch('https://app.herofashion.com/ord_prn/');
+        
+        if (!response.ok) throw new Error("Failed to fetch data from Print API");
 
-        const orderData: OrderData[] = await orderResponse.json();
-        const printData: any[] = await printResponse.json();
-        const qcData : any[] = await qcResponse.json();
+        const printData: any[] = await response.json();
 
-        const printMap: Record<string, any> = {};
-        printData.forEach(item => { if (item.jobno) printMap[item.jobno] = item; });
-
-        const mergedData = orderData.map((order) => {
-          const matchingPrintData = printMap[order.jobno_oms] || {};
-          return {
-            ...order,
-            clr: matchingPrintData.clr || null,
-            print_img: matchingPrintData.print_img || '',
-            prnmeaimg: matchingPrintData.prnmeaimg || '',
-            mpic: matchingPrintData.mpic || '',
-            // img_fpath: matchingPrintData.img_fpath || ''
-          };
-        });
-
-        const processedData = mergedData
-          .filter((item) => {
-            const dateStr = item.finaldelvdate || item.final_delivery_date;
-            if (!dateStr) return true;
-            const dateParts = dateStr.split(/[-/]/); let year = 0;
-            if (dateParts.length === 3) {
-              const p0 = parseInt(dateParts[0]); const p2 = parseInt(dateParts[2]);
-              year = p0 > 1000 ? p0 : (p2 < 100 ? 2000 + p2 : p2);
-            }
-            return year <= 2127;
-          })
-          .sort((a, b) => {
-            const typeA = (a.director_sample_order || '').toLowerCase();
-            const typeB = (b.director_sample_order || '').toLowerCase();
-            if (typeA !== typeB) {
-              if (typeA === 'sample') return -1; if (typeB === 'sample') return 1;
-              return typeA.localeCompare(typeB);
-            }
-            const dateA = new Date(a.finaldelvdate || a.final_delivery_date || 0).getTime();
-            const dateB = new Date(b.finaldelvdate || b.final_delivery_date || 0).getTime();
-            return dateA - dateB;
-          })
-          // --- FRONTEND SLNO GENERATION ---
-          .map((item, index) => ({
-            ...item,
-            slno1: index + 1
-          }));
+        // Process Print Data directly
+        const processedData = printData
+          .map((item, index) => {
+            return {
+              ...item,
+              // Map 'jobno' from API to 'jobno_oms' used in Grid Columns
+              jobno_oms: item.jobno || '', 
+              slno1: index + 1
+            };
+          });
 
         setDataSource(processedData);
         setTotalCount(processedData.length);
         setShowingCount(processedData.length);
-        setQualityControllers(qcData.slice(0, 10));
       } catch (err: any) {
         console.error("Fetch error:", err); setError(err.message);
       } finally { setLoading(false); }
@@ -212,20 +173,16 @@ const HeroFashionGrid13: React.FC = () => {
     }
     if (!gridRef.current) return;
     try {
-      // Get the persisted data (column width, order, sorting, filtering, etc.)
       const persist = gridRef.current.getPersistData();
       let persistedSettings: any = persist;
       try { persistedSettings = JSON.parse(persist); } catch (e) { /* keep as-is if not JSON */ }
 
-      // Clone the grid columns to preserve templates, header templates, and custom properties
       const gridColumns = Object.assign([], (gridRef.current as any).getColumns());
 
-      // Manually attach templates and header templates to persisted column data
       if (persistedSettings.columns && Array.isArray(persistedSettings.columns)) {
         persistedSettings.columns.forEach((persistedColumn: any) => {
           const column = gridColumns.find((col: any) => col.field === persistedColumn.field);
           if (column) {
-            // Preserve template, headerTemplate, and other custom properties
             persistedColumn.template = column.template;
             persistedColumn.headerTemplate = column.headerTemplate;
             persistedColumn.formatter = column.formatter;
@@ -258,14 +215,10 @@ const HeroFashionGrid13: React.FC = () => {
     if (!settingData) return alert('Setting not found');
     if (!gridRef.current) return;
     try {
-      // Parse the persisted data if it's a string
       let persistedState: any = settingData.data;
       if (typeof persistedState === 'string') {
         persistedState = JSON.parse(persistedState);
       }
-
-      // Apply the persisted state to the grid
-      // This includes column width, order, sorting, filtering, AND the preserved templates
       (gridRef.current as any).setProperties(persistedState, true);
 
       setTimeout(() => {
@@ -329,7 +282,7 @@ const HeroFashionGrid13: React.FC = () => {
   );
 
   // --- Templates ---
-  const imageFieldTemplate = (field: 'mainimagepath' | 'print_img' | 'prnmeaimg' | 'img_fpath') => (p: OrderData) => {
+  const imageFieldTemplate = (field: 'ordimg' | 'print_img' | 'tbimg' | 'mpic' | 'prnmeaimg') => (p: OrderData) => {
     if (!p[field]) return <div style={{ color: '#ccc', fontSize: '10px' }}>No Image</div>;
     return <img src={p[field]} alt="img" style={{ width: '70px', height: '70px', objectFit: 'contain', border: '1px solid #eee' }} />;
   };
@@ -390,7 +343,7 @@ const HeroFashionGrid13: React.FC = () => {
     <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
       <b>Fdt:</b> <span style={getDateStyle(p.Fdt || p.final_delivery_date)}>{highlightText(p.Fdt || p.final_delivery_date)}</span><br />
       <b>Dir:</b> {highlightText(p.director_sample_order)}<br />
-      <b>ST:</b> {highlightText(p.styleno)}<br />
+      <b>Sno:</b> {highlightText(p.styleno)}<br />
       <b>Uom:</b> {highlightText(p.uom)}<br />
       <b>Type:</b> {highlightText(p.production_type_inside_outside)}
     </div>
@@ -417,7 +370,7 @@ const HeroFashionGrid13: React.FC = () => {
     { text: '', prefixIcon: 'e-csvexport', id: 'export_csv', tooltipText: 'Export CSV' },
     { text: '', prefixIcon: 'e-excelexport', id: 'export_excel', tooltipText: 'Export Excel' },
     { text: '', prefixIcon: 'e-pdfexport', id: 'export_pdf', tooltipText: 'Export PDF' },
-    'ColumnChooser'
+    'ColumnChooser',
   ];
 
   const searchHighlightText = (key: string | undefined, gridElement: Node) => {
@@ -511,75 +464,20 @@ const HeroFashionGrid13: React.FC = () => {
       const records = gridRef.current.getFilteredRecords();
       setShowingCount(records ? (records as object[]).length : 0);
       searchHighlightText(gridRef.current?.searchSettings?.key, gridRef.current?.element);
-      searchHighlightText(gridRef.current?.searchSettings?.key, gridRef.current?.element);
     }
   };
+
+   const footerSum = (props: any) =>{
+    return (<span className='font-bold'>Q: {props.Sum}</span>)
+  }
 
   const rollnoTemplate = (props: any) => {
     let rollno = props.index
     if(rollno){
       return (<span>{++rollno}</span>)
+    
     }
   }
-
-  const footerSum = (props: any) =>{
-    return (<span className='font-bold'>Q: {props.Sum}</span>)
-  }
-
-  const footerCount = (props: any) =>{
-    return (<span className='font-bold'>C: {props.Count}</span>)
-  }
-
-  const qualityControllerEdit = {
-    create: () => {
-      const elem = document.createElement('input');
-      return elem;
-    },
-    read: (elem: HTMLElement) => {
-      const multiSelectObj = (elem as any).ej2_instances[0];
-      return multiSelectObj.value ? multiSelectObj.value.join(',') : '';
-    },
-    destroy: () => {
-      // Cleanup if needed
-    },
-    write: (args: any) => {
-      const currentValue = args.rowData[args.column.field];
-      const valueArray = currentValue ? currentValue.split(',').map((v: string) => v.trim()).filter(Boolean) : [];
-
-      // Use vanilla JS MultiSelect instead of React component
-      const multiSelect = new MultiSelect({
-        dataSource: qualityControllers,
-        fields: { text: 'name', value: 'name' }, // Adjust based on your API response
-        value: valueArray,
-        placeholder: 'Select Quality Controllers',
-        mode: 'Box',
-        showDropDownIcon: true,
-        popupHeight: '200px',
-        allowFiltering: true,
-        filterBarPlaceholder: 'Search controllers...'
-      });
-      multiSelect.appendTo(args.element);
-    }
-  };
-
-  const tooltipOpen = (args: any) => {
-    let img = args.target.querySelector('img')
-    if (img) {
-      (tooltipRef.current as TooltipComponent).content = args.target.innerHTML
-    }
-    else {
-      (tooltipRef.current as TooltipComponent).content = args.target.innerText;
-    }
-  }
-
-  // const toolbarClick = (args: any) => {
-  //   if (gridRef && args.item.id === 'export_pdf') { // 'Grid_pdfexport' -> Grid component id + _ + toolbar item name
-  //     const exportProperties = {
-  //       exportType: 'CurrentPage'
-  //     };
-  //     gridRef.pdfExport(exportProperties);
-  //   }
-  // }
 
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#fff', minWidth: 0, overflow: 'hidden' }}>
@@ -692,7 +590,7 @@ const HeroFashionGrid13: React.FC = () => {
             white-space: nowrap;
             border: 1px solid #dce1e6;
             display:block;
-            width: 70px;
+            width: 60px;
             float: right;
             }
             .count{
@@ -703,7 +601,6 @@ const HeroFashionGrid13: React.FC = () => {
                   text-align: center;
                   margin-right: 0;
                   margin-bottom: 5px;
-                  fontStyle:'Bold' ;
                   order: 1;
                   }
                   .header-controls {
@@ -766,7 +663,7 @@ const HeroFashionGrid13: React.FC = () => {
           />
         </div>
         <div style={{ padding: '12px 18px', borderBottom: '1px solid #eee', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8,fontStyle:'Bold' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             {/* <label style={{ fontSize: '13px', fontWeight: '500', color: '#333', whiteSpace: 'nowrap' }}>Setting Name:</label> */}
             <TextBoxComponent
               ref={settingNameRef}
@@ -781,6 +678,7 @@ const HeroFashionGrid13: React.FC = () => {
             style={{ padding: '6px 12px', fontSize: '13px', border: "2px" }}
           >
             💾
+
           </ButtonComponent>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -821,19 +719,15 @@ const HeroFashionGrid13: React.FC = () => {
         ) : error ? (
           <div style={{ padding: '50px', textAlign: 'center', color: 'red' }}>Error: {error}</div>
         ) : (
-          <><div><TooltipComponent ref={tooltipRef} target=".e-rowcell" beforeOpen={tooltipOpen}>
           <GridComponent
-            id="default-aggregate-grid"
             ref={gridRef}
             dataSource={dataSource}
             dataBound={dataBound}
-            height="440px"
+            height="430px"
             enableVirtualization={true}
             rowHeight={95}
             allowSorting={true}
             allowFiltering={true}
-            allowMultiSorting={true}
-            filterSettings={{type:'CheckBox'}}
             allowGrouping={true}
             allowTextWrap={true}
             showColumnMenu={true}
@@ -842,10 +736,9 @@ const HeroFashionGrid13: React.FC = () => {
             adaptiveUIMode = {'Mobile'}      
             allowReordering={true}
             allowResizing={true}
-            allowPdfExport={true}
             // filterSettings={{ type: 'Excel' }}
             gridLines="Both"
-            searchSettings={{ fields:["jobno_oms", "quality_controller"], operator: 'contains', ignoreCase: true }}
+            searchSettings={{ fields: searchableFields, operator: 'contains', ignoreCase: true }}
             toolbar={toolbarOptions}
             editSettings={{
               allowDeleting: true,
@@ -857,64 +750,87 @@ const HeroFashionGrid13: React.FC = () => {
             actionBegin={actionBegin}
             actionComplete={actionComplete}
             created={created}
-            // toolbarClick={toolbarClick}
+
+
           >
             <ColumnsDirective>
 
-              <ColumnDirective isPrimaryKey={true} field="jobno_oms" headerText="ORDER INFO" width="120" maxWidth="120" freeze='Left' template={orderSummaryTemplate} allowEditing={false}/>
-              <ColumnDirective field="mainimagepath" headerText="IMG" freeze='Left' width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('mainimagepath')} allowEditing={false} />
-              <ColumnDirective field="qltycontroller" headerText="QC-ms" width="100" template={genericHighlighter('qltycontroller')} edit={qualityControllerEdit} allowEditing={true} />
-              <ColumnDirective field="Fdt" headerText="DELIVERY INFO" width="150" maxWidth="150" template={deliveryInfoTemplate} />
-              <ColumnDirective headerText='fsn' width="90" textAlign="Center" allowFiltering={true} template={rollnoTemplate} allowEditing={false}/>
-              <ColumnDirective field="print_img" headerText="PRN IMG" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('print_img')} />
-              <ColumnDirective field="prnmeaimg" headerText="MEAS IMG" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('prnmeaimg')} />
-              {/* <ColumnDirective field="img_fpath" headerText="AOP" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('img_fpath')} /> */}
-              <ColumnDirective field="prnclr" headerText="PRN COL" width="100" template={genericHighlighter('prnclr')} />
-              <ColumnDirective field="u25" headerText="25 WEEK" width="100" template={genericHighlighter('u25')} />
-              <ColumnDirective field="abc" headerText="ABC" width="100" template={genericHighlighter('abc')} />
-              <ColumnDirective field="u46" headerText="46 EMPTY" width="100" template={genericHighlighter('u46')} />
-              <ColumnDirective field="production_type_inside_outside" headerText="PRD TYPE" width="100" template={genericHighlighter('production_type_inside_outside')} />
-              <ColumnDirective field="u37" headerText="37 AOP" width="100" template={genericHighlighter('u37')} />
-              <ColumnDirective field="printing_R" headerText="1 PRINT" width="100" template={genericHighlighter('printing_R')} />
-              <ColumnDirective field="u8" headerText="8 FAB" width="100" template={genericHighlighter('u8')} />
+             
+
+              {/* <ColumnDirective isPrimaryKey={true} field="jobno_oms" headerText="ORDER INFO" width="130" freeze='Left' template={orderSummaryTemplate} allowEditing={false}/>
+              <ColumnDirective field="mainimagepath" headerText="IMG" width="100" freeze='Left' textAlign="Center" allowFiltering={false} template={imageFieldTemplate('mainimagepath')} allowEditing={false} />
+             */}
+              {/* <ColumnDirective field="Fdt" headerText="DELIVERY INFO" width="150" template={deliveryInfoTemplate} /> */}
+              <ColumnDirective field="jobno" headerText="jobno" width="90" template={genericHighlighter('jobno')} />
+              <ColumnDirective field="merch" headerText="merch" width="90" template={genericHighlighter('merch')} />
+              <ColumnDirective field="Buyer" headerText="Buyer" width="90" template={genericHighlighter('Buyer')} />
+              <ColumnDirective field="production_unit" headerText="p_unit" width="90" template={genericHighlighter('production_unit')} />
+              <ColumnDirective field="printing_r" headerText="print_r" width="90" template={genericHighlighter('printing_r')} />
+              <ColumnDirective field="number_03_emb" headerText="emb" width="80" template={genericHighlighter('number_03_emb')} />
+              <ColumnDirective field="u37" headerText="u37 aop" width="100" template={genericHighlighter('u37')} />
+
+              <ColumnDirective field="clrcomb" headerText="clrcomb" width="100" template={genericHighlighter('clrcomb')} />
+              <ColumnDirective field="print_ty" headerText="print_ty" width="100" template={genericHighlighter('print_ty')} />
+              <ColumnDirective field="print_des" headerText="print_des" width="100" template={genericHighlighter('print_des')} />
+              <ColumnDirective field="part" headerText="part" width="90" template={genericHighlighter('part')} />
+              <ColumnDirective field="groundclr" headerText="gclr" width="75" template={genericHighlighter('groundclr')} />
+              <ColumnDirective field="clr" headerText="clr" width="145" template={genericHighlighter('clr')} />
+              <ColumnDirective field="ordimg" headerText="ord_img" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('ordimg')} />
+               <ColumnDirective field="tbimg" headerText="top_bot" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('tbimg')} />
+              <ColumnDirective field="print_img" headerText="PRN IMG" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('print_img')} />
+              <ColumnDirective field="prnmeaimg" headerText="PLT" width="80" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('prnmeaimg')} />
+
+              {/* <ColumnDirective field="prnmeaimg" headerText="PLT" width="80" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('prnmeaimg')} /> */}
+              <ColumnDirective field="mpic" headerText="MMC" width="80" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('mpic')} />
+              <ColumnDirective field="in_out" headerText="in_out" width="90" template={genericHighlighter('in_out')} />
+              <ColumnDirective field="noclr" headerText="noclr" width="50" template={genericHighlighter('noclr')} />
+              <ColumnDirective field="sup" headerText="sup" width="90" template={genericHighlighter('sup')} />
+               <ColumnDirective field="prnmeaimg" headerText="PLT" width="80" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('prnmeaimg')} />
+
+              <ColumnDirective field="u7" headerText="udf allow 7" width="66" template={genericHighlighter('u7')} />
+              <ColumnDirective headerText='Fsn' width="80" textAlign="Center" template={rollnoTemplate} allowEditing={false}/>
+              {/* <ColumnDirective field="reference" headerText="reference" width="400" template={genericHighlighter('reference')} />
+              <ColumnDirective field="quality_controller" headerText="QC" width="80" template={genericHighlighter('quality_controller')} />
+              <ColumnDirective field="qltycontroller" headerText="QC-Ms" width="80" template={genericHighlighter('qltycontroller')} />
+              <ColumnDirective field="u14" headerText="14 DY" width="80" minWidth="50" template={genericHighlighter('u14')} /> */}
+              {/* <ColumnDirective field="img_fpath" headerText="AOP" width="200" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('img_fpath')} /> */}
+              {/* <ColumnDirective field="clr" headerText="clr" width="350" template={genericHighlighter('clr')} /> */}
+              {/* <ColumnDirective field="u25" headerText="25 w" width="80" template={genericHighlighter('u25')} />
+              <ColumnDirective field="abc" headerText="ABC" width="80" template={genericHighlighter('abc')} />
+              <ColumnDirective field="u46" headerText="46 EMPTY" width="80" template={genericHighlighter('u46')} />
+              <ColumnDirective field="production_type_inside_outside" headerText="PR TYPE" width="80" template={genericHighlighter('production_type_inside_outside')} />
+              <ColumnDirective field="u37" headerText="37 AOP" width="90" template={genericHighlighter('u37')} />
+              <ColumnDirective field="printing_R" headerText="1 PR" width="80" template={genericHighlighter('printing_R')} />
+              <ColumnDirective field="u8" headerText="8 FAB" width="90" template={genericHighlighter('u8')} />
               <ColumnDirective field="u36" headerText="36 FABIN" width="90" template={genericHighlighter('u36')} />
-              <ColumnDirective field="u15" headerText="15" width="90" template={genericHighlighter('u15')} />
+              <ColumnDirective field="u15" headerText="15" width="70" template={genericHighlighter('u15')} />
               <ColumnDirective field="u45" headerText="45 ORDER" width="90" template={genericHighlighter('u45')} />
-              <ColumnDirective field="u31" headerText="31 ITS" width="90" template={genericHighlighter('u31')} />
-              <ColumnDirective field="u141" headerText="141 SAMPLE" width="100" template={genericHighlighter('u141')} />
-              <ColumnDirective field="Emb" headerText="3 EMB" width="90" template={genericHighlighter('Emb')} />
-              <ColumnDirective field="buyer1" headerText="BUYER" width="100" template={genericHighlighter('buyer1')} />
-              <ColumnDirective field="merch" headerText="MERCH" width="100" template={genericHighlighter('merch')} />
-              <ColumnDirective field='punit_sh' headerText="punit_sh" width="100" template={genericHighlighter('punit_sh')} />
-
-
-              <ColumnDirective field="styleno" headerText="STYLE NO" width="110" template={genericHighlighter('styleno')} />
+              <ColumnDirective field="u31" headerText="31 ITS" width="80" template={genericHighlighter('u31')} />
+              <ColumnDirective field="u141" headerText="141 SAMPLE" width="90" template={genericHighlighter('u141')} />
+              <ColumnDirective field="Emb" headerText="3 EM" width="80" template={genericHighlighter('Emb')} />
+              <ColumnDirective field="merch" headerText="MERCH" width="90" template={genericHighlighter('merch')} />
+              <ColumnDirective field="styleno" headerText="STYLE NO" width="90" template={genericHighlighter('styleno')} />
               <ColumnDirective field="director_sample_order" headerText="DIR S/O" width="100" template={genericHighlighter('director_sample_order')} />
-              <ColumnDirective field="order_follow_up" headerText="ORD FOLLOW UP" width="100" template={genericHighlighter('order_follow_up')} />
-              <ColumnDirective field="u7" headerText="U7" width="100" template={genericHighlighter('u7')} />
-              <ColumnDirective field="quality_controller" headerText="QC" width="100" template={genericHighlighter('quality_controller')}/>
-              <ColumnDirective field="slno1" headerText="No" width="90" textAlign="Center" />
-              <ColumnDirective field="u14" headerText="14 DY" width="70" minWidth="90" template={genericHighlighter('u14')} />
-              <ColumnDirective field="styledesc" headerText="DESC" width="160" template={genericHighlighter('styledesc')} />
-              <ColumnDirective field="reference" headerText="reference" width="250" maxWidth="250" template={genericHighlighter('reference')} />
-              <ColumnDirective field="quantity" headerText="QTY" width="90" textAlign="Right" template={genericHighlighter('quantity')} />
-              <ColumnDirective field="company_name" headerText="COMPANY" width="90" template={genericHighlighter('company_name')} />
-
+              <ColumnDirective field="order_follow_up" headerText="ORD FOLLOW UP" width="130" template={genericHighlighter('order_follow_up')} />
+              <ColumnDirective field="styledesc" headerText="DESC" width="90" template={genericHighlighter('styledesc')} />
+              <ColumnDirective field="quantity" headerText="QTY" width="80" textAlign="Right" template={genericHighlighter('quantity')} />
+              <ColumnDirective field="company_name" headerText="COMPANY" width="120" template={genericHighlighter('company_name')} />
+               <ColumnDirective field="slno1" headerText="SL NO" width="60"textAlign="Center"
+              /> */}
             </ColumnsDirective>
-            <AggregatesDirective>
-              <AggregateDirective>
-                <AggregateColumnsDirective>
-                  <AggregateColumnDirective field='slno1'  type='Count' footerTemplate={footerCount} format='N'> </AggregateColumnDirective>
-                  <AggregateColumnDirective field='quantity'  type='Sum' footerTemplate={footerSum} format='N'> </AggregateColumnDirective>
-                </AggregateColumnsDirective>
-              </AggregateDirective>
-            </AggregatesDirective>
-            <Inject services={[Sort, Edit, Filter, Group, Reorder, Search, VirtualScroll, Freeze, Resize, ContextMenu, Page, Toolbar, ColumnChooser, ColumnMenu, Aggregate, PdfExport]} />
-          </GridComponent></TooltipComponent></div></>
+               <AggregatesDirective>
+                          <AggregateDirective>
+                            <AggregateColumnsDirective>
+                              <AggregateColumnDirective field='quantity'  type='Sum' footerTemplate={footerSum} format='N'> </AggregateColumnDirective>
+                            </AggregateColumnsDirective>
+                          </AggregateDirective>
+                        </AggregatesDirective>
+            <Inject services={[Sort, Edit, Filter, Group, Reorder, Search, VirtualScroll, Freeze, Resize, ContextMenu, Page, Toolbar, ColumnChooser, ColumnMenu,Aggregate]} />
+          </GridComponent>
         )}
       </div>
     </div>
   );
 };
 
-export default HeroFashionGrid13;
+export default PRN;

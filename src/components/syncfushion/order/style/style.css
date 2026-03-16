@@ -97,4 +97,20 @@
 .e-icons.session::before        { content: "◌"; }
 .e-icons.profile::before        { content: "👤"; }
 .e-icons.views::before          { content: "👁"; }
-.e-icons::before { font-size: 18px; line-height: 1; }
+.e-grid .e-icons:not(.e-icon-filter)::before {
+  font-size: 18px;
+  line-height: 1;
+}
+ 
+
+
+::highlight(search) {
+
+  background-color: yellow;
+  color: inherit;
+  }
+
+.e-grid .e-headertext {
+  color: black;
+  font-weight: 900;
+}

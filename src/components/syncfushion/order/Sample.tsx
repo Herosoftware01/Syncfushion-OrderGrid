@@ -1,22 +1,24 @@
-import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-
+import { useEffect, useState, useRef, } from "react";
 import {
   GridComponent,
   ColumnsDirective,
   ColumnDirective,
   Inject,
   Toolbar,
-  Sort,
   Filter,
   Group,
   Page,
+  Sort,
   Search,
-  FilterSettingsModel
+  FilterSettingsModel,
+  Edit,
+  toolbarClick
 } from "@syncfusion/ej2-react-grids";
 import { DataManager, WebApiAdaptor, Query } from "@syncfusion/ej2-data";
 
+
 import "./style/style.css";
+import { ClickEventArgs } from "@syncfusion/ej2-react-navigations/src";
 
 interface OrderRow {
   jobno_oms: string;
@@ -37,7 +39,6 @@ interface OrderRow {
   validationStatus?: "OK" | "Pending";
   validationNotes?: string;
 }
-
 // Fallback data if API fails
 const sampleDataRaw = [
   {
@@ -114,7 +115,6 @@ const normalizeRows = (rows: any[]): OrderRow[] =>
   });
 
 function Sample() {
-  const navigate = useNavigate();
   const [gridData, setGridData] = useState<OrderRow[]>([]);
   const [apiAvailable, setApiAvailable] = useState(true);
 
@@ -182,9 +182,6 @@ function Sample() {
     updateRowCounts();
   }, [gridData]);
 
-  const handleTopNavigate = () => navigate("/details");
-
-  // Fixed image template with stable key and error handling
   const imageTemplate = (props: OrderRow) => {
     const [imgSrc, setImgSrc] = useState(props.mainimagepath);
     
@@ -240,7 +237,7 @@ function Sample() {
       align: "Right",
       template: RowCountBadge
     },
-    { text: '', prefixIcon: 'e-add', id: 'add_icon', tooltipText: 'Add Records' },
+      'Add',
       'Edit',
       'Delete',
       'Update',
@@ -259,13 +256,19 @@ function Sample() {
       { text: '', prefixIcon: 'e-csvexport', id: 'export_csv', tooltipText: 'Export CSV' },
       { text: '', prefixIcon: 'e-excelexport', id: 'export_excel', tooltipText: 'Export Excel' },
       { text: '', prefixIcon: 'e-pdfexport', id: 'export_pdf', tooltipText: 'Export PDF' },
+      'ColumnChooser',
   ];
 
+  const toolbarClick =(args: ClickEventArgs) =>{
+    console.log(args)
+    if (args.item.id === "clearsorting_icon"){
+      gridRef.current?.clearSorting()
+    }
+  }  
   const filterSettings: FilterSettingsModel = { type: "Excel" };
 
   const onDataBound = () => updateRowCounts();
   const onActionComplete = () => updateRowCounts();
-  const [prompts, setPrompts] = useState<any[]>([]);
 
   return (
     <div id="assistive-grid" style={{ padding: "12px" }}>
@@ -283,10 +286,21 @@ function Sample() {
         height={650}
         allowPaging={true}
         allowFiltering={true}
+        allowTextWrap={true}
+        allowReordering={true}
+        allowResizing={true}
         allowSorting={true}
+        showColumnChooser={true}      
         allowGrouping={true}
+            editSettings={{
+                    allowDeleting: true,
+                    allowEditing: true,
+                    allowEditOnDblClick:false,
+                    allowAdding: true,
+                }}
         filterSettings={filterSettings}
         toolbar={toolbarOptions}
+        toolbarClick={toolbarClick}
         dataBound={onDataBound}
         actionComplete={onActionComplete}
       >
@@ -318,7 +332,7 @@ function Sample() {
           />
         </ColumnsDirective>
 
-        <Inject services={[Toolbar, Sort, Filter, Group, Page, Search]} />
+        <Inject services={[Toolbar, Filter, Group, Page, Search, Edit, Sort]} />
       </GridComponent>
     </div>
   );
