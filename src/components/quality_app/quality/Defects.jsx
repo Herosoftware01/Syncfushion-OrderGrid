@@ -121,32 +121,32 @@ const handleDecrement = (id) => {
 
         <div className="flex gap-4 p-4 bg-gray-100 mb-2 rounded-xl">
             <div>
-                <label htmlFor="Bundle No" className="text-gray-500 font-semibold">Bundle No :</label>
+                <label htmlFor="Bundle No" className="text-gray-500 font-semibold">No of Garment Inspected:</label>
                 <input
                 type="text"
                 //   value={bundleNo}
-                placeholder="Bundle No"
+                placeholder="Garment Inspected"
                 className="w-full h-[60px] px-5 rounded-2xl border border-slate-200 bg-white"
                 />
             </div>
 
 
             <div>
-                <label htmlFor="Bundle No" className="text-gray-500 font-semibold">Bundle No :</label>
+                <label htmlFor="Bundle No" className="text-gray-500 font-semibold">Mistake Found :</label>
                 <input
                 type="text"
                 //   value={bundleNo}
-                placeholder="Bundle No"
+                placeholder="Mistake Found"
                 className="w-full h-[60px] px-5 rounded-2xl border border-slate-200 bg-white"
                 />
             </div>
 
             <div>
-                <label htmlFor="Bundle No" className="text-gray-500 font-semibold">Bundle No :</label>
+                <label htmlFor="Bundle No" className="text-gray-500 font-semibold">Mistake %</label>
                 <input
                 type="text"
                 //   value={bundleNo}
-                placeholder="Bundle No"
+                placeholder="100 %"
                 className="w-full h-[60px] px-5 rounded-2xl border border-slate-200 bg-white"
                 />
             </div>
