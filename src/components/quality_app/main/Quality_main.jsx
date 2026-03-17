@@ -3,6 +3,7 @@ import Quality_admin from "../admin_control/Quality_admin";
 import Qc from "../quality/Qc";
 import LineDetail from "../quality/LineDetail"
 import ProductionDetails from "../quality/ProductDetails"
+import DefectTabs from "../quality/Defects"
 
 function Quality_main() {
   return (
@@ -11,6 +12,7 @@ function Quality_main() {
       <Route path="qc" element={<Qc />} />
       <Route path="line/:unit/:line" element={<LineDetail />} />
       <Route path="qc-entry/:unit/:line/first-piece" element={<ProductionDetails />} />
+      <Route path="/defects/:unit/:line" element={<DefectTabs />} />
     </Routes>
   );
 }

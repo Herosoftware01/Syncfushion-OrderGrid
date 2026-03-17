@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
+import Defects from "../quality/Defects"
 
 export default function ProductionDetails() {
 
@@ -18,27 +19,39 @@ export default function ProductionDetails() {
 
   const canContinue = jobNo && product && pieces;
 
-  // 🔥 Dummy Database
-  const bundleDatabase = {
-    B123: { jobNo: "J001", product: "T-Shirt", colour: "Navy Blue", size: "XL", pieces: 25 },
-    B124: { jobNo: "J002", product: "Polo", colour: "Black", size: "L", pieces: 30 }
-  };
 
-  // 🔥 Auto-fill based on scanned bundle
-  const fillBundleData = (bundle) => {
-    const data = bundleDatabase[bundle];
-    if (!data) {
+const fillBundleData = async (bundle) => {
+  if (!bundle) return;
+
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/qcapp/get_bundle_data/?bundle_id=${bundle}`
+    );
+
+    const data = await response.json();
+
+    if (!data || data.length === 0) {
       alert("Bundle Not Found");
       return;
     }
-    setJobNo(data.jobNo);
-    setProduct(data.product);
-    setColour(data.colour);
-    setSize(data.size);
-    setPieces(data.pieces);
-  };
 
-  // 🔥 QR Scanner
+    const item = data[0]; 
+
+
+
+    setJobNo(item.jobno || "");
+    setProduct(item.TopBottom_des || "");
+    setColour(item.Comboclr || "");
+    setSize(item.SizeName || "");
+    setPieces(item.pc || "");
+    setBundleNo(item.Bdl || "");
+
+  } catch (error) {
+    console.error("API Error:", error);
+    alert("Server error");
+  }
+};
+  
   useEffect(() => {
     let scanner = null;
     if (isScanning) {
@@ -67,7 +80,8 @@ export default function ProductionDetails() {
 
   const handleContinue = () => {
     if (!canContinue) return;
-    navigate(`/qc-entry/${unit}/${line}/first-piece/defects`);
+    // navigate(Defects);
+    navigate(`/qc-admin/defects/${unit}/${line}`);
   };
 
   return (
