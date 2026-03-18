@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
+import { useContext } from "react";
+import { UserContext } from "../../../UserContext";
 import {
   GridComponent,
   ColumnsDirective,
@@ -51,7 +53,7 @@ interface OrderData {
   quality_controller: string; reference: string; insdatenew: string; styledesc: string;
   date: string; ourdelvdate: string; podate: string; vessel_dt: string; vessel_yr: string;
   shipment_complete: string; u7: string; u141: string; u45: string; u36: string; u31: string;
-  u15: string; u14: string; u8: string; u25: string; insdate: string; insdateyear: string;
+  u15: string; u14: string; u8: string; u25: string; insdate: string; insdateyear: string;finaldelvdate1:string;
   actdaten: string; actyeardate: string; pono: string; u46: string; u37: string; qltycontroller: string;Print:string;others1:string;
   mainimagepath: string; finaldelvdate: string; prnclr?: string | null; prnfile1?: string; prnfile2?: string; img_fpath?: string;clr?:string;print_img?:string;
   prnmeaimg?:String;mpic?:string;
@@ -66,9 +68,23 @@ const HeroFashionGrid13: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchKey, setSearchKey] = useState<string>('');
-  const [savedSettings, setSavedSettings] = useState<Array<{
-    id: number; name: string; data: any 
-}>>([]);
+  // const [userName, setUserName] = useState("");
+  const { username } = useContext(UserContext);
+
+  // const [savedSettings, setSavedSettings] = useState<Array<{
+    // id: number; name: string; data: any; user: string; 
+// }>>([]);
+
+
+interface SavedSetting {
+  id: number;
+  name: string;
+  data: any;
+  user: string; // <-- add this
+}
+
+const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
+
   const [selectedSetting, setSelectedSetting] = useState<string>('');
   const [qualityControllers, setQualityControllers] = useState<any[]>([]);
 
@@ -189,129 +205,11 @@ const HeroFashionGrid13: React.FC = () => {
       } finally { setLoading(false); }
     };
     fetchData();
-    // loadSettingsFromStorage();
+   
     fetchSavedSettings();
   }, []);
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       setLoading(true);
-  //       setError(null);
-
-  //       // 1. Concurrent Fetching
-  //       const [orderResponse, printResponse, qcResponse] = await Promise.all([
-  //         fetch('https://app.herofashion.com/order_panda'),
-  //         // fetch('https://app.herofashion.com/PrintRgb/'),
-  //         fetch('https://app.herofashion.com/ord_prn/'),
-  //         fetch('https://app.herofashion.com/get_quality_controllers/')
-  //       ]);
-
-  //       if (!orderResponse.ok || !printResponse.ok || !qcResponse.ok) {
-  //         throw new Error("Failed to fetch data from APIs");
-  //       }
-
-  //       const orderData: OrderData[] = await orderResponse.json();
-  //       const printData: any[] = await printResponse.json();
-  //       const qcData: any[] = await qcResponse.json();
-
-  //       // 2. Efficient Mapping
-  //       const printMap: Record<string, any> = {};
-  //       printData.forEach(item => { if (item.jobno) printMap[item.jobno] = item; });
-
-  //       const processedData = orderData
-  //         .map((order) => {
-  //           const matchingPrintData = printMap[order.jobno_oms] || {};
-  //           return {
-  //             ...order,
-  //             clr: matchingPrintData.clr || null,
-  //             print_img: matchingPrintData.print_img || '',
-  //             prnmeaimg: matchingPrintData.prnmeaimg || '',
-  //             mpic: matchingPrintData.mpic || '',
-  //           };
-  //         })
-  //         // 3. Date Filtering (Preventing future-dated errors)
-  //         .filter((item) => {
-  //           const dateStr = item.finaldelvdate || item.final_delivery_date;
-  //           if (!dateStr) return true;
-  //           const dateParts = dateStr.split(/[-/]/);
-  //           let year = 0;
-  //           if (dateParts.length === 3) {
-  //             const p0 = parseInt(dateParts[0]);
-  //             const p2 = parseInt(dateParts[2]);
-  //             year = p0 > 1000 ? p0 : (p2 < 100 ? 2000 + p2 : p2);
-  //           }
-  //           return year <= 2127;
-  //         })
-  //         // 4. Sorting logic
-  //         .sort((a, b) => {
-  //           const typeA = (a.director_sample_order || '').toLowerCase();
-  //           const typeB = (b.director_sample_order || '').toLowerCase();
-  //           if (typeA !== typeB) {
-  //             if (typeA === 'sample') return -1;
-  //             if (typeB === 'sample') return 1;
-  //             return typeA.localeCompare(typeB);
-  //           }
-  //           const dateA = new Date(a.finaldelvdate || a.final_delivery_date || 0).getTime();
-  //           const dateB = new Date(b.finaldelvdate || b.final_delivery_date || 0).getTime();
-  //           return dateA - dateB;
-  //         })
-  //         // 5. Generate Serial Numbers
-  //         .map((item, index) => ({
-  //           ...item,
-  //           slno1: index + 1
-  //         }));
-
-  //       // 6. Update State
-  //       setDataSource(processedData);
-  //       setTotalCount(processedData.length);
-  //       setShowingCount(processedData.length);
-  //       setQualityControllers(qcData.slice(0, 10));
-
-  //       // 7. Grid Ref Manipulations (Added logic)
-  //         if (gridRef.current) {
-  //     setTimeout(() => {
-  //       // Cast to any to access the methods
-  //       (gridRef.current as any).collapseAll();
-        
-  //       setTimeout(() => {
-  //         (gridRef.current as any).expandGroup("ABC: A");
-  //       }, 2000);
-  //     }, 0);
-  //   }
-
-
-  //     } catch (err: any) {
-  //       console.error("Fetch error:", err);
-  //       setError(err.message);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchData();
-  //   loadSettingsFromStorage();
-  // }, []); // Mount only
-
+  
   const STORAGE_KEY = 'MainSettings';
-
-  // const loadSettingsFromStorage = () => {
-  //   try {
-  //     const raw = localStorage.getItem(STORAGE_KEY);
-  //     if (!raw) {
-  //       setSavedSettings([]);
-  //       return;
-  //     }
-  //     const parsed = JSON.parse(raw);
-  //     if (Array.isArray(parsed)) {
-  //       setSavedSettings(parsed);
-  //     } else {
-  //       setSavedSettings([]);
-  //     }
-  //   } catch (e) {
-  //     console.error('Failed to load saved grid settings', e);
-  //     setSavedSettings([]);
-  //   }
-  // };
 
   const fetchSavedSettings = async () => {
   try {
@@ -349,9 +247,12 @@ const HeroFashionGrid13: React.FC = () => {
       });
     }
 
-    const payload = { name, data: persistedSettings };
+    const payload = { name, data: persistedSettings, user: username };
+
+    console.log("Saving payload:", payload);
 
     const existing = savedSettings.find(s => s.name === name);
+    
     const method = existing ? 'PUT' : 'POST';
     const url = existing
       ? `https://hfapi.herofashion.com/syncfushion/api/grid-settings/${existing.id}/`
@@ -371,6 +272,7 @@ const HeroFashionGrid13: React.FC = () => {
       settingNameRef.current.value = '';
       }
     alert('Setting saved');
+    console.log("Saving grid setting for user:", username);
   } catch (err) {
     console.error(err);
     alert('Failed to save setting');
@@ -387,6 +289,19 @@ const HeroFashionGrid13: React.FC = () => {
 
   try {
     let persistedState = setting.data;
+    const gridColumns = Object.assign([], (gridRef.current as any).getColumns());
+    if (persistedState.columns && Array.isArray(persistedState.columns)) {
+      persistedState.columns.forEach((persistedColumn: any) => {
+        const origCol = gridColumns.find((c: any) => c.field === persistedColumn.field);
+        if (origCol) {
+          persistedColumn.template = origCol.template;
+          persistedColumn.headerTemplate = origCol.headerTemplate;
+          persistedColumn.formatter = origCol.formatter;
+          persistedColumn.valueAccessor = origCol.valueAccessor;
+        }
+      });
+    }
+
     (gridRef.current as any).setProperties(persistedState, true);
       setTimeout(() => {
         if (gridRef.current) {
@@ -490,6 +405,30 @@ const HeroFashionGrid13: React.FC = () => {
         // searchHighlightText(gridRef.current?.searchSettings?.key, gridRef.current.element);
       }
     }
+     if (gridRef.current && args.requestType === 'beginEdit') {
+            const cols: any = gridRef.current?.columns;
+            for (const col of cols) {
+                if (col.field === "jobno_oms" || col.field === "mainimagepath" || col.field === "Print") {
+                    col.visible = false;
+                }
+            }
+        }
+        // if (gridRef.current && args.requestType === 'add') {
+        //     const cols: any = gridRef.current?.columns;
+        //     for (const col of cols) {
+        //         if (col.field === "jobno_oms" || col.field === "mainimagepath") {
+        //             col.visible = true;
+        //         }
+        //     }
+        // }
+        if (gridRef.current && args.requestType === 'save') {
+            const cols: any = gridRef.current?.columns;
+            for (const col of cols) {
+                if (col.field === "jobno_oms" || col.field === "mainimagepath" || col.field === "Print") {
+                    col.visible = true;
+                }
+            }
+        }
     if (args.requestType === 'save') {
       if ((args as any).action === 'edit') {
         console.log(args)
@@ -894,6 +833,8 @@ const HeroFashionGrid13: React.FC = () => {
           <ColumnDirective field="prnmeaimg" headerText="MEAS IMG" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('prnmeaimg')} />
           {/* <ColumnDirective field="img_fpath" headerText="AOP" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('img_fpath')} /> */}
           <ColumnDirective field="prnclr" headerText="PRN COL" width="100" template={genericHighlighter('prnclr')} />
+          <ColumnDirective field="finaldelvdate1" headerText="finaldelvdate1" width="100" template={genericHighlighter('finaldelvdate1')} />
+          <ColumnDirective field="actdaten" headerText="actdaten" width="100" template={genericHighlighter('actdaten')} />
           <ColumnDirective field="u25" headerText="25 WEEK" width="100" template={genericHighlighter('u25')} />
           <ColumnDirective field="abc" type="string" headerText="ABC" width="100" template={genericHighlighter('abc')} />
           <ColumnDirective field="u46" headerText="46 EMPTY" width="100" template={genericHighlighter('u46')} />
@@ -1138,17 +1079,22 @@ const HeroFashionGrid13: React.FC = () => {
     💾
   </ButtonComponent>
 
-  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-    <DropDownListComponent
-      ref={dropdownRef}
-      id="settings-dropdown"
-      dataSource={savedSettings.map(s => ({ text: s.name, value: s.id }))}
-      fields={{ text: 'text', value: 'value' }}
-      placeholder="Select setting..."
-      style={{ minWidth: '150px' }}
-      change={() => setSelectedSetting(dropdownRef.current?.value as string)}
-    />
-  </div>
+<div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+  <DropDownListComponent
+    ref={dropdownRef}
+    id="settings-dropdown"
+    dataSource={savedSettings
+      .filter(
+        s =>
+          s.user?.toLowerCase() === username?.toLowerCase() // normalize for comparison
+      )
+      .map(s => ({ text: s.name, value: s.id }))}
+    fields={{ text: 'text', value: 'value' }}
+    placeholder="Select setting..."
+    style={{ minWidth: '150px' }}
+    change={() => setSelectedSetting(dropdownRef.current?.value as string)}
+  />
+</div>
 
   <ButtonComponent
     onClick={applySetting}

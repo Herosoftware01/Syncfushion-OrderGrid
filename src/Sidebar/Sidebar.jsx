@@ -1,8 +1,11 @@
-import { useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import { ChevronDown, Menu, X, LayoutDashboard, User } from "lucide-react";
 import { api } from "../auth/auth";
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../auth/auth";
+
+import { UserContext } from "../UserContext";
+
 
 function Sidebar({ children }) {
   const [menus, setMenus] = useState([]);
@@ -11,21 +14,24 @@ function Sidebar({ children }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userName, setUserName] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const { setUsername } = useContext(UserContext); // update global context
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchSidebar = async () => {
-      try {
-        const res = await api.get("/sidebar/");
-        setMenus(res.data.menus || res.data);
-        setUserName(res.data.user?.username || "Admin");
-      } catch (err) {
-        console.error("Sidebar API error:", err);
-      }
-    };
+ useEffect(() => {
+  const fetchSidebar = async () => {
+    try {
+      const res = await api.get("/sidebar/");
+      setMenus(res.data.menus || []);
+      setUserName(res.data.user?.username || "Admin");
+      setUsername(res.data.user?.username || "Admin"); // global context
+    } catch (err) {
+      console.error("Sidebar API error:", err);
+    }
+  };
 
-    fetchSidebar();
+  fetchSidebar();
+
 
     const handleResize = () => {
       if (window.innerWidth < 1024) setSidebarOpen(false);
