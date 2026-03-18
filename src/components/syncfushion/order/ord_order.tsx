@@ -469,7 +469,7 @@ const HeroFashionGrid13: React.FC = () => {
     if (!p[field]) return <div style={{ color: '#ccc', fontSize: '10px' }}>No Image</div>;
     return <img src={p[field]} alt="img" style={{ width: '70px', height: '70px', objectFit: 'contain', border: '1px solid #eee' }} />;
   };
-  
+
   let serverUpdated = false;
   let newPrimaryKey: number | null = null;
   const actionBegin = (args: AddEventArgs | SaveEventArgs | EditEventArgs | DeleteEventArgs | ActionEventArgs) => {
@@ -496,7 +496,7 @@ const HeroFashionGrid13: React.FC = () => {
         if (!serverUpdated) {
           args.cancel = true;
           ajax.url =
-            'https://app.herofashion.com/udf7_update/';
+            'http://10.1.21.13:7004/udf7_update/';
           ajax.type = 'POST';
           ajax.data = JSON.stringify((args as any).data);
           ajax.send();
@@ -859,7 +859,7 @@ const HeroFashionGrid13: React.FC = () => {
         // showColumnChooser={true}
         enableAdaptiveUI={true}
         adaptiveUIMode={'Mobile'}
-
+        allowTextWrap={true}
         allowReordering={true}
         allowResizing={true}
         allowPdfExport={true}
@@ -884,6 +884,9 @@ const HeroFashionGrid13: React.FC = () => {
 
           <ColumnDirective isPrimaryKey={true} field="jobno_oms" headerText="ORDER INFO" width="120" maxWidth="120" template={orderSummaryTemplate} allowEditing={false} />
           <ColumnDirective field="mainimagepath" headerText="IMG" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('mainimagepath')} allowEditing={false} />
+          <ColumnDirective field="Print" headerText="Print" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Print')} allowEditing={false} />
+          <ColumnDirective field="Emb" headerText="Emb" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Emb')} allowEditing={false} />
+          <ColumnDirective field="others1" headerText="others1" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others1')} allowEditing={false} />
           <ColumnDirective field="qltycontroller" headerText="QC-ms" width="100" template={genericHighlighter('qltycontroller')} edit={qualityControllerEdit} allowEditing={true} />
           <ColumnDirective field="Fdt" headerText="DELIVERY INFO" width="150" maxWidth="150" template={deliveryInfoTemplate} />
           <ColumnDirective headerText='fsn' width="90" textAlign="Center" allowFiltering={true} template={rollnoTemplate} allowEditing={false} />
