@@ -411,12 +411,13 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
                 if (col.field === "jobno_oms" || col.field === "Print" || col.field==="print_img" || col.field==="prnclr" || col.field==="merch" || col.field==="buyer1"
                   || col.field==="punit_sh" || col.field==="punit_sh" || col.field==="styleno" ||  col.field==="director_sample_order"  ||  col.field==="director_sample_order" ||
                     col.field==="abc"  ||  col.field==="order_follow_up" ||  col.field==="styledesc" ||  col.field==="company_name" ||  col.field==="quantity" ||  col.field==="production_type_inside_outside"
-                  ||  col.field==="prnmeaimg" ||  col.field==="Emb"  ||  col.field==="others1"  ||  col.field==="u25" ||  col.field==="u45" ||  col.field==="u37" ||  col.field==="actdaten"  ||  col.field==="u46"  ||  col.field==="date" ||  col.field==="ourdelvdate" ||  col.field==="finaldelvdate1" ||  col.field==="u15" ||  col.field==="u14" 
+                  ||  col.field==="prnmeaimg" ||  col.field==="Emb"  ||  col.field==="others1"  ||  col.field==="u25" ||  col.field==="u45" ||  col.field==="slno1" || col.field==="u37" ||  col.field==="actdaten"  ||  col.field==="u46"  ||  col.field==="date" ||  col.field==="ourdelvdate" ||  col.field==="finaldelvdate1" ||  col.field==="u15" ||  col.field==="u14" 
                 ) {
                     col.visible = false;
                 }
             }
         }
+
         // if (gridRef.current && args.requestType === 'add') {
         //     const cols: any = gridRef.current?.columns;
         //     for (const col of cols) {
