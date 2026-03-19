@@ -408,11 +408,16 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
      if (gridRef.current && args.requestType === 'beginEdit') {
             const cols: any = gridRef.current?.columns;
             for (const col of cols) {
-                if (col.field === "jobno_oms" || col.field === "mainimagepath" || col.field === "Print") {
+                if (col.field === "jobno_oms" || col.field === "Print" || col.field==="print_img" || col.field==="prnclr" || col.field==="merch" || col.field==="buyer1"
+                  || col.field==="punit_sh" || col.field==="punit_sh" || col.field==="styleno" ||  col.field==="director_sample_order"  ||  col.field==="director_sample_order" ||
+                    col.field==="abc"  ||  col.field==="order_follow_up" ||  col.field==="styledesc" ||  col.field==="company_name" ||  col.field==="quantity" ||  col.field==="production_type_inside_outside"
+                  ||  col.field==="prnmeaimg" ||  col.field==="Emb"  ||  col.field==="others1"  ||  col.field==="u25" ||  col.field==="u45" ||  col.field==="slno1" || col.field==="u37" ||  col.field==="actdaten"  ||  col.field==="u46"  ||  col.field==="date" ||  col.field==="ourdelvdate" ||  col.field==="finaldelvdate1" ||  col.field==="u15" ||  col.field==="u14" 
+                ) {
                     col.visible = false;
                 }
             }
         }
+
         // if (gridRef.current && args.requestType === 'add') {
         //     const cols: any = gridRef.current?.columns;
         //     for (const col of cols) {
@@ -424,7 +429,7 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
         if (gridRef.current && args.requestType === 'save') {
             const cols: any = gridRef.current?.columns;
             for (const col of cols) {
-                if (col.field === "jobno_oms" || col.field === "mainimagepath" || col.field === "Print") {
+                if (col.field === "jobno_oms" || col.field === "Print") {
                     col.visible = true;
                 }
             }
@@ -818,12 +823,12 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
         actionComplete={actionComplete}
         created={created}
         frozenColumns={2}
-        toolbarClick={toolbarClick}
+        toolbarClick={toolbarClick} 
       >
         <ColumnsDirective>
 
           <ColumnDirective isPrimaryKey={true} field="jobno_oms" headerText="ORDER INFO" width="120" maxWidth="120" template={orderSummaryTemplate} allowEditing={false} />
-          <ColumnDirective field="mainimagepath" headerText="IMG" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('mainimagepath')} allowEditing={false} />
+          <ColumnDirective field="mainimagepath" headerText="IMG" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('mainimagepath')} allowEditing={true} />
           <ColumnDirective field="Print" headerText="Print" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Print')} allowEditing={false} />
           <ColumnDirective field="Emb" headerText="Emb" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Emb')} allowEditing={false} />
           <ColumnDirective field="others1" headerText="others1" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others1')} allowEditing={false} />
