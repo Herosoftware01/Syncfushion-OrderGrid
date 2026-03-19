@@ -798,6 +798,7 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
         allowFiltering={true}
         allowMultiSorting={true}
         filterSettings={{type:'CheckBox'}}
+        statelessTemplates={['directiveTemplates']}
         allowGrouping={true}
         showColumnMenu={true}
         // showColumnChooser={true}
@@ -1069,19 +1070,19 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
             className="search-input"
           />
         </div>
-        <div style={{ padding: '12px 18px', borderBottom: '1px solid #eee', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
+        <div style={{ padding: '8px 5px', borderBottom: '1px solid #eee', display: 'flex', gap: 7, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
   <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight:'bold' }}>
     <TextBoxComponent
       ref={settingNameRef}
-      placeholder="Enter setting name"
-      style={{ width: '120px' }}
+      placeholder="setting name"
+      style={{ width: '80px' }}
     />
   </div>
 
   <ButtonComponent
     onClick={saveSetting}
     cssClass="e-primary"
-    style={{ padding: '6px 12px', fontSize: '13px' }}
+    style={{ padding: '3px 6px', fontSize: '13px' }}
   >
     💾
   </ButtonComponent>
@@ -1097,8 +1098,8 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
       )
       .map(s => ({ text: s.name, value: s.id }))}
     fields={{ text: 'text', value: 'value' }}
-    placeholder="Select setting..."
-    style={{ minWidth: '150px' }}
+    placeholder="Select setting"
+    style={{ width: '80px' }}
     change={() => setSelectedSetting(dropdownRef.current?.value as string)}
   />
 </div>
@@ -1106,7 +1107,7 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
   <ButtonComponent
     onClick={applySetting}
     cssClass="e-outline"
-    style={{ padding: '6px 12px', fontSize: '13px' }}
+    style={{ padding: '3px 6px', fontSize: '15px' }}
   >
    ✔
   </ButtonComponent>
@@ -1114,7 +1115,7 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
   <ButtonComponent
     onClick={deleteSetting}
     cssClass="e-outline e-danger"
-    style={{ padding: '6px 12px', fontSize: '13px' }}
+    style={{ padding: '3px 6px', fontSize: '15px' }}
   >
     🗑
   </ButtonComponent>

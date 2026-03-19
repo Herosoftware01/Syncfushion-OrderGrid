@@ -51,17 +51,20 @@ const MachineReport = () => {
             const remarkExists = check.remark && check.remark.trim() !== '';
             
             // Logic: Count how many mistake types were recorded
-            const filledMistakes = MISTAKE_KEYS.filter(
-              key => check[key] && check[key].trim() !== '' && check[key] !== '0'
-            );
+            const hasBigMistake = MISTAKE_KEYS.some(key => {
+              const value = check[key];
+              if (!value) return false;
 
-            // UPDATED LOGIC: 
-            // 1. Fail if any mistake is filled (length > 0)
-            // 2. Fail if remarks exist
-            let status = 'Pass Roll';
-            if (remarkExists || filledMistakes.length > 0) {
-              status = 'Fail Roll';
-            }
+              const str = String(value).trim();
+              const match = str.match(/\d+/);
+              if (!match) return false;
+
+              return parseInt(match[0], 10) > 5;
+            });
+
+            const status = (remarkExists || hasBigMistake)
+              ? 'Fail Roll'
+              : 'Pass Roll';
 
             return {
               roll_no: item.rlno,
@@ -108,13 +111,13 @@ const MachineReport = () => {
   const empOptions = ['All Employees', ...new Set(rows.map(r => r.emp_id))];
 
   return (
-    <div className="p-4 md:p-8 bg-slate-100 min-h-screen font-sans text-slate-800">
-      <div className="max-w-7xl mx-auto bg-white shadow-2xl rounded-2xl overflow-hidden border border-slate-200">
+    <div className="p-2 bg-slate-100 min-h-screen font-sans text-slate-800">
+      <div className="max-w-auto mx-auto bg-white shadow-2xl rounded-xl border border-slate-200">
         
         {/* Header */}
-        <div className="bg-gradient-to-r from-slate-900 to-slate-800 p-8 flex justify-between items-center text-white">
+        <div className="bg-gradient-to-r from-slate-900 to-slate-800 px-4 pt-2 pb-2 flex justify-between items-center text-white">
           <div>
-            <h1 className="text-3xl font-extrabold tracking-tight">Quality Inspection Report</h1>
+            <h2 className="font-extrabold tracking-tight">Quality Inspection Report</h2>
             <p className="text-slate-400 text-sm mt-1">Real-time monitoring of fabric roll defects</p>
           </div>
           <button
@@ -126,7 +129,7 @@ const MachineReport = () => {
         </div>
 
         {/* Filter Toolbar */}
-        <div className="p-6 border-b border-slate-100 bg-white">
+        <div className="p-6 border-b border-slate-100 bg-white ">
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
             <div>
               <label className="block text-[10px] font-bold uppercase text-slate-400 mb-1">Status</label>
@@ -166,9 +169,9 @@ const MachineReport = () => {
         </div>
 
         {/* Table Section */}
-        <div className="overflow-x-auto">
+        <div className="overflow-auto max-h-[63.7vh]">
           <table className="w-full text-left border-collapse">
-            <thead>
+            <thead className="sticky top-0 z-20 bg-slate-50">
               <tr className="bg-slate-50 text-slate-500 text-[11px] uppercase tracking-wider font-bold">
                 <th className="px-6 py-4 border-b">Roll / Job</th>
                 <th className="px-6 py-4 border-b">Inspector</th>
@@ -188,20 +191,20 @@ const MachineReport = () => {
                   const isFail = row.status === 'Fail Roll';
                   return (
                     <tr key={i} className={`transition-colors ${isFail ? 'bg-red-50/50 hover:bg-red-50' : 'hover:bg-slate-50'}`}>
-                      <td className="px-6 py-5">
+                      <td className="px-6 py-3">
                         <div className={`font-bold ${isFail ? 'text-red-700' : 'text-slate-900'}`}>{row.roll_no}</div>
                         <div className="text-[11px] text-slate-500 font-medium">{row.job_no}</div>
                       </td>
-                      <td className="px-6 py-5">
+                      <td className="px-6 py-3">
                         <span className="bg-slate-100 text-slate-600 px-2.5 py-1 rounded-md text-[11px] font-bold border border-slate-200">
                           {row.emp_id}
                         </span>
                       </td>
-                      <td className="px-6 py-5">
+                      <td className="px-6 py-3">
                         <div className="text-sm font-medium text-slate-700">Dia: {row.dia} | GSM: {row.gsm}</div>
                         <div className="text-[11px] text-slate-400 italic">Loop: {row.loop_length}</div>
                       </td>
-                      <td className="px-6 py-5">
+                      <td className="px-6 py-3">
                         <div className="flex flex-wrap gap-1.5 max-w-[250px]">
                           {MISTAKE_KEYS.filter(k => row.mistakes?.[k] && row.mistakes[k] !== '0').length > 0 ? (
                             MISTAKE_KEYS.filter(k => row.mistakes?.[k] && row.mistakes[k] !== '0').map(k => (
@@ -214,13 +217,13 @@ const MachineReport = () => {
                           )}
                         </div>
                       </td>
-                      <td className="px-6 py-5">
+                      <td className="px-6 py-3">
                         <div className="text-sm text-slate-600 leading-relaxed italic">
                           {row.remarks || "—"}
                         </div>
                         <div className="text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-tighter">{row.time}</div>
                       </td>
-                      <td className="px-6 py-5 text-center">
+                      <td className="px-6 py-3 text-center">
                         <span className={`inline-block px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest shadow-sm ${
                           !isFail 
                           ? 'bg-green-500 text-white' 
@@ -238,7 +241,7 @@ const MachineReport = () => {
         </div>
 
         {/* Footer */}
-        <div className="p-5 bg-slate-50 border-t border-slate-100 text-[11px] font-bold text-slate-400 flex justify-between items-center">
+        <div className="p-4 bg-slate-50 border-t border-slate-100 text-[11px] font-bold text-slate-400 flex justify-between items-center">
           <div className="flex items-center gap-4">
             <span>TOTAL ROLLS: {filteredRows.length}</span>
             <span className="text-red-400">FAILED: {filteredRows.filter(r => r.status === 'Fail Roll').length}</span>
