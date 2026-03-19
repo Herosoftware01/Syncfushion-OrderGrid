@@ -56,7 +56,7 @@ interface OrderData {
   u15: string; u14: string; u8: string; u25: string; insdate: string; insdateyear: string;finaldelvdate1:string;
   actdaten: string; actyeardate: string; pono: string; u46: string; u37: string; qltycontroller: string;Print:string;others1:string;
   mainimagepath: string; finaldelvdate: string; prnclr?: string | null; prnfile1?: string; prnfile2?: string; img_fpath?: string;clr?:string;print_img?:string;
-  prnmeaimg?:String;mpic?:string;
+  prnmeaimg?:string;mpic?:string;
   
 
 }
