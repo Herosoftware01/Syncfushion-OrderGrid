@@ -13,11 +13,11 @@ export default function App() {
     <Routes>
     <Route path='/' element={<GreyLayout />}>
         <Route index element={<EntryPage />} />
-        <Route path="/grey-app/machine/:id" element={<Machine />} />
-        <Route path="/grey-app/machine/:id/checking" element={<Checking />} />
-        <Route path="/grey-app/machine/:id/details" element={<RollChecking />} />
-        <Route path="/grey-app/machine/:id/report" element={<MachineReport />} />
-        <Route path="/grey-app/report" element={<MachineReport />} />
+        <Route path="/machine/:id" element={<Machine />} />
+        <Route path="/machine/:id/checking" element={<Checking />} />
+        <Route path="/machine/:id/details" element={<RollChecking />} />
+        <Route path="/machine/:id/report" element={<MachineReport />} />
+        <Route path="/report" element={<MachineReport />} />
         {/* <Route path="/report/costreport" element={<CostReport />} /> */}
     </Route>
     </Routes>

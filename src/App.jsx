@@ -14,6 +14,7 @@ import Qc_entry from "./components/quality_app/quality/Qc"
 import Syncfushion from "./components/syncfushion/main/home"
 import HeroFashionGrid13 from "./components/syncfushion/order/ord_order";
 import GreyRollChecking from "./components/GreyrollChecking/main/App";
+import FabricForm from "./components/syncfushion/fabric/Fabric";
 function App() {
 
   useEffect(() => {
@@ -124,7 +125,18 @@ function App() {
         />
 
         <Route
-          path="/grey_roll/grey-app/*"
+          path="/alias/*"
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <FabricForm />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/grey-app/*"
           element={
             <ProtectedRoute>
               <ProtectedLayout>

@@ -29,7 +29,7 @@ export default function EntryPage() {
             
             {/* Machine 1 Button */}
             <a 
-              href="/grey-app/machine/1A"
+              href="#/grey-app/machine/1A"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-blue-600 text-white w-full sm:w-auto px-8 py-4 rounded font-semibold hover:bg-blue-700 transition duration-300 shadow-xl inline-block text-center"
@@ -39,7 +39,7 @@ export default function EntryPage() {
             </a>
 
             <a 
-              href="/grey-app/machine/1B"
+              href="#/grey-app/machine/1B"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-blue-600 text-white w-full sm:w-auto px-8 py-4 rounded font-semibold hover:bg-blue-700 transition duration-300 shadow-xl inline-block text-center"
@@ -50,7 +50,7 @@ export default function EntryPage() {
             
             {/* Machine 2 Button */}
             <a 
-              href="/grey-app/machine/2A"
+              href="#/grey-app/machine/2A"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-blue-600 text-white w-full sm:w-auto px-8 py-4 rounded font-semibold hover:bg-blue-700 transition duration-300 shadow-xl inline-block text-center"
@@ -59,7 +59,7 @@ export default function EntryPage() {
               <span className="text-lg md:text-2xl">Machine 2A</span>
             </a>
             <a 
-              href="/grey-app/machine/2B"
+              href="#/grey-app/machine/2B"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-blue-600 text-white w-full sm:w-auto px-8 py-4 rounded font-semibold hover:bg-blue-700 transition duration-300 shadow-xl inline-block text-center"
