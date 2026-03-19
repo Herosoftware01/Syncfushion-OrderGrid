@@ -127,7 +127,7 @@ const fillBundleData = async (bundle) => {
             <label htmlFor="Bundle No" className="text-gray-500 font-semibold">Bundle No :</label>
             <input
               type="text"
-              
+            
               value={bundleNo}
               
               onChange={(e) => handleBundleChange(e.target.value)}

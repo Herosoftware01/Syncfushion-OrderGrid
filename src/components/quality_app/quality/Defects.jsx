@@ -74,7 +74,7 @@ const handleDecrement = (id) => {
     />
     <div>
       <p className="font-semibold text-gray-800">{item.name}</p>
-      <p className="text-sm text-gray-500">{item.category}</p>
+      {/* <p className="text-sm text-gray-500">{item.category}</p> */}
     </div>
   </div>
 
@@ -82,14 +82,14 @@ const handleDecrement = (id) => {
   <div className="flex items-center gap-2">
     <button
       onClick={() => handleDecrement(item.id)}
-      className="px-3 py-1 bg-gray-200 rounded-lg hover:bg-gray-300"
+      className="px-3 py-1 bg-red-200 rounded-lg hover:bg-gray-300"
     >
       -
     </button>
     <span className="w-6 text-center">{counts[item.id] || 0}</span>
     <button
       onClick={() => handleIncrement(item.id)}
-      className="px-3 py-1 bg-gray-200 rounded-lg hover:bg-gray-300"
+      className="px-3 py-1 bg-green-200 rounded-lg hover:bg-gray-300"
     >
       +
     </button>
@@ -97,6 +97,9 @@ const handleDecrement = (id) => {
 </div>
         ))}
       </div>
+
+
+
     );
   };
 
@@ -111,7 +114,7 @@ const handleDecrement = (id) => {
     <div className="w-full max-w-6xl mx-auto p-4 mt-14 sm:mt-14 md:mt-12 lg:mt-2" >
 
         <div className="">
-          <div>
+          <div className="flex justify-between p-2">
             <h1 className="text-[20px] font-bold text-[#0F172A]">Defect Tracking</h1>
             <p className="text-slate-400 font-medium text-lg">Record quality issues found</p>
             <p className="text-blue-600 text-md font-extrabold">Unit - {unit} / Line - {line}</p>
@@ -154,12 +157,12 @@ const handleDecrement = (id) => {
         </div>
 
       {/* Tabs */}
-      <div className="flex flex-col sm:flex-row bg-gray-100 rounded-xl p-2 gap-2">
+      <div className="flex bg-gray-100 rounded-xl p-2 gap-2">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex-1 px-4 py-3 rounded-lg font-medium transition-all duration-300 capitalize
+            className={`flex-1 px-4 py-3 bg-gray-300 rounded-lg font-medium transition-all duration-300 capitalize
               ${
                 activeTab === tab.id
                   ? tab.id === "minor"
@@ -176,9 +179,33 @@ const handleDecrement = (id) => {
       </div>
 
       {/* Content */}
-      <div className="mt-4 p-4 bg-white rounded-xl shadow-md transition-all duration-300">
+     <div className="mt-4 bg-white rounded-xl shadow-md flex flex-col h-[400px]">
+      <div className="flex-1 overflow-y-auto p-4">
         {renderContent()}
       </div>
+    </div>
+
+
+    <div className="sticky bottom-0 bg-white p-4 mt-4 rounded-xl shadow-md">
+  
+  {/* Comment Field */}
+  <div className="mb-3">
+    <label className="text-gray-600 font-semibold">Comments</label>
+    <textarea
+      placeholder="Type your comments..."
+      className="w-full mt-1 p-3 border rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
+      rows={3}
+    />
+  </div>
+
+  {/* Buttons */}
+  <div className="flex gap-3 justify-center w-full">
+    <button className="w-full bg-black text-white text-xl px-6 py-2 rounded-lg hover:bg-gray-400">
+      Complete & Save Record
+    </button>   
+  </div>
+  
+</div>
     </div>
   );
 }

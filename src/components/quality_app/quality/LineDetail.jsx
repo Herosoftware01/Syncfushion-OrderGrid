@@ -9,7 +9,7 @@ export default function LineDetail() {
             id: 'first-piece',
             title: 'First Piece Output',
             subtitle: 'Quality Assurance Protocol',
-            icon: "📄",  // Replace with your icon or SVG component
+            icon: "📄",
         },
         {
             id: 'roving-qc',
@@ -20,7 +20,8 @@ export default function LineDetail() {
     ];
 
     const handleSelect = (inspectionId) => {
-        navigate(`/qc-admin/qc-entry/${unit}/${line}/first-piece`);
+        // 🔥 Dynamic navigation based on clicked item
+        navigate(`/qc-admin/qc-entry/${unit}/${line}/${inspectionId}`);
     };
 
     return (
@@ -31,7 +32,9 @@ export default function LineDetail() {
                     <h1 className="text-2xl font-bold">
                         Unit {unit} - Line {line}
                     </h1>
-                    <p className="text-gray-600 mt-2">Select the type of quality check</p>
+                    <p className="text-gray-600 mt-2">
+                        Select the type of quality check
+                    </p>
                 </div>
 
                 <div className="w-full max-w-md space-y-4">
@@ -40,11 +43,11 @@ export default function LineDetail() {
                             key={id}
                             onClick={() => handleSelect(id)}
                             className={`flex items-center justify-between w-full p-10 rounded-lg border
-                ${id === 'first-piece'
+                                ${id === 'first-piece'
                                     ? "bg-green-50 border-green-300"
                                     : "bg-white border-gray-300"
                                 }
-                hover:bg-green-100 transition`}
+                                hover:bg-green-100 transition`}
                         >
                             <div className="flex items-center gap-4">
                                 <div className="bg-green-200 text-green-700 p-2 rounded-md text-xl">
@@ -55,6 +58,7 @@ export default function LineDetail() {
                                     <p className="text-gray-500 text-sm">{subtitle}</p>
                                 </div>
                             </div>
+
                             <div className="text-green-400 text-xl font-bold">
                                 →
                             </div>
