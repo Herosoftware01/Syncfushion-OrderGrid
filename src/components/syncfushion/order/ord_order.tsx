@@ -32,13 +32,15 @@ import {
   AggregateDirective,
   AggregatesDirective,
   PdfExport,
-  ExcelExport
+  ExcelExport,
+  recordClick
 }from '@syncfusion/ej2-react-grids';
 import { TooltipComponent } from '@syncfusion/ej2-react-popups';
 import { Ajax, registerLicense } from '@syncfusion/ej2-base';
 import { TextBoxComponent } from '@syncfusion/ej2-react-inputs';
 import { DropDownListComponent, MultiSelect } from '@syncfusion/ej2-react-dropdowns';
-import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
+import { ButtonComponent } from '@syncfusion/ej2-react-buttons';
+import { Uploader } from '@syncfusion/ej2-inputs';
 import "../../../App.css"
 import { ClickEventArgs } from '@syncfusion/ej2-react-navigations';
 
@@ -53,7 +55,7 @@ interface OrderData {
   quality_controller: string; reference: string; insdatenew: string; styledesc: string;
   date: string; ourdelvdate: string; podate: string; vessel_dt: string; vessel_yr: string;
   shipment_complete: string; u7: string; u141: string; u45: string; u36: string; u31: string;
-  u15: string; u14: string; u8: string; u25: string; insdate: string; insdateyear: string;finaldelvdate1:string;number_03_emb:string;
+  u15: string; u14: string; u8: string; u25: string; insdate: string; insdateyear: string;finaldelvdate1:string;
   actdaten: string; actyeardate: string; pono: string; u46: string; u37: string; qltycontroller: string;Print:string;others1:string;
   mainimagepath: string; finaldelvdate: string; prnclr?: string | null; prnfile1?: string; prnfile2?: string; img_fpath?: string;clr?:string;print_img?:string;
   prnmeaimg?:string;mpic?:string;
@@ -93,6 +95,7 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
   const tooltipRef = useRef<TooltipComponent>(null);  
   const gridRef = useRef<GridComponent>(null);
   const searchTimeout = useRef<any>(null);
+  const previousCellRef = useRef<HTMLElement | null>(null);
 
   const searchableFields = [
     'jobno_oms', 'company_name', 'buyer1', 'stylename', 'merch',
@@ -470,47 +473,6 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
     </div>
   );
 
-const  udf= (p: OrderData) => (
-    <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
-      <b>1-Print:</b> {highlightText(p.printing_R)}<br />
-      <b>3-Emb:</b> {highlightText(p.number_03_emb)}<br />
-      <b>7:</b> {highlightText(p.u7)}<br />
-      <b>8-Fab:</b> {highlightText(p.u8)}<br />
-      <b>14-Fabdy:</b> {highlightText(p.u14)}<br />
-      <b>25-week:</b> {highlightText(p.u25)}<br />
-      {/* <b>Unit:</b> <span style={getPunitStyle(p.punit_sh)}>{highlightText(p.punit_sh)}</span><br />
-      <b>Qty:</b> {highlightText(p.quantity)} */}
-    </div>
-  );
-  const  udf2= (p: OrderData) => (
-    <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
-      <b>31:</b> {highlightText(p.u31)}<br />
-      <b>36-ITS:</b> {highlightText(p.u36)}<br />
-      <b>u45:</b> {highlightText(p.u45)}<br />
-      <b>u46:</b> {highlightText(p.u46)}<br />
-      <b>u141:</b> {highlightText(p.u141)}<br />
-      {/* <b>3-Emb:</b> {highlightText(p.number_03_emb)}<br />
-      <b>8-Fab:</b> {highlightText(p.u8)}<br />
-      <b>14-Fabdy:</b> {highlightText(p.u14)}<br /> */}
-      {/* <b>31:</b> {highlightText(p.u31)}<br /> */}
-      {/* <b>36-ITS:</b> {highlightText(p.u36)}<br /> */}
-      {/* <b>Unit:</b> <span style={getPunitStyle(p.punit_sh)}>{highlightText(p.punit_sh)}</span><br />
-      <b>Qty:</b> {highlightText(p.quantity)} */}
-    </div>
-  );
-
-
-
-const   qualy= (p: OrderData) => (
-    <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
-      <b>styleno:</b> {highlightText(p.styleno)}<br />
-      <b>styledesc:</b> {highlightText(p.styledesc)}<br />
-      <b>quality_controller:</b> {highlightText(p.quality_controller)}<br />
-      <b>order_follow_up:</b> {highlightText(p.order_follow_up)}<br />
-      {/* <b>36-ITS:</b> {highlightText(p.u36)}<br /> */}
-  </div>
-  );
-
   const deliveryInfoTemplate = (p: OrderData) => (
     <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
       <b>Fdt:</b> <span style={getDateStyle(p.Fdt || p.final_delivery_date)}>{highlightText(p.Fdt || p.final_delivery_date)}</span><br />
@@ -754,6 +716,85 @@ const   qualy= (p: OrderData) => (
     }
   };
 
+  const imageUploaderEdit = {
+    create: () => {
+      const elem = document.createElement('input');
+      elem.setAttribute('type', 'file');
+      elem.setAttribute('name', 'UploadFiles');
+      return elem;
+    },
+    read: (elem: HTMLElement) => {
+      const uploaderObj = (elem as any).ej2_instances[0];
+      const files = uploaderObj.getFilesData();
+      
+      // If files are uploaded, return the file path or URL
+      if (files && files.length > 0) {
+        // You can return the uploaded file URL here
+        // For now, returning the file name
+        return files[0].name || '';
+      }
+      
+      // Return existing value if no new file uploaded
+      return (elem as any).dataset.currentValue || '';
+    },
+    destroy: () => {
+      // Cleanup uploader if needed
+    },
+    write: (args: any) => {
+      const currentValue = args.rowData[args.column.field];
+      
+      // Store current value in dataset for read method
+      args.element.dataset.currentValue = currentValue || '';
+      
+      // Create uploader instance
+      const uploader = new Uploader({
+        asyncSettings: {
+          saveUrl: 'https://app.herofashion.com/upload_image/', // Replace with your upload API endpoint
+          removeUrl: 'https://app.herofashion.com/remove_image/' // Replace with your remove API endpoint
+        },
+        multiple: false,
+        allowedExtensions: '.jpg,.jpeg,.png,.gif,.webp',
+        maxFileSize: 5000000, // 5MB
+        dropArea: args.element.closest('.e-dialog'),
+        success: (args: any) => {
+          console.log('Upload successful:', args);
+          // You can handle the uploaded file URL here
+          if (args.e && args.e.currentTarget) {
+            const response = JSON.parse(args.e.currentTarget.response);
+            if (response && response.url) {
+              // Store the uploaded URL
+              (args.element as any).dataset.uploadedUrl = response.url;
+            }
+          }
+        },
+        failure: (args: any) => {
+          console.error('Upload failed:', args);
+        },
+        removing: (args: any) => {
+          console.log('File removing:', args);
+        }
+      });
+      
+      uploader.appendTo(args.element);
+      
+      // Show current image preview if exists
+      if (currentValue) {
+        const previewDiv = document.createElement('div');
+        previewDiv.style.marginTop = '10px';
+        previewDiv.style.textAlign = 'center';
+        previewDiv.innerHTML = `
+          <div style="margin-bottom: 8px; font-weight: bold; color: #666;">Current Image:</div>
+          <img 
+            src="${currentValue}" 
+            alt="Current" 
+            style="max-width: 200px; max-height: 200px; object-fit: contain; border: 1px solid #ddd; border-radius: 4px; padding: 5px;"
+          />
+        `;
+        args.element.parentElement?.appendChild(previewDiv);
+      }
+    }
+  };
+
 <TooltipComponent 
   target=".image-tooltip-target" 
   cssClass="custom-tooltip-size" // இந்த கிளாஸ் முக்கியம்
@@ -771,34 +812,75 @@ const   qualy= (p: OrderData) => (
   {/* Unga Grid code inga varum */}
 </TooltipComponent>
 
-  const tooltipOpen = (args: any) => {
+// Implementation on tooltipBeforeRender and removed toolTipOpen
+
+  const tooltipBeforeRender = (args: any) => {
 
     const isHeaderCell = args.target.closest('.e-headercell');
     const isRowCell = args.target.closest('.e-rowcell');
 
     if (isRowCell || isHeaderCell) {
       let img = args.target.querySelector('img')
-      if (img) {
+      if (img && !isHeaderCell) {
+        // Get row information
+        const rowInfo = gridRef.current?.getRowInfo(args.target.closest('td'));
+        const rowData: OrderData = rowInfo?.rowData as OrderData;
+        
+        if (rowData) {
+          // Get image source
+          const imgSrc = img.src;
+          
+          // Build order information HTML
+          const orderInfo = `
+            <div style="padding: 12px; line-height: 1.6; font-size: 13px;">
+              <div style="margin-bottom: 8px;"><strong>Job No:</strong> ${rowData.jobno_oms || 'N/A'}</div>
+              <div style="margin-bottom: 8px;"><strong>Company:</strong> ${rowData.company_name || 'N/A'}</div>
+              <div style="margin-bottom: 8px;"><strong>Buyer:</strong> ${rowData.buyer1 || 'N/A'}</div>
+              <div style="margin-bottom: 8px;"><strong>Style:</strong> ${rowData.stylename || 'N/A'}</div>
+              <div style="margin-bottom: 8px;"><strong>Style No:</strong> ${rowData.styleno || 'N/A'}</div>
+              <div style="margin-bottom: 8px;"><strong>Quantity:</strong> ${rowData.quantity || 'N/A'}</div>
+              <div style="margin-bottom: 8px;"><strong>Unit:</strong> ${rowData.punit_sh || 'N/A'}</div>
+              <div style="margin-bottom: 8px;"><strong>Merch:</strong> ${rowData.merch || 'N/A'}</div>
+              <div style="margin-bottom: 8px;"><strong>Delivery Date:</strong> ${rowData.Fdt || rowData.final_delivery_date || 'N/A'}</div>
+              <div style="margin-bottom: 8px;"><strong>Type:</strong> ${rowData.director_sample_order || 'N/A'}</div>
+            </div>
+          `;
+          
+          // Create tooltip content with order info on left and image on right
+          const tooltipContent = `
+            <div style="display: flex; max-width: 700px;">
+              <div style="flex: 1; min-width: 250px; max-width: 300px; border-right: 1px solid #e0e0e0;">
+                ${orderInfo}
+              </div>
+              <div style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 12px;">
+                <img 
+                  src="${imgSrc}" 
+                  style="max-width: 350px; max-height: 350px; width: auto; height: auto; object-fit: contain;" 
+                  alt="Order Image"
+                />
+              </div>
+            </div>
+          `;
+          
+          (tooltipRef.current as TooltipComponent).content = tooltipContent;
+          (tooltipRef.current as TooltipComponent).width = '700px';
+          (tooltipRef.current as TooltipComponent).height = 'auto';
+        }
+      }
+      else if (img && isHeaderCell) {
+        // For header cells, show simple image
         let imgElem:any= args.target.innerHTML;
-        // Create a wrapper div with increased image height
         const wrapper = document.createElement('div');
         wrapper.innerHTML = imgElem;
         const tooltipImg = wrapper.querySelector('img');
         if (tooltipImg) {
-          tooltipImg.style.width = '500px';
-          tooltipImg.style.height = '500px';
+          tooltipImg.style.width = '100px';
+          tooltipImg.style.height = '100px';
           tooltipImg.style.objectFit = 'contain';
         }
         (tooltipRef.current as TooltipComponent).content = wrapper.innerHTML;
-        
-        // Set different dimensions for header cells
-        if (isHeaderCell) {
-          (tooltipRef.current as TooltipComponent).width = '100px';
-          (tooltipRef.current as TooltipComponent).height = '100px';
-        } else {
-          (tooltipRef.current as TooltipComponent).width = '500px';
-          (tooltipRef.current as TooltipComponent).height = '500px';
-        }
+        (tooltipRef.current as TooltipComponent).width = '100px';
+        (tooltipRef.current as TooltipComponent).height = '100px';
       }
       else {
         // Create a wrapper div for text content with styling
@@ -824,9 +906,37 @@ const   qualy= (p: OrderData) => (
 
   }
 
+  // Background color implementation
+  const recordClick=(args:any)=>
+    {
+      // Remove background from previously clicked cell
+      if (previousCellRef.current) {
+        previousCellRef.current.style.backgroundColor = '';
+      }
+      
+      // Set yellow background on the newly clicked cell
+      if (args.cell) {
+        args.cell.style.backgroundColor = 'yellow';
+        // Store the current cell as the previous cell for next click
+        previousCellRef.current = args.cell;
+      }
+      
+      console.log('Cell clicked:', args);
+    }
+
+  const beforeOpen = (args: any) => {
+    // Adjust tooltip dimensions based on content type
+    const hasOrderInfo = args.element.innerHTML.includes('Job No:');
+    
+    if (hasOrderInfo) {
+      args.element.style.maxWidth = '750px';
+      args.element.style.width = 'auto';
+    }
+  };
+
   // Memoize the grid component to prevent unnecessary re-renders
   const memoizedGridComponent = useMemo(() => (
-    <><div><TooltipComponent ref={tooltipRef} target=".e-rowcell, .e-headercell" position={"RightCenter"} width="200px" height="200px" beforeOpen={tooltipOpen}>
+    <><div><TooltipComponent ref={tooltipRef} target=".e-rowcell, .e-headercell" width="130px" height="130px" beforeRender={tooltipBeforeRender} beforeOpen={beforeOpen}>
       <GridComponent
         id="default-aggregate-grid"
         ref={gridRef}
@@ -864,28 +974,23 @@ const   qualy= (p: OrderData) => (
         actionComplete={actionComplete}
         created={created}
         frozenColumns={2}
-        toolbarClick={toolbarClick} 
+        toolbarClick={toolbarClick}
+        recordClick={recordClick}
       >
         <ColumnsDirective>
 
           <ColumnDirective isPrimaryKey={true} field="jobno_oms" headerText="ORDER INFO" width="120" maxWidth="120" template={orderSummaryTemplate} allowEditing={false} />
-          
           <ColumnDirective field="mainimagepath" headerText="IMG" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('mainimagepath')} allowEditing={true} />
           <ColumnDirective field="Print" headerText="Print" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Print')} allowEditing={false} />
           <ColumnDirective field="Emb" headerText="Emb" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Emb')} allowEditing={false} />
           <ColumnDirective field="others1" headerText="others1" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others1')} allowEditing={false} />
           <ColumnDirective field="qltycontroller" headerText="QC-ms" width="100" template={genericHighlighter('qltycontroller')} edit={qualityControllerEdit} allowEditing={true} />
           <ColumnDirective field="Fdt" headerText="DELIVERY INFO" width="150" maxWidth="150" template={deliveryInfoTemplate} />
-          <ColumnDirective field="printing_R" headerText="udf1" width="150" maxWidth="150" template={udf} />
-          <ColumnDirective field="styleno" headerText="qualy" width="150" maxWidth="150" template={qualy} />
-          <ColumnDirective field="styleno" headerText="udf2" width="150" maxWidth="150" template={udf2} />
           <ColumnDirective headerText='fsn' width="90" textAlign="Center" allowFiltering={true} template={rollnoTemplate} allowEditing={false} />
           <ColumnDirective field="print_img" headerText="PRN IMG" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('print_img')} />
           <ColumnDirective field="prnmeaimg" headerText="MEAS IMG" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('prnmeaimg')} />
-          {/* <ColumnDirective field="img_fpath" headerText="AOP" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('img_fpath')} /> */}
+          <ColumnDirective field="img_fpath" headerText="AOP" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('img_fpath')} />
           <ColumnDirective field="prnclr" headerText="PRN COL" width="100" template={genericHighlighter('prnclr')} />
-          <ColumnDirective field="jobno_oms" headerText="jobno_oms" width="100" template={genericHighlighter('jobno_oms')} />
-          <ColumnDirective field="jobno_oms" headerText="jobno_oms" width="100" template={genericHighlighter('jobno_oms')} />
           <ColumnDirective field="finaldelvdate1" headerText="finaldelvdate1" width="100" template={genericHighlighter('finaldelvdate1')} />
           <ColumnDirective field="date" headerText="date" width="100" template={genericHighlighter('finaldelvdate1')} />
           <ColumnDirective field="ourdelvdate" headerText="ourdelvdate" width="100" template={genericHighlighter('ourdelvdate')} />
@@ -906,8 +1011,6 @@ const   qualy= (p: OrderData) => (
           <ColumnDirective field="buyer1" headerText="BUYER" width="100" template={genericHighlighter('buyer1')} />
           <ColumnDirective field="merch" headerText="MERCH" width="100" template={genericHighlighter('merch')} />
           <ColumnDirective field='punit_sh' headerText="punit_sh" width="100" template={genericHighlighter('punit_sh')} />
-
-
           <ColumnDirective field="styleno" headerText="STYLE NO" width="110" template={genericHighlighter('styleno')} />
           <ColumnDirective field="director_sample_order" headerText="DIR S/O" width="100" template={genericHighlighter('director_sample_order')} />
           <ColumnDirective field="order_follow_up" headerText="ORD FOLLOW UP" width="100" template={genericHighlighter('order_follow_up')} />
@@ -943,6 +1046,16 @@ const   qualy= (p: OrderData) => (
         .e-rowcell { vertical-align: top !important; font-size: 12px !important; line-height: 1.3 !important; padding-top: 8px !important; }
         .e-filter-popup { z-index: 10000001 !important; }
         .e-grid { min-width: 0 !important; }
+        
+        /* Tooltip custom styles */
+        .e-tooltip-wrap .e-tip-content {
+          padding: 0 !important;
+        }
+        
+        .e-tooltip-wrap {
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+          border: 1px solid #e0e0e0 !important;
+        }
         
         /* --- Desktop Layout --- */
         .dashboard-header {
@@ -1117,19 +1230,19 @@ const   qualy= (p: OrderData) => (
             className="search-input"
           />
         </div>
-        <div style={{ padding: '8px 5px', borderBottom: '1px solid #eee', display: 'flex', gap: 7, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
+        <div style={{ padding: '12px 18px', borderBottom: '1px solid #eee', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
   <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight:'bold' }}>
     <TextBoxComponent
       ref={settingNameRef}
-      placeholder="setting name"
-      style={{ width: '80px' }}
+      placeholder="Enter setting name"
+      style={{ width: '120px' }}
     />
   </div>
 
   <ButtonComponent
     onClick={saveSetting}
     cssClass="e-primary"
-    style={{ padding: '3px 6px', fontSize: '13px' }}
+    style={{ padding: '6px 12px', fontSize: '13px' }}
   >
     💾
   </ButtonComponent>
@@ -1145,8 +1258,8 @@ const   qualy= (p: OrderData) => (
       )
       .map(s => ({ text: s.name, value: s.id }))}
     fields={{ text: 'text', value: 'value' }}
-    placeholder="Select setting"
-    style={{ width: '80px' }}
+    placeholder="Select setting..."
+    style={{ minWidth: '150px' }}
     change={() => setSelectedSetting(dropdownRef.current?.value as string)}
   />
 </div>
@@ -1154,7 +1267,7 @@ const   qualy= (p: OrderData) => (
   <ButtonComponent
     onClick={applySetting}
     cssClass="e-outline"
-    style={{ padding: '3px 6px', fontSize: '15px' }}
+    style={{ padding: '6px 12px', fontSize: '13px' }}
   >
    ✔
   </ButtonComponent>
@@ -1162,7 +1275,7 @@ const   qualy= (p: OrderData) => (
   <ButtonComponent
     onClick={deleteSetting}
     cssClass="e-outline e-danger"
-    style={{ padding: '3px 6px', fontSize: '15px' }}
+    style={{ padding: '6px 12px', fontSize: '13px' }}
   >
     🗑
   </ButtonComponent>
