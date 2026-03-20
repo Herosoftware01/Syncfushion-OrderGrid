@@ -31,7 +31,7 @@ import {
   AggregateColumnDirective,
   AggregateDirective,
   AggregatesDirective,
-  PdfExport,DetailRow,
+  PdfExport,
   ExcelExport
 }from '@syncfusion/ej2-react-grids';
 import { TooltipComponent } from '@syncfusion/ej2-react-popups';
@@ -795,183 +795,6 @@ const   Alldate= (p: OrderData) => (
   {/* Unga Grid code inga varum */}
 </TooltipComponent>
 
-  const groupByPrint = (printing: OrderData[]) => {
-    const map = new Map<string, any>();
-
-    printing.forEach((item) => {
-      const key = `${item.jobno_oms ?? ""}_${item.buyer1 ?? ""}_${item.merch ?? ""}`;
-
-      if (!map.has(key)) {
-        const primaryImage = firstTruthy(item.mainimagepath, item.prnfile1, item.prnfile2);
-        const secondaryImage = firstTruthy(item.prnfile2);
-        // const imageTb = firstTruthy(item.image_tb);
-
-        const image1 = secondaryImage && secondaryImage !== primaryImage ? secondaryImage : "";
-        // const image2 = imageTb && imageTb !== primaryImage && imageTb !== image1 ? imageTb : "";
-
-        map.set(key, {
-          jobno: item.jobno_oms ?? "",
-          print_type: item.buyer1 ?? "",
-          print_description: item.merch ?? "",
-          // ✅ keep whatever type comes (number/string), we'll render via showVal()
-          print_colours: item.production_type_inside_outside,
-          inside_outside_print_emb: item.reference ?? "",
-          individual_part_print_emb: item.director_sample_order ?? "",
-          // print_screen_1: item.print_screen_1 ?? "",
-          // print_screen_2: item.print_screen_2 ?? "",
-          // print_screen_3: item.print_screen_3 ?? "",
-          // top_bottom: item.top_bottom ?? "",
-          // unit: item.sv ?? "",
-          image: primaryImage,
-          // image1,
-          // image2,
-          rows: [] as OrderData[]
-        });
-      }
-      map.get(key).rows.push(item);
-    });
-
-    return Array.from(map.values());
-  };
-
-  const detailTemplate = (props: OrderData) => {
-    const ord = Array.isArray(props.jobno_oms) ? props.jobno_oms : [];
-    const printGroups = groupByPrint(ord);
-
-    return (
-      <div style={{ padding: "20px" }}>
-        {printGroups.map((grp: any, idx: number) => {
-          const colours = getUniqueColours(grp.rows);
-
-          const imageCount =
-            (grp.image ? 1 : 0) + (grp.image1 ? 1 : 0) + (grp.image2 ? 1 : 0);
-          const imageBlockWidth = imageCount > 0 ? imageCount * 160 + (imageCount - 1) * 20 : 160;
-
-          return (
-            <div
-              key={idx}
-              style={{ marginBottom: "30px", borderBottom: "2px solid #003399", paddingBottom: "20px" }}
-            >
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: `${imageBlockWidth}px 1fr auto`,
-                  columnGap: "30px",
-                  alignItems: "start",
-                  width: "100%"
-                }}
-              >
-                {/* IMAGES BLOCK */}
-                <div style={{ display: "flex", gap: "20px", width: `${imageBlockWidth}px`, flexShrink: 0 }}>
-                  {grp.image ? (
-                    <img
-                      src={grp.image}
-                      alt="print"
-                      style={{ width: "160px", border: "1px solid #ccc", padding: "6px", display: "block", objectFit: "contain", background: "#fff" }}
-                      onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
-                        (e.currentTarget as HTMLImageElement).style.display = "none";
-                      }}
-                    />
-                  ) : null}
-{/* 
-                  {/* {grp.image1 ? (
-                    <img
-                      src={grp.image1}
-                      alt="print 2"
-                      style={{ width: "160px", border: "1px solid #ccc", padding: "6px", display: "block", objectFit: "contain", background: "#fff" }}
-                      onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
-                        (e.currentTarget as HTMLImageElement).style.display = "none";
-                      }}
-                    />
-                  ) : null}
-
-                  {grp.image2 ? (
-                    <img
-                      src={grp.image2}
-                      alt="image_tb"
-                      style={{ width: "160px", border: "1px solid #ccc", padding: "6px", display: "block", objectFit: "contain", background: "#fff" }}
-                      onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
-                        (e.currentTarget as HTMLImageElement).style.display = "none";
-                      }}
-                    />
-                   ) :} */}
-                </div> 
-
-                /* DATA BLOCK */
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1.2fr 1.2fr 0.8fr",
-                    columnGap: "20px",
-                    rowGap: "12px",
-                    width: "100%",
-                    fontSize: "14px",
-                    minWidth: 0,
-                    wordBreak: "break-word"
-                  }}
-                >
-                  {/* Row 1 */}
-                  <div><b>Job No:</b> {showVal(grp.jobno_oms)}</div>
-                  <div><b>Print Type:</b> {showVal(grp.merch)}</div>
-                  <div />
-
-                  {/* Row 2 */}
-                  <div><b>Print Description:</b> {showVal(grp.buyer1)}</div>
-                  <div><b>Print Colours:</b> {showVal(grp.production_type_inside_outside)}</div>  {/* ✅ number 4 will show */}
-                  <div />
-
-                  {/* Row 3 */}
-                  <div><b>Inside / Outside:</b> {showVal(grp.inside_outside_print_emb)}</div>
-                  <div><b>Individual Part:</b> {showVal(grp.individual_part_print_emb)}</div>
-                  <div />
-
-                  {/* Row 4 */}
-                  <div><b>Top / Bottom:</b> {showVal(grp.top_bottom)}</div>
-                  <div>
-                    <b>Unit:</b>
-                    {String(grp.unit || "")
-                      .split(",")
-                      .filter(Boolean)
-                      .map((u: string, i: number) => (
-                        <div key={i}>{u.trim()}</div>
-                      ))}
-                  </div>
-                  <div />
-
-                  {/* Row 5: Screen info */}
-                  <div><b>Print Screen 1:</b> {showVal(grp.print_screen_1)}</div>
-                  <div><b>Print Screen 2:</b> {showVal(grp.print_screen_2)}</div>
-                  <div />
-
-                  {/* Row 6 */}
-                  <div><b>Print Screen 3:</b> {showVal(grp.print_screen_3)}</div>
-                  <div />
-                  <div />
-                </div>
-
-                {/* COLOURS BLOCK */}
-                <div style={{ minWidth: 220 }}>
-                  <b>Colours:</b>
-                  {colours.map((c: any, i: number) => (
-                    <div
-                      key={`${c.colour}_${c.rgb}_${i}`}
-                      style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "6px", whiteSpace: "nowrap" }}
-                    >
-                      <div
-                        style={{ width: "20px", height: "20px", background: c.rgb || "#fff", border: "1px solid #000", flex: "0 0 auto" }}
-                      />
-                      <span>{showVal(c.colour || c.rgb)}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
-
   const tooltipOpen = (args: any) => {
 
     const isHeaderCell = args.target.closest('.e-headercell');
@@ -1133,7 +956,7 @@ const   Alldate= (p: OrderData) => (
             </AggregateColumnsDirective>
           </AggregateDirective>
         </AggregatesDirective>
-        <Inject services={[Sort, Edit, Filter, Group, Reorder, Search, VirtualScroll, DetailRow,Freeze, Resize, ContextMenu, Page, Toolbar, ColumnChooser, ColumnMenu, Aggregate, PdfExport]} />
+        <Inject services={[Sort, Edit, Filter, Group, Reorder, Search, VirtualScroll, Freeze, Resize, ContextMenu, Page, Toolbar, ColumnChooser, ColumnMenu, Aggregate, PdfExport]} />
       </GridComponent></TooltipComponent></div></>
   ), [dataSource]);
 
