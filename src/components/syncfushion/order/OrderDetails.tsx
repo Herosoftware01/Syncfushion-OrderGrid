@@ -63,7 +63,7 @@ interface OrderData {
 
 }
 
-const HeroFashionGrid13: React.FC = () => {
+const OrderDetails: React.FC = () => {
   const [dataSource, setDataSource] = useState<OrderData[]>([]);
   const [totalCount, setTotalCount] = useState<number>(0);
   const [showingCount, setShowingCount] = useState<number>(0);
@@ -1296,4 +1296,4 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
   );
 };
 
-export default HeroFashionGrid13;
+export default OrderDetails;

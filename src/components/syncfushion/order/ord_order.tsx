@@ -31,16 +31,14 @@ import {
   AggregateColumnDirective,
   AggregateDirective,
   AggregatesDirective,
-  PdfExport,
-  ExcelExport,
-  recordClick
+  PdfExport,DetailRow,
+  ExcelExport
 }from '@syncfusion/ej2-react-grids';
 import { TooltipComponent } from '@syncfusion/ej2-react-popups';
 import { Ajax, registerLicense } from '@syncfusion/ej2-base';
 import { TextBoxComponent } from '@syncfusion/ej2-react-inputs';
 import { DropDownListComponent, MultiSelect } from '@syncfusion/ej2-react-dropdowns';
-import { ButtonComponent } from '@syncfusion/ej2-react-buttons';
-import { Uploader } from '@syncfusion/ej2-inputs';
+import { ButtonComponent } from '@syncfusion/ej2-react-buttons'
 import "../../../App.css"
 import { ClickEventArgs } from '@syncfusion/ej2-react-navigations';
 
@@ -55,7 +53,7 @@ interface OrderData {
   quality_controller: string; reference: string; insdatenew: string; styledesc: string;
   date: string; ourdelvdate: string; podate: string; vessel_dt: string; vessel_yr: string;
   shipment_complete: string; u7: string; u141: string; u45: string; u36: string; u31: string;
-  u15: string; u14: string; u8: string; u25: string; insdate: string; insdateyear: string;finaldelvdate1:string;
+  u15: string; u14: string; u8: string; u25: string; insdate: string; insdateyear: string;finaldelvdate1:string;number_03_emb:string;actdate:string;
   actdaten: string; actyeardate: string; pono: string; u46: string; u37: string; qltycontroller: string;Print:string;others1:string;
   mainimagepath: string; finaldelvdate: string; prnclr?: string | null; prnfile1?: string; prnfile2?: string; img_fpath?: string;clr?:string;print_img?:string;
   prnmeaimg?:string;mpic?:string;
@@ -95,7 +93,6 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
   const tooltipRef = useRef<TooltipComponent>(null);  
   const gridRef = useRef<GridComponent>(null);
   const searchTimeout = useRef<any>(null);
-  const previousCellRef = useRef<HTMLElement | null>(null);
 
   const searchableFields = [
     'jobno_oms', 'company_name', 'buyer1', 'stylename', 'merch',
@@ -414,7 +411,7 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
                 if (col.field === "jobno_oms" || col.field === "Print" || col.field==="print_img" || col.field==="prnclr" || col.field==="merch" || col.field==="buyer1"
                   || col.field==="punit_sh" || col.field==="punit_sh" || col.field==="styleno" ||  col.field==="director_sample_order"  ||  col.field==="director_sample_order" ||
                     col.field==="abc"  ||  col.field==="order_follow_up" ||  col.field==="styledesc" ||  col.field==="company_name" ||  col.field==="quantity" ||  col.field==="production_type_inside_outside"
-                  ||  col.field==="prnmeaimg" ||  col.field==="Emb"  ||  col.field==="others1"  ||  col.field==="u25" ||  col.field==="u45" ||  col.field==="slno1" || col.field==="u37" ||  col.field==="actdaten"  ||  col.field==="u46"  ||  col.field==="date" ||  col.field==="ourdelvdate" ||  col.field==="finaldelvdate1" ||  col.field==="u15" ||  col.field==="u14" 
+                  ||  col.field==="prnmeaimg" || col.field==="mainimagepath" ||  col.field==="Emb"  ||  col.field==="others1"  ||  col.field==="u25" ||  col.field==="u45" ||  col.field==="slno1" || col.field==="u37" ||  col.field==="actdaten"  ||  col.field==="u46"  ||  col.field==="date" ||  col.field==="ourdelvdate" ||  col.field==="finaldelvdate1" ||  col.field==="u15" ||  col.field==="u14" 
                 ) {
                     col.visible = false;
                 }
@@ -432,7 +429,7 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
         if (gridRef.current && args.requestType === 'save') {
             const cols: any = gridRef.current?.columns;
             for (const col of cols) {
-                if (col.field === "jobno_oms" || col.field === "Print") {
+                if (col.field === "jobno_oms" || col.field === "Print" || col.field === "mainimagepath") {
                     col.visible = true;
                 }
             }
@@ -471,6 +468,71 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
       <b>Unit:</b> <span style={getPunitStyle(p.punit_sh)}>{highlightText(p.punit_sh)}</span><br />
       <b>Qty:</b> {highlightText(p.quantity)}
     </div>
+  );
+
+const  udf= (p: OrderData) => (
+    <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
+      <b>1-Print:</b> {highlightText(p.printing_R)}<br />
+      <b>3-Emb:</b> {highlightText(p.number_03_emb)}<br />
+      <b>7:</b> {highlightText(p.u7)}<br />
+      <b>8-Fab:</b> {highlightText(p.u8)}<br />
+      <b>14-Fabdy:</b> {highlightText(p.u14)}<br />
+      <b>25-week:</b> {highlightText(p.u25)}<br />
+      {/* <b>Unit:</b> <span style={getPunitStyle(p.punit_sh)}>{highlightText(p.punit_sh)}</span><br />
+      <b>Qty:</b> {highlightText(p.quantity)} */}
+    </div>
+  );
+  const  udf2= (p: OrderData) => (
+    <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
+      <b>31:</b> {highlightText(p.u31)}<br />
+      <b>36-ITS:</b> {highlightText(p.u36)}<br />
+      <b>u45:</b> {highlightText(p.u45)}<br />
+      <b>u46:</b> {highlightText(p.u46)}<br />
+      <b>u141:</b> {highlightText(p.u141)}<br />
+      {/* <b>3-Emb:</b> {highlightText(p.number_03_emb)}<br />
+      <b>8-Fab:</b> {highlightText(p.u8)}<br />
+      <b>14-Fabdy:</b> {highlightText(p.u14)}<br /> */}
+      {/* <b>31:</b> {highlightText(p.u31)}<br /> */}
+      {/* <b>36-ITS:</b> {highlightText(p.u36)}<br /> */}
+      {/* <b>Unit:</b> <span style={getPunitStyle(p.punit_sh)}>{highlightText(p.punit_sh)}</span><br />
+      <b>Qty:</b> {highlightText(p.quantity)} */}
+    </div>
+  );
+
+
+
+const   qualy= (p: OrderData) => (
+    <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
+      <b>styleno:</b> {highlightText(p.styleno)}<br />
+      <b>styledesc:</b> {highlightText(p.styledesc)}<br />
+      <b>qcontr:</b> {highlightText(p.quality_controller)}<br />
+      <b>order_follow_up:</b> {highlightText(p.order_follow_up)}<br />
+      {/* <b>36-ITS:</b> {highlightText(p.u36)}<br /> */}
+  </div>
+  );
+
+const   prdty= (p: OrderData) => (
+    <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
+      <b>ptype:</b> {highlightText(p.production_type_inside_outside)}<br />
+      <b>dir_sam_ord:</b> {highlightText(p.director_sample_order)}<br />
+      <b>comp:</b> {highlightText(p.company_name)}<br />
+      {/* <b>ref:</b> {highlightText(p.reference)}<br /> */}
+      {/* <b>order_follow_up:</b> {highlightText(p.order_follow_up)}<br /> */}
+      {/* <b>36-ITS:</b> {highlightText(p.u36)}<br /> */}
+  </div>
+  );
+  
+
+const   Alldate= (p: OrderData) => (
+    <div style={{ fontSize: '10px', lineHeight: '1.4' }}>
+      <b>finaldelvdate:</b> {highlightText(p.finaldelvdate)}<br />
+      <b>ourdelvdate:</b> {highlightText(p.ourdelvdate)}<br />
+      <b>date:</b> {highlightText(p.date)}<br />
+      {/* <b>date:</b> {highlightText(p.date)}<br />
+      <b>actdate:</b> {highlightText(p.actdate)}<br /> */}
+      {/* <b>order_follow_up:</b> {highlightText(p.order_follow_up)}<br /> */}
+      {/* <b>36-ITS:</b> {highlightText(p.u36)}<br /> */}
+  </div>
   );
 
   const deliveryInfoTemplate = (p: OrderData) => (
@@ -584,7 +646,23 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
     }
 
   };
+const firstTruthy = (...vals: Array<any>) =>
+  vals.find((v) => typeof v === "string" && v.trim().length > 0) || "";
 
+/** NEW: show any non-empty value (string/number/boolean) else dash */
+const showVal = (val: any): string => {
+  if (val === null || val === undefined) return "–";
+  if (typeof val === "string") {
+    const t = val.trim();
+    return t.length ? t : "–";
+  }
+  // number/boolean/object: stringify safely
+  try {
+    return String(val);
+  } catch {
+    return "–";
+  }
+};
 
 
   const clearHighlights = () => {
@@ -716,85 +794,6 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
     }
   };
 
-  const imageUploaderEdit = {
-    create: () => {
-      const elem = document.createElement('input');
-      elem.setAttribute('type', 'file');
-      elem.setAttribute('name', 'UploadFiles');
-      return elem;
-    },
-    read: (elem: HTMLElement) => {
-      const uploaderObj = (elem as any).ej2_instances[0];
-      const files = uploaderObj.getFilesData();
-      
-      // If files are uploaded, return the file path or URL
-      if (files && files.length > 0) {
-        // You can return the uploaded file URL here
-        // For now, returning the file name
-        return files[0].name || '';
-      }
-      
-      // Return existing value if no new file uploaded
-      return (elem as any).dataset.currentValue || '';
-    },
-    destroy: () => {
-      // Cleanup uploader if needed
-    },
-    write: (args: any) => {
-      const currentValue = args.rowData[args.column.field];
-      
-      // Store current value in dataset for read method
-      args.element.dataset.currentValue = currentValue || '';
-      
-      // Create uploader instance
-      const uploader = new Uploader({
-        asyncSettings: {
-          saveUrl: 'https://app.herofashion.com/upload_image/', // Replace with your upload API endpoint
-          removeUrl: 'https://app.herofashion.com/remove_image/' // Replace with your remove API endpoint
-        },
-        multiple: false,
-        allowedExtensions: '.jpg,.jpeg,.png,.gif,.webp',
-        maxFileSize: 5000000, // 5MB
-        dropArea: args.element.closest('.e-dialog'),
-        success: (args: any) => {
-          console.log('Upload successful:', args);
-          // You can handle the uploaded file URL here
-          if (args.e && args.e.currentTarget) {
-            const response = JSON.parse(args.e.currentTarget.response);
-            if (response && response.url) {
-              // Store the uploaded URL
-              (args.element as any).dataset.uploadedUrl = response.url;
-            }
-          }
-        },
-        failure: (args: any) => {
-          console.error('Upload failed:', args);
-        },
-        removing: (args: any) => {
-          console.log('File removing:', args);
-        }
-      });
-      
-      uploader.appendTo(args.element);
-      
-      // Show current image preview if exists
-      if (currentValue) {
-        const previewDiv = document.createElement('div');
-        previewDiv.style.marginTop = '10px';
-        previewDiv.style.textAlign = 'center';
-        previewDiv.innerHTML = `
-          <div style="margin-bottom: 8px; font-weight: bold; color: #666;">Current Image:</div>
-          <img 
-            src="${currentValue}" 
-            alt="Current" 
-            style="max-width: 200px; max-height: 200px; object-fit: contain; border: 1px solid #ddd; border-radius: 4px; padding: 5px;"
-          />
-        `;
-        args.element.parentElement?.appendChild(previewDiv);
-      }
-    }
-  };
-
 <TooltipComponent 
   target=".image-tooltip-target" 
   cssClass="custom-tooltip-size" // இந்த கிளாஸ் முக்கியம்
@@ -804,7 +803,7 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
     <div style={{ width: '100%', height: '100%' }}>
       <img 
         src={args.target.src} 
-        style={{ width: '200%', height: '200%', objectFit: 'contain' }} 
+        style={{ width: '200%', height: '200%', objectFit: 'contain' }}
       />
     </div>
   )}
@@ -812,75 +811,211 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
   {/* Unga Grid code inga varum */}
 </TooltipComponent>
 
-// Implementation on tooltipBeforeRender and removed toolTipOpen
+  const groupByPrint = (printing: OrderData[]) => {
+    const map = new Map<string, any>();
 
-  const tooltipBeforeRender = (args: any) => {
+    printing.forEach((item) => {
+      const key = `${item.jobno_oms ?? ""}_${item.buyer1 ?? ""}_${item.merch ?? ""}`;
+
+      if (!map.has(key)) {
+        const primaryImage = firstTruthy(item.mainimagepath, item.prnfile1, item.prnfile2);
+        const secondaryImage = firstTruthy(item.prnfile2);
+        // const imageTb = firstTruthy(item.image_tb);
+
+        const image1 = secondaryImage && secondaryImage !== primaryImage ? secondaryImage : "";
+        // const image2 = imageTb && imageTb !== primaryImage && imageTb !== image1 ? imageTb : "";
+
+        map.set(key, {
+          jobno: item.jobno_oms ?? "",
+          print_type: item.buyer1 ?? "",
+          print_description: item.merch ?? "",
+          // ✅ keep whatever type comes (number/string), we'll render via showVal()
+          print_colours: item.production_type_inside_outside,
+          inside_outside_print_emb: item.reference ?? "",
+          individual_part_print_emb: item.director_sample_order ?? "",
+          // print_screen_1: item.print_screen_1 ?? "",
+          // print_screen_2: item.print_screen_2 ?? "",
+          // print_screen_3: item.print_screen_3 ?? "",
+          // top_bottom: item.top_bottom ?? "",
+          // unit: item.sv ?? "",
+          image: primaryImage,
+          // image1,
+          // image2,
+          rows: [] as OrderData[]
+        });
+      }
+      map.get(key).rows.push(item);
+    });
+
+    return Array.from(map.values());
+  };
+
+  const detailTemplate = (props: OrderData) => {
+    const ord = Array.isArray(props.jobno_oms) ? props.jobno_oms : [];
+    const printGroups = groupByPrint(ord);
+
+    return (
+      <div style={{ padding: "20px" }}>
+        {printGroups.map((grp: any, idx: number) => {
+          // const colours = getUniqueColours(grp.rows);
+
+          const imageCount =
+            (grp.image ? 1 : 0) + (grp.image1 ? 1 : 0) + (grp.image2 ? 1 : 0);
+          const imageBlockWidth = imageCount > 0 ? imageCount * 160 + (imageCount - 1) * 20 : 160;
+
+          return (
+            <div
+              key={idx}
+              style={{ marginBottom: "30px", borderBottom: "2px solid #003399", paddingBottom: "20px" }}
+            >
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: `${imageBlockWidth}px 1fr auto`,
+                  columnGap: "30px",
+                  alignItems: "start",
+                  width: "100%"
+                }}
+              >
+                {/* IMAGES BLOCK */}
+                <div style={{ display: "flex", gap: "20px", width: `${imageBlockWidth}px`, flexShrink: 0 }}>
+                  {grp.image ? (
+                    <img
+                      src={grp.image}
+                      alt="print"
+                      style={{ width: "160px", border: "1px solid #ccc", padding: "6px", display: "block", objectFit: "contain", background: "#fff" }}
+                      onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+                        (e.currentTarget as HTMLImageElement).style.display = "none";
+                      }}
+                    />
+                  ) : null}
+{/* 
+                  {/* {grp.image1 ? (
+                    <img
+                      src={grp.image1}
+                      alt="print 2"
+                      style={{ width: "160px", border: "1px solid #ccc", padding: "6px", display: "block", objectFit: "contain", background: "#fff" }}
+                      onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+                        (e.currentTarget as HTMLImageElement).style.display = "none";
+                      }}
+                    />
+                  ) : null}
+
+                  {grp.image2 ? (
+                    <img
+                      src={grp.image2}
+                      alt="image_tb"
+                      style={{ width: "160px", border: "1px solid #ccc", padding: "6px", display: "block", objectFit: "contain", background: "#fff" }}
+                      onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+                        (e.currentTarget as HTMLImageElement).style.display = "none";
+                      }}
+                    />
+                   ) :} */}
+                </div> 
+
+                /* DATA BLOCK */
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1.2fr 1.2fr 0.8fr",
+                    columnGap: "20px",
+                    rowGap: "12px",
+                    width: "100%",
+                    fontSize: "14px",
+                    minWidth: 0,
+                    wordBreak: "break-word"
+                  }}
+                >
+                  {/* Row 1 */}
+                  <div><b>Job No:</b> {showVal(grp.jobno_oms)}</div>
+                  <div><b>Print Type:</b> {showVal(grp.merch)}</div>
+                  <div />
+
+                  {/* Row 2 */}
+                  <div><b>Print Description:</b> {showVal(grp.buyer1)}</div>
+                  <div><b>Print Colours:</b> {showVal(grp.production_type_inside_outside)}</div>  {/* ✅ number 4 will show */}
+                  <div />
+
+                  {/* Row 3 */}
+                  <div><b>Inside / Outside:</b> {showVal(grp.inside_outside_print_emb)}</div>
+                  <div><b>Individual Part:</b> {showVal(grp.individual_part_print_emb)}</div>
+                  <div />
+
+                  {/* Row 4 */}
+                  <div><b>Top / Bottom:</b> {showVal(grp.top_bottom)}</div>
+                  <div>
+                    <b>Unit:</b>
+                    {String(grp.unit || "")
+                      .split(",")
+                      .filter(Boolean)
+                      .map((u: string, i: number) => (
+                        <div key={i}>{u.trim()}</div>
+                      ))}
+                  </div>
+                  <div />
+
+                  {/* Row 5: Screen info */}
+                  <div><b>Print Screen 1:</b> {showVal(grp.print_screen_1)}</div>
+                  <div><b>Print Screen 2:</b> {showVal(grp.print_screen_2)}</div>
+                  <div />
+
+                  {/* Row 6 */}
+                  <div><b>Print Screen 3:</b> {showVal(grp.print_screen_3)}</div>
+                  <div />
+                  <div />
+                </div>
+
+                {/* COLOURS BLOCK */}
+                <div style={{ minWidth: 220 }}>
+                  <b>Colours:</b>
+                  {colours.map((c: any, i: number) => (
+                    <div
+                      key={`${c.colour}_${c.rgb}_${i}`}
+                      style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "6px", whiteSpace: "nowrap" }}
+                    >
+                      <div
+                        style={{ width: "20px", height: "20px", background: c.rgb || "#fff", border: "1px solid #000", flex: "0 0 auto" }}
+                      />
+                      <span>{showVal(c.colour || c.rgb)}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  const tooltipOpen = (args: any) => {
 
     const isHeaderCell = args.target.closest('.e-headercell');
     const isRowCell = args.target.closest('.e-rowcell');
 
     if (isRowCell || isHeaderCell) {
       let img = args.target.querySelector('img')
-      if (img && !isHeaderCell) {
-        // Get row information
-        const rowInfo = gridRef.current?.getRowInfo(args.target.closest('td'));
-        const rowData: OrderData = rowInfo?.rowData as OrderData;
-        
-        if (rowData) {
-          // Get image source
-          const imgSrc = img.src;
-          
-          // Build order information HTML
-          const orderInfo = `
-            <div style="padding: 12px; line-height: 1.6; font-size: 13px;">
-              <div style="margin-bottom: 8px;"><strong>Job No:</strong> ${rowData.jobno_oms || 'N/A'}</div>
-              <div style="margin-bottom: 8px;"><strong>Company:</strong> ${rowData.company_name || 'N/A'}</div>
-              <div style="margin-bottom: 8px;"><strong>Buyer:</strong> ${rowData.buyer1 || 'N/A'}</div>
-              <div style="margin-bottom: 8px;"><strong>Style:</strong> ${rowData.stylename || 'N/A'}</div>
-              <div style="margin-bottom: 8px;"><strong>Style No:</strong> ${rowData.styleno || 'N/A'}</div>
-              <div style="margin-bottom: 8px;"><strong>Quantity:</strong> ${rowData.quantity || 'N/A'}</div>
-              <div style="margin-bottom: 8px;"><strong>Unit:</strong> ${rowData.punit_sh || 'N/A'}</div>
-              <div style="margin-bottom: 8px;"><strong>Merch:</strong> ${rowData.merch || 'N/A'}</div>
-              <div style="margin-bottom: 8px;"><strong>Delivery Date:</strong> ${rowData.Fdt || rowData.final_delivery_date || 'N/A'}</div>
-              <div style="margin-bottom: 8px;"><strong>Type:</strong> ${rowData.director_sample_order || 'N/A'}</div>
-            </div>
-          `;
-          
-          // Create tooltip content with order info on left and image on right
-          const tooltipContent = `
-            <div style="display: flex; max-width: 700px;">
-              <div style="flex: 1; min-width: 250px; max-width: 300px; border-right: 1px solid #e0e0e0;">
-                ${orderInfo}
-              </div>
-              <div style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 12px;">
-                <img 
-                  src="${imgSrc}" 
-                  style="max-width: 350px; max-height: 350px; width: auto; height: auto; object-fit: contain;" 
-                  alt="Order Image"
-                />
-              </div>
-            </div>
-          `;
-          
-          (tooltipRef.current as TooltipComponent).content = tooltipContent;
-          (tooltipRef.current as TooltipComponent).width = '700px';
-          (tooltipRef.current as TooltipComponent).height = 'auto';
-        }
-      }
-      else if (img && isHeaderCell) {
-        // For header cells, show simple image
+      if (img) {
         let imgElem:any= args.target.innerHTML;
+        // Create a wrapper div with increased image height
         const wrapper = document.createElement('div');
         wrapper.innerHTML = imgElem;
         const tooltipImg = wrapper.querySelector('img');
         if (tooltipImg) {
-          tooltipImg.style.width = '100px';
-          tooltipImg.style.height = '100px';
+          tooltipImg.style.width = '500px';
+          tooltipImg.style.height = '500px';
           tooltipImg.style.objectFit = 'contain';
         }
         (tooltipRef.current as TooltipComponent).content = wrapper.innerHTML;
-        (tooltipRef.current as TooltipComponent).width = '100px';
-        (tooltipRef.current as TooltipComponent).height = '100px';
+        
+        // Set different dimensions for header cells
+        if (isHeaderCell) {
+          (tooltipRef.current as TooltipComponent).width = '100px';
+          (tooltipRef.current as TooltipComponent).height = '100px';
+        } else {
+          (tooltipRef.current as TooltipComponent).width = '500px';
+          (tooltipRef.current as TooltipComponent).height = '500px';
+        }
       }
       else {
         // Create a wrapper div for text content with styling
@@ -906,37 +1041,9 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
 
   }
 
-  // Background color implementation
-  const recordClick=(args:any)=>
-    {
-      // Remove background from previously clicked cell
-      if (previousCellRef.current) {
-        previousCellRef.current.style.backgroundColor = '';
-      }
-      
-      // Set yellow background on the newly clicked cell
-      if (args.cell) {
-        args.cell.style.backgroundColor = 'yellow';
-        // Store the current cell as the previous cell for next click
-        previousCellRef.current = args.cell;
-      }
-      
-      console.log('Cell clicked:', args);
-    }
-
-  const beforeOpen = (args: any) => {
-    // Adjust tooltip dimensions based on content type
-    const hasOrderInfo = args.element.innerHTML.includes('Job No:');
-    
-    if (hasOrderInfo) {
-      args.element.style.maxWidth = '750px';
-      args.element.style.width = 'auto';
-    }
-  };
-
   // Memoize the grid component to prevent unnecessary re-renders
   const memoizedGridComponent = useMemo(() => (
-    <><div><TooltipComponent ref={tooltipRef} target=".e-rowcell, .e-headercell" width="130px" height="130px" beforeRender={tooltipBeforeRender} beforeOpen={beforeOpen}>
+    <><div><TooltipComponent ref={tooltipRef} target=".e-rowcell, .e-headercell" position={"RightCenter"} width="200px" height="200px" beforeOpen={tooltipOpen}>
       <GridComponent
         id="default-aggregate-grid"
         ref={gridRef}
@@ -974,54 +1081,64 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
         actionComplete={actionComplete}
         created={created}
         frozenColumns={2}
-        toolbarClick={toolbarClick}
-        recordClick={recordClick}
+        toolbarClick={toolbarClick} 
       >
         <ColumnsDirective>
-
           <ColumnDirective isPrimaryKey={true} field="jobno_oms" headerText="ORDER INFO" width="120" maxWidth="120" template={orderSummaryTemplate} allowEditing={false} />
-          <ColumnDirective field="mainimagepath" headerText="IMG" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('mainimagepath')} allowEditing={true} />
+          <ColumnDirective field="mainimagepath" headerText="IMG" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('mainimagepath')} allowEditing={false} />
+          <ColumnDirective field="Fdt" headerText="DELIVERY INFO" width="150" maxWidth="150" template={deliveryInfoTemplate} />
           <ColumnDirective field="Print" headerText="Print" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Print')} allowEditing={false} />
           <ColumnDirective field="Emb" headerText="Emb" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Emb')} allowEditing={false} />
-          <ColumnDirective field="others1" headerText="others1" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others1')} allowEditing={false} />
-          <ColumnDirective field="qltycontroller" headerText="QC-ms" width="100" template={genericHighlighter('qltycontroller')} edit={qualityControllerEdit} allowEditing={true} />
-          <ColumnDirective field="Fdt" headerText="DELIVERY INFO" width="150" maxWidth="150" template={deliveryInfoTemplate} />
+          {/* <ColumnDirective field="Fdt" headerText="DELIVERY INFO" width="150" maxWidth="150" template={deliveryInfoTemplate} /> */}
+          <ColumnDirective field="printing_R" headerText="udf1" width="150" maxWidth="150" template={udf} />
+          <ColumnDirective field="styleno" headerText="qualy" width="150" maxWidth="150" template={qualy} />
+          <ColumnDirective field="styleno" headerText="udf2" width="150" maxWidth="150" template={udf2} />
+          <ColumnDirective field="prdty" headerText="prdty" width="150" maxWidth="250" template={prdty} />
           <ColumnDirective headerText='fsn' width="90" textAlign="Center" allowFiltering={true} template={rollnoTemplate} allowEditing={false} />
+          <ColumnDirective headerText='All ' width="90" textAlign="Center" allowFiltering={true} template={Alldate} allowEditing={false} />
           <ColumnDirective field="print_img" headerText="PRN IMG" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('print_img')} />
           <ColumnDirective field="prnmeaimg" headerText="MEAS IMG" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('prnmeaimg')} />
-          <ColumnDirective field="img_fpath" headerText="AOP" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('img_fpath')} />
+          {/* <ColumnDirective field="img_fpath" headerText="AOP" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('img_fpath')} /> */}
           <ColumnDirective field="prnclr" headerText="PRN COL" width="100" template={genericHighlighter('prnclr')} />
+          <ColumnDirective field="printing_R" headerText="1 PRINT" width="100" template={genericHighlighter('printing_R')} />
+          <ColumnDirective field="jobno_oms" headerText="jobno_oms" width="100" template={genericHighlighter('jobno_oms')} />
+          <ColumnDirective field="jobno_oms" headerText="jobno_oms" width="100" template={genericHighlighter('jobno_oms')} />
+          
           <ColumnDirective field="finaldelvdate1" headerText="finaldelvdate1" width="100" template={genericHighlighter('finaldelvdate1')} />
           <ColumnDirective field="date" headerText="date" width="100" template={genericHighlighter('finaldelvdate1')} />
+          <ColumnDirective field="others1" headerText="others1" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others1')} allowEditing={false} />
+          <ColumnDirective field="qltycontroller" headerText="QC-ms" width="100" template={genericHighlighter('qltycontroller')} edit={qualityControllerEdit} allowEditing={true} />
           <ColumnDirective field="ourdelvdate" headerText="ourdelvdate" width="100" template={genericHighlighter('ourdelvdate')} />
-          <ColumnDirective field="actdaten" headerText="actdaten" width="100" template={genericHighlighter('actdaten')} />
-          <ColumnDirective field="u25" headerText="25 WEEK" width="100" template={genericHighlighter('u25')} />
-          <ColumnDirective field="abc" type="string" headerText="ABC" width="100" template={genericHighlighter('abc')} />
-          <ColumnDirective field="u46" headerText="46 EMPTY" width="100" template={genericHighlighter('u46')} />
-          <ColumnDirective field="production_type_inside_outside" headerText="PRD TYPE" width="100" template={genericHighlighter('production_type_inside_outside')} />
-          <ColumnDirective field="u37" headerText="37 AOP" width="100" template={genericHighlighter('u37')} />
-          <ColumnDirective field="printing_R" headerText="1 PRINT" width="100" template={genericHighlighter('printing_R')} />
-          <ColumnDirective field="u8" headerText="8 FAB" width="100" template={genericHighlighter('u8')} />
-          <ColumnDirective field="u36" headerText="36 FABIN" width="90" template={genericHighlighter('u36')} />
-          <ColumnDirective field="u15" headerText="15" width="90" template={genericHighlighter('u15')} />
-          <ColumnDirective field="u45" headerText="45 ORDER" width="90" template={genericHighlighter('u45')} />
-          <ColumnDirective field="u31" headerText="31 ITS" width="90" template={genericHighlighter('u31')} />
-          <ColumnDirective field="u141" headerText="141 SAMPLE" width="100" template={genericHighlighter('u141')} />
-          <ColumnDirective field="Emb" headerText="3 EMB" width="90" template={genericHighlighter('Emb')} />
-          <ColumnDirective field="buyer1" headerText="BUYER" width="100" template={genericHighlighter('buyer1')} />
+          {/* <ColumnDirective field="actdaten" headerText="actdaten" width="100" template={genericHighlighter('actdaten')} /> */}
+          {/* <ColumnDirective field="u25" headerText="25 WEEK" width="100" template={genericHighlighter('u25')} /> */}
+          {/* <ColumnDirective field="abc" type="string" headerText="ABC" width="100" template={genericHighlighter('abc')} /> */}
+          {/* <ColumnDirective field="u46" headerText="46 EMPTY" width="100" template={genericHighlighter('u46')} /> */}
+          {/* <ColumnDirective field="production_type_inside_outside" headerText="PRD TYPE" width="100" template={genericHighlighter('production_type_inside_outside')} /> */}
+          {/* <ColumnDirective field="u37" headerText="37 AOP" width="100" template={genericHighlighter('u37')} /> */}
+          {/* <ColumnDirective field="printing_R" headerText="1 PRINT" width="100" template={genericHighlighter('printing_R')} /> */}
+          {/* <ColumnDirective field="u8" headerText="8 FAB" width="100" template={genericHighlighter('u8')} /> */}
+          {/* <ColumnDirective field="u36" headerText="36 FABIN" width="90" template={genericHighlighter('u36')} /> */}
+          {/* <ColumnDirective field="u15" headerText="15" width="90" template={genericHighlighter('u15')} /> */}
+          {/* <ColumnDirective field="u45" headerText="45 ORDER" width="90" template={genericHighlighter('u45')} /> */}
+          {/* <ColumnDirective field="u31" headerText="31 ITS" width="90" template={genericHighlighter('u31')} /> */}
+          {/* <ColumnDirective field="u141" headerText="141 SAMPLE" width="100" template={genericHighlighter('u141')} /> */}
+          {/* <ColumnDirective field="Emb" headerText="3 EMB" width="90" template={genericHighlighter('Emb')} /> */}
+          {/* <ColumnDirective field="buyer1" headerText="BUYER" width="100" template={genericHighlighter('buyer1')} />
           <ColumnDirective field="merch" headerText="MERCH" width="100" template={genericHighlighter('merch')} />
-          <ColumnDirective field='punit_sh' headerText="punit_sh" width="100" template={genericHighlighter('punit_sh')} />
+          <ColumnDirective field='punit_sh' headerText="punit_sh" width="100" template={genericHighlighter('punit_sh')} /> */}
+
+{/* 
           <ColumnDirective field="styleno" headerText="STYLE NO" width="110" template={genericHighlighter('styleno')} />
           <ColumnDirective field="director_sample_order" headerText="DIR S/O" width="100" template={genericHighlighter('director_sample_order')} />
           <ColumnDirective field="order_follow_up" headerText="ORD FOLLOW UP" width="100" template={genericHighlighter('order_follow_up')} />
           <ColumnDirective field="u7" headerText="U7" width="100" template={genericHighlighter('u7')} />
-          <ColumnDirective field="quality_controller" headerText="QC" width="100" template={genericHighlighter('quality_controller')} />
+          <ColumnDirective field="quality_controller" headerText="QC" width="100" template={genericHighlighter('quality_controller')} /> */}
           <ColumnDirective field="slno1" headerText="No" width="90" textAlign="Center" />
-          <ColumnDirective field="u14" headerText="14 DY" width="70" minWidth="90" template={genericHighlighter('u14')} />
-          <ColumnDirective field="styledesc" headerText="DESC" width="160" template={genericHighlighter('styledesc')} />
-          <ColumnDirective field="reference" headerText="reference" width="250" maxWidth="250" template={genericHighlighter('reference')} />
+          {/* <ColumnDirective field="u14" headerText="14 DY" width="70" minWidth="90" template={genericHighlighter('u14')} /> */}
+          {/* <ColumnDirective field="styledesc" headerText="DESC" width="160" template={genericHighlighter('styledesc')} /> */}
+          {/* <ColumnDirective field="reference" headerText="reference" width="250" maxWidth="250" template={genericHighlighter('reference')} /> */}
           <ColumnDirective field="quantity" headerText="QTY" width="90" textAlign="Right" template={genericHighlighter('quantity')} />
-          <ColumnDirective field="company_name" headerText="COMPANY" width="90" template={genericHighlighter('company_name')} />
+          {/* <ColumnDirective field="company_name" headerText="COMPANY" width="90" template={genericHighlighter('company_name')} /> */}
 
         </ColumnsDirective>
         <AggregatesDirective>
@@ -1032,7 +1149,7 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
             </AggregateColumnsDirective>
           </AggregateDirective>
         </AggregatesDirective>
-        <Inject services={[Sort, Edit, Filter, Group, Reorder, Search, VirtualScroll, Freeze, Resize, ContextMenu, Page, Toolbar, ColumnChooser, ColumnMenu, Aggregate, PdfExport]} />
+        <Inject services={[Sort, Edit, Filter, Group, Reorder, Search, VirtualScroll, DetailRow,Freeze, Resize, ContextMenu, Page, Toolbar, ColumnChooser, ColumnMenu, Aggregate, PdfExport]} />
       </GridComponent></TooltipComponent></div></>
   ), [dataSource]);
 
@@ -1046,16 +1163,6 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
         .e-rowcell { vertical-align: top !important; font-size: 12px !important; line-height: 1.3 !important; padding-top: 8px !important; }
         .e-filter-popup { z-index: 10000001 !important; }
         .e-grid { min-width: 0 !important; }
-        
-        /* Tooltip custom styles */
-        .e-tooltip-wrap .e-tip-content {
-          padding: 0 !important;
-        }
-        
-        .e-tooltip-wrap {
-          box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
-          border: 1px solid #e0e0e0 !important;
-        }
         
         /* --- Desktop Layout --- */
         .dashboard-header {
@@ -1230,19 +1337,19 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
             className="search-input"
           />
         </div>
-        <div style={{ padding: '12px 18px', borderBottom: '1px solid #eee', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
+        <div style={{ padding: '8px 5px', borderBottom: '1px solid #eee', display: 'flex', gap: 7, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
   <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight:'bold' }}>
     <TextBoxComponent
       ref={settingNameRef}
-      placeholder="Enter setting name"
-      style={{ width: '120px' }}
+      placeholder="setting name"
+      style={{ width: '80px' }}
     />
   </div>
 
   <ButtonComponent
     onClick={saveSetting}
     cssClass="e-primary"
-    style={{ padding: '6px 12px', fontSize: '13px' }}
+    style={{ padding: '3px 6px', fontSize: '13px' }}
   >
     💾
   </ButtonComponent>
@@ -1258,8 +1365,8 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
       )
       .map(s => ({ text: s.name, value: s.id }))}
     fields={{ text: 'text', value: 'value' }}
-    placeholder="Select setting..."
-    style={{ minWidth: '150px' }}
+    placeholder="Select setting"
+    style={{ width: '80px' }}
     change={() => setSelectedSetting(dropdownRef.current?.value as string)}
   />
 </div>
@@ -1267,7 +1374,7 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
   <ButtonComponent
     onClick={applySetting}
     cssClass="e-outline"
-    style={{ padding: '6px 12px', fontSize: '13px' }}
+    style={{ padding: '3px 6px', fontSize: '15px' }}
   >
    ✔
   </ButtonComponent>
@@ -1275,7 +1382,7 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
   <ButtonComponent
     onClick={deleteSetting}
     cssClass="e-outline e-danger"
-    style={{ padding: '6px 12px', fontSize: '13px' }}
+    style={{ padding: '3px 6px', fontSize: '15px' }}
   >
     🗑
   </ButtonComponent>
