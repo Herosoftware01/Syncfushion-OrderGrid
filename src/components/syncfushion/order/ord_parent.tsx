@@ -565,7 +565,7 @@ const   prdty= (p: OrderData) => (
             allowSorting={true}
             allowFiltering={true}
             filterSettings={{ type: 'Menu' }}
-            allowTextWrap={true}
+            // allowTextWrap={true}
             allowResizing={true}
             toolbar={toolbarOptions}
             editSettings={{ allowEditing: true, allowDeleting: true, mode: 'Dialog' }}
