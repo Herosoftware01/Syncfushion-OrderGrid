@@ -61,7 +61,7 @@ interface OrderData {
 
 }
 
-const HeroFashionGrid13: React.FC = () => {
+const HeroFashionGrid131: React.FC = () => {
   const [dataSource, setDataSource] = useState<OrderData[]>([]);
   const [totalCount, setTotalCount] = useState<number>(0);
   const [showingCount, setShowingCount] = useState<number>(0);
@@ -1329,8 +1329,8 @@ const showVal = (val: any): string => {
           </div>
         </div>
         <div className="header-controls bg-white">
-          <input
-            type="text"
+          <input 
+            type="text" 
             placeholder="Search all columns..."
             value={searchKey}
             onChange={onSearchChange}
@@ -1403,4 +1403,4 @@ const showVal = (val: any): string => {
   );
 };
 
-export default HeroFashionGrid13;
+export default HeroFashionGrid131;
