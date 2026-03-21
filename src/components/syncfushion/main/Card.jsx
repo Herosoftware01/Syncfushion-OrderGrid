@@ -310,7 +310,23 @@ const Dashboard = () => {
             </p>
           </div>
 
-          
+         {/* Card 17 */}
+           <div
+            onClick={() => navigate("chart")}
+            className="group cursor-pointer bg-white rounded-2xl shadow-lg p-6 relative overflow-hidden transform hover:scale-105 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300"
+          >
+            <div className="absolute -top-10 -right-10 w-32 h-32 bg-green-200 rounded-full opacity-40 group-hover:scale-150 transition duration-500"></div>
+            <div className="w-14 h-14 flex items-center justify-center bg-green-100 rounded-xl mb-4 group-hover:rotate-12 transition duration-300">
+              <FaAirbnb className="text-green-500 text-2xl" />
+            </div>
+            <h2 className="text-lg font-semibold text-gray-800 group-hover:text-green-600 transition">
+              Gantt Chart
+            </h2>
+            <p className="text-gray-500 text-sm mt-1">
+              Details about Gantt Chart
+            </p>
+          </div>
+
         </div>
       </div>
     </div>
