@@ -1008,7 +1008,7 @@ const showVal = (val: any): string => {
 
     const isHeaderCell = args.target.closest('.e-headercell');
     const isRowCell = args.target.closest('.e-rowcell');
-
+    
     if (isRowCell || isHeaderCell) {
       let img = args.target.querySelector('img')
       if (img) {
@@ -1033,6 +1033,10 @@ const showVal = (val: any): string => {
           (tooltipRef.current as TooltipComponent).height = '500px';
         }
       }
+       
+        // args.cancel=true
+        
+      
       else {
         // Create a wrapper div for text content with styling
         const textWrapper = document.createElement('div');
@@ -1048,7 +1052,7 @@ const showVal = (val: any): string => {
         if (isHeaderCell) {
           (tooltipRef.current as TooltipComponent).width = '100px';
           (tooltipRef.current as TooltipComponent).height = '100px';
-        } else {
+        } else { args.cancel=true;
           (tooltipRef.current as TooltipComponent).width = '200px';
           (tooltipRef.current as TooltipComponent).height = '200px';
         }

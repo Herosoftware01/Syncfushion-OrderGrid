@@ -20,7 +20,7 @@ function ForeignKeyColumn() {
   }
 
   const [orderData, setOrderData] = useState<OrderRow[]>([]);
-  const [rgbData, setRgbData] = useState([]);
+  const [printData, setPrintData] = useState([]);
 
     const imageTemplate = (props: OrderRow) => {
       const src = props?.mainimagepath
@@ -41,7 +41,7 @@ function ForeignKeyColumn() {
       );
     };
 
-  const toolbarOptions = ["Add", "Edit", "Delete", "Update", "Cancel"];
+  const toolbarOptions = ["Add", "Edit", "Delete", "Update", "Cancel", "Search"];
   const validationRules = { required: true };
 
   // 🔥 Fetch APIs
@@ -55,7 +55,7 @@ function ForeignKeyColumn() {
     fetch("https://app.herofashion.com/PrintRgb/")
       .then((res) => res.json())
       .then((data) => {
-        setRgbData(data);
+        setPrintData(data);
       });
   }, []);
 
@@ -77,9 +77,9 @@ function ForeignKeyColumn() {
         >
           <ColumnsDirective>
             {/* Primary Key */}
-            <ColumnDirective field="jobno_oms" headerText="Job No" width="150" isPrimaryKey={true} validationRules={validationRules} />
+            {/* <ColumnDirective field="jobno_oms" headerText="Job No" width="150" isPrimaryKey={true} validationRules={validationRules} /> */}
             {/* 🔗 Foreign Key Column */}
-            <ColumnDirective field="jobno_oms" headerText="RGB Job" width="180" foreignKeyField="jobno_joint" foreignKeyValue="jobno_joint" dataSource={rgbData} />
+            <ColumnDirective field="jobno_oms" headerText="RGB Job" width="180" foreignKeyField="jobno_oms" foreignKeyValue="print_type" dataSource={printData} />
             <ColumnDirective headerText="Image" width="150" template={imageTemplate} />
             <ColumnDirective field="buyer" headerText="Buyer" width="150" />
             <ColumnDirective field="style" headerText="Style" width="150" />
