@@ -631,9 +631,14 @@ const HeroFashionGrid13: React.FC = () => {
                                 <div className="e-info-text-separator">
                                     <span>{showVal(props.buyer1)} - {showVal(props.company_name)}</span>
                                 </div>
+                                <div> <span className="e-pizza-size">({showVal(props.reference)})</span></div>
+                               
                                 <div className="e-info-text-separator">
                                     {chipTags([showVal(props.punit_sh), showVal(props.production_type_inside_outside), showVal(props.director_sample_order)])}
                                 </div>
+                                  <div className="e-pizza-price-min-layout e-info-text-separator">
+                                    <span className="e-pizza-price-text">({showVal(props.reference)})</span>
+                                  </div>
                                 <div className="e-pizza-price-min-layout e-info-text-separator">
                                     <span className="e-pizza-price-text">Total Qty&nbsp;</span>
                                     <span className="e-pizza-price">{showVal(props.quantity)}</span>
