@@ -5,6 +5,7 @@ import {
   GridComponent,
   ColumnsDirective,
   ColumnDirective,
+  InfiniteScroll,
   Sort,
   Inject,
   Resize,
@@ -322,6 +323,13 @@ const HeroFashionGrid13: React.FC = () => {
       }
     }
   };
+
+    const rollnoTemplate = (props: any) => {
+    let rollno = props.index
+    if (rollno) {
+      return (<span>{++rollno}</span>)
+    }
+  }
 
   const toolbarClick = (args: any) => {
     if (!gridRef.current) return;
@@ -656,7 +664,8 @@ const HeroFashionGrid13: React.FC = () => {
   };
 
   // --- RENDER ---
-  const toolbarOptions: any[] = ["Search", "Edit", "Delete", "Update", "Cancel", { type: 'Separator' }, { text: '', prefixIcon: 'e-excelexport', id: 'export_excel' }];
+  
+  const toolbarOptions: any[] = [ { text: 'Search', prefixIcon: 'e-icons e-search', id: 'Grid_search', align: 'Left' as any }, "Edit", "Delete", "Update", "Cancel", { type: 'Separator' }, { text: '', prefixIcon: 'e-excelexport', id: 'export_excel' }];
   const actionBegin = (args: any) => { /* Keep existing logic */ };
   const actionComplete = (args: any) => { /* Keep existing logic */ };
 
@@ -776,11 +785,15 @@ const HeroFashionGrid13: React.FC = () => {
         )}
         {loading ? <div style={{ padding: '50px', textAlign: 'center' }}>Loading...</div> : (
           <GridComponent
+            id="Grid"
             ref={gridRef}
             dataSource={dataSource}
             dataBound={dataBound}
             pageSettings={{ pageSize: 10 }}
-            height="100%"
+            // allowPaging={true}
+            enableInfiniteScrolling={true}
+            statelessTemplates={['directiveTemplates']}
+            height="700px"
             width="100%"
             allowSorting={true}
             allowFiltering={true}
@@ -797,7 +810,12 @@ const HeroFashionGrid13: React.FC = () => {
             detailTemplate={detailTemplate}
           >
             <ColumnsDirective>
+<<<<<<< HEAD
               <ColumnDirective field="jobno_oms" headerText="Order Info" width="100" template={orderSummaryTemplate} isPrimaryKey={true} /> 
+=======
+              <ColumnDirective headerText='fsn' width="90" textAlign="Center" allowFiltering={true} template={rollnoTemplate} allowEditing={false} />
+              <ColumnDirective field="jobno_oms" headerText="Order Info" width="100" template={orderSummaryTemplate} isPrimaryKey={true} />
+>>>>>>> 80850bd7e891055b6ff4252f48a189de94774857
               <ColumnDirective headerText="Photo" width="80" template={photoTemplate} textAlign="Center" allowFiltering={false} />
               {/* <ColumnDirective field="Fdt" headerText="Delivery Info" width="100" template={deliveryInfoTemplate} />
               <ColumnDirective field="print_img" headerText="PRN IMG" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('print_img')} />
@@ -805,7 +823,7 @@ const HeroFashionGrid13: React.FC = () => {
                 <ColumnDirective field="Print" headerText="Print" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Print')} allowEditing={false} />
                  <ColumnDirective field="Emb" headerText="Emb" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Emb')} allowEditing={false} />
               <ColumnDirective field="others1" headerText="others1" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others1')} allowEditing={false} />
-              <ColumnDirective field="Fdt" headerText="udf1" width="100" template={udf} />
+              <ColumnDirective field="printing_R" headerText="udf1" width="100" template={udf} />
               <ColumnDirective field="udf2" headerText="udf2" width="100" template={udf2} />
               <ColumnDirective field="qualy" headerText="qualy" width="120" template={qualy} />
               <ColumnDirective field="prdty" headerText="prdty" width="120" template={prdty} />
@@ -814,7 +832,7 @@ const HeroFashionGrid13: React.FC = () => {
               <ColumnDirective field="final_delivery_date" headerText="Fdt" width="120" template={genericHighlighter('final_delivery_date')} />
               <ColumnDirective field="production_type_inside_outside" headerText="Type" width="120" template={genericHighlighter('production_type_inside_outside')} /> */}
             </ColumnsDirective>
-            <Inject services={[Sort, Filter, Resize, Page, Toolbar, Edit, DetailRow, ExcelExport, Reorder]} />
+            <Inject services={[Sort, Filter, Resize, Page, Toolbar, Edit, DetailRow, ExcelExport, Reorder, InfiniteScroll]} />
           </GridComponent>
         )}
       </div>
