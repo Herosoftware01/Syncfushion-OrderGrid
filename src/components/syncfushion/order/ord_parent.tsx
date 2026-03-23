@@ -623,9 +623,14 @@ const HeroFashionGrid13: React.FC = () => {
                                 <div className="e-info-text-separator">
                                     <span>{showVal(props.buyer1)} - {showVal(props.company_name)}</span>
                                 </div>
+                                <div> <span className="e-pizza-size">({showVal(props.reference)})</span></div>
+                               
                                 <div className="e-info-text-separator">
                                     {chipTags([showVal(props.punit_sh), showVal(props.production_type_inside_outside), showVal(props.director_sample_order)])}
                                 </div>
+                                  <div className="e-pizza-price-min-layout e-info-text-separator">
+                                    <span className="e-pizza-price-text">({showVal(props.reference)})</span>
+                                  </div>
                                 <div className="e-pizza-price-min-layout e-info-text-separator">
                                     <span className="e-pizza-price-text">Total Qty&nbsp;</span>
                                     <span className="e-pizza-price">{showVal(props.quantity)}</span>
@@ -792,7 +797,7 @@ const HeroFashionGrid13: React.FC = () => {
             detailTemplate={detailTemplate}
           >
             <ColumnsDirective>
-              <ColumnDirective field="jobno_oms" headerText="Order Info" width="100" template={orderSummaryTemplate} isPrimaryKey={true} />
+              <ColumnDirective field="jobno_oms" headerText="Order Info" width="100" template={orderSummaryTemplate} isPrimaryKey={true} /> 
               <ColumnDirective headerText="Photo" width="80" template={photoTemplate} textAlign="Center" allowFiltering={false} />
               {/* <ColumnDirective field="Fdt" headerText="Delivery Info" width="100" template={deliveryInfoTemplate} />
               <ColumnDirective field="print_img" headerText="PRN IMG" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('print_img')} />

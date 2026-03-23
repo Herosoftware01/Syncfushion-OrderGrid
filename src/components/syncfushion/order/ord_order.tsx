@@ -55,7 +55,8 @@ interface OrderData {
   shipment_complete: string; u7: string; u141: string; u45: string; u36: string; u31: string;
   u15: string; u14: string; u8: string; u25: string; insdate: string; insdateyear: string;finaldelvdate1:string;number_03_emb:string;actdate:string;
   actdaten: string; actyeardate: string; pono: string; u46: string; u37: string; qltycontroller: string;Print:string;others1:string;
-  mainimagepath: string; finaldelvdate: string; prnclr?: string | null; prnfile1?: string; prnfile2?: string; img_fpath?: string;clr?:string;print_img?:string;
+  mainimagepath: string; finaldelvdate: string; prnclr?: string | null; prnfile1?: string; prnfile2?: string; img_fpath?: string;clr?:string;print_img?:string;Fab_R:string;
+  ITS_R:string;Order_R:string;Dy_R:string;Sample_R:string;Week_R:string;
   prnmeaimg?:string;mpic?:string;
   
 
@@ -475,20 +476,20 @@ const  udf= (p: OrderData) => (
       <b>1-Print:</b> {highlightText(p.printing_R)}<br />
       <b>3-Emb:</b> {highlightText(p.number_03_emb)}<br />
       <b>7:</b> {highlightText(p.u7)}<br />
-      <b>8-Fab:</b> {highlightText(p.u8)}<br />
-      <b>14-Fabdy:</b> {highlightText(p.u14)}<br />
-      <b>25-week:</b> {highlightText(p.u25)}<br />
+      <b>8-Fab:</b> {highlightText(p.Fab_R)}<br />
+      <b>14-Fabdy:</b> {highlightText(p.Dy_R)}<br />
+      <b>25-week:</b> {highlightText(p.Week_R)}<br />
       {/* <b>Unit:</b> <span style={getPunitStyle(p.punit_sh)}>{highlightText(p.punit_sh)}</span><br />
       <b>Qty:</b> {highlightText(p.quantity)} */}
     </div>
   );
   const  udf2= (p: OrderData) => (
     <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
-      <b>31:</b> {highlightText(p.u31)}<br />
+      <b>31:</b> {highlightText(p.ITS_R)}<br />
       <b>36-ITS:</b> {highlightText(p.u36)}<br />
-      <b>u45:</b> {highlightText(p.u45)}<br />
+      <b>u45:</b> {highlightText(p.Order_R)}<br />
       <b>u46:</b> {highlightText(p.u46)}<br />
-      <b>u141:</b> {highlightText(p.u141)}<br />
+      <b>u141:</b> {highlightText(p.Sample_R)}<br />
       {/* <b>3-Emb:</b> {highlightText(p.number_03_emb)}<br />
       <b>8-Fab:</b> {highlightText(p.u8)}<br />
       <b>14-Fabdy:</b> {highlightText(p.u14)}<br /> */}
