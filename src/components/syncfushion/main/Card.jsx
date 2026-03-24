@@ -279,6 +279,7 @@ const Dashboard = () => {
               Syncfusion order deatil with tooltip
             </p>
           </div>
+          
          {/* Card 15 */}
            <div
             onClick={() => navigate("chart")}

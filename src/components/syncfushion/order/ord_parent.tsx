@@ -696,112 +696,241 @@ const HeroFashionGrid13: React.FC = () => {
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#fff', minWidth: 0, overflow: 'hidden' }}>
       {/* CSS Styles */}
       <style>{`
-        .custom-highlight { background-color: #fff9c4 !important; color: '#d32f2f' !important; font-weight: bold; }
+        .custom-highlight { background-color: #fff9c4 !important; color: #d32f2f !important; font-weight: bold; }
         .e-rowcell { vertical-align: top !important; font-size: 12px !important; line-height: 1.3 !important; padding-top: 8px !important; }
-        .e-detailrow .e-tab { border: none; }
-        .e-dtdiagonal, .e-dtvertical { display: none !important; }
-
-        /* --- Pizza Menu Layout Styles (Ref Code) --- */
-        .e-pizza-cell { 
-            padding: 10px; 
-            border-bottom: 1px solid #e0e0e0; 
-            background: #fff;
-        }
-        .e-pizza-info-container {
-            display: flex;
-            align-items: center;
-            min-height: 120px;
-        }
-        .e-pizza-image-layout {
-            width: 120px;
-            height: 120px;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-        .e-pizza-image {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-        .e-pizza-info-layout {
-            padding: 10px 20px;
-            flex-grow: 1;
-        }
-        .e-info-text-separator {
-            margin-bottom: 8px;
-        }
-        .e-pizza-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #333;
-            margin-right: 5px;
-        }
-        .e-pizza-size {
-            font-size: 14px;
-            color: #888;
-        }
-        .e-pizza-price-min-layout {
-            display: none; /* Hidden on larger screens */
-        }
-        .e-pizza-price-layout {
-            padding: 20px;
-            text-align: right;
-            flex-shrink: 0;
-        }
-        .e-pizza-price-text {
-            font-size: 12px;
-            color: #888;
-            display: block;
-        }
-        .e-pizza-price {
-            font-size: 20px;
-            font-weight: bold;
-            color: #d62828;
-            display: block;
-        }
-        .e-flex-grow { flex-grow: 1; }
+        .e-filter-popup { z-index: 10000001 !important; }
+        .e-grid { min-width: 0 !important; }
         
-        /* Chip styles */
-        .e-chip-list.e-outline .e-chip { 
-            border: 1px solid #e0e0e0; 
-            background: transparent; 
-            color: #666;
-            padding: 0 8px;
-            height: 24px;
-            line-height: 22px;
-            border-radius: 12px;
-            font-size: 12px;
-            margin: 2px;
-        }
+        /* --- Desktop Layout --- */
+        .dashboard-header {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+          padding: 5px 10px;
+          background-color: #0ff180;
+          border-bottom: 1px solid #dee2e6;
+          flex-shrink: 0;
+          flex-wrap: wrap; 
+          }
+          
+          .header-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-right: 20px;
+            }
+            
+            .header-controls {
+              display: flex;
+              flex-direction: row;
+              align-items: center;
+              gap: 15px;
+              }
+              
+              .search-input {
+          padding: 8px 16px;
+          border-radius: 4px;
+          border: 1px solid #ced4da;
+          outline: none;
+          width: 250px;
+          transition: width 0.3s;
+          }
+          
+          .search-input:focus {
+          border-color: #007bff;
+          box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+          }
+          
+          .count-display {
+            background: #e9ecef;
+            color: #007bff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+            white-space: nowrap;
+            border: 1px solid #dce1e6;
+            }
 
-          @media (max-width: 1023px){
+                      .count-display1 {
+            background: #e9ecef;
+            color: #007bff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+            white-space: nowrap;
+            border: 1px solid #dce1e6;
+            display: none
+            }
+
+            @media (max-width: 1023px){
             .dashboard-header {
               margin-top: 60px
             }
             }
+            
+            /* --- Mobile Layout --- */
+            @media (max-width: 768px) {
+              .dashboard-header {
+                flex-direction: column;
+                padding: 10px;
+                align-items: stretch;
+                gap: 10px;             
+                margin-top: 60px
+                }
+
+                .breadcromp{
+                width:80%;
+                font-size:50px;
+                }
+                 
+        
+                          .count-display {
+            background: #e9ecef;
+            color: #007bff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+            white-space: nowrap;
+            border: 1px solid #dce1e6;
+            display:none
+            }
+                          .count-display1 {
+            background: #e9ecef;
+            color: #007bff;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+            white-space: nowrap;
+            border: 1px solid #dce1e6;
+            display:block;
+            width: 70px;
+            float: right;
+            }
+            .count{
+              margin-top: -30px;
+              margin-left: 30px
+            }
+                .header-title {
+                  text-align: center;
+                  margin-right: 0;
+                  margin-bottom: 5px;
+                  fontStyle:'Bold' ;
+                  order: 1;
+                  }
+                  .header-controls {
+                    flex-direction: column;
+                    width: 100%;
+                    gap: 10px;
+                    order: 2;
+                    }
+            .search-input {
+              width: 100%;
+              }
+              .count-display {
+                width: 100%;
+                textAlign: 'center';
+                display: 'block';
+                boxSizing: 'border-box';
+                }
+                }
+                
       `}</style>
 
       {/* Header */}
-      <div className="dashboard-header" style={{ display: 'flex', justifyContent: 'space-between', padding: '10px', background: '#0ff180', alignItems: 'center'}}>
-        <div className="count-display" style={{ background: '#e9ecef', padding: '8px', borderRadius: '4px' }}>
+      <div className="dashboard-header">
+        <div className="count-display">
           {showingCount} / {totalCount}
         </div>
-        
-        <div className="header-controls bg-white">
-          <input type="text" placeholder="Search all columns..." value={searchKey} onChange={onSearchChange} className="search-input" style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ced4da' }}/>
-        </div>
 
-        {/* Settings Controls */}
-        <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
-          <TextBoxComponent ref={settingNameRef} placeholder="Name" width="80px" />
-          <ButtonComponent onClick={saveSetting}>💾</ButtonComponent>
-          <DropDownListComponent ref={dropdownRef} dataSource={savedSettings.filter(s=>s.user===username).map(s=>({text:s.name, value:s.id}))} fields={{text:'text', value:'value'}} placeholder="Select" width="100px" />
-          <ButtonComponent onClick={applySetting}>✔</ButtonComponent>
-          <ButtonComponent onClick={deleteSetting}>🗑</ButtonComponent>
+        <ol className="flex items-center whitespace-nowrap breadcromp">
+          <li className="inline-flex items-center">
+            <a className="flex items-center text-xs md:text-sm text-lg text-muted-foreground-1 hover:text-primary-focus focus:outline-hidden focus:text-primary-focus" href="/#/dashboard">
+              <svg className="shrink-0 me-3 size-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
+              Dashboard
+            </a>
+            <svg className="shrink-0 mx-2 size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+          </li>
+          <li className="inline-flex items-center">
+            <a className="flex items-center text-xs md:text-sm text-muted-foreground-1 hover:text-primary-focus focus:outline-hidden focus:text-primary-focus" href="/#/sy-order">
+              <svg className="shrink-0 me-3 size-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="14" y="3" rx="1" /><path d="M10 21V8a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1H3" /></svg>
+              Order
+              <svg className="shrink-0 mx-2 size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+            </a>
+          </li>
+          <li className="inline-flex items-center text-xs md:text-sm font-semibold text-foreground truncate" aria-current="page">
+            Order Table
+          </li>
+        </ol>
+        <div className='count'>
+
+          <div className="count-display1">
+            {showingCount} / {totalCount}
+          </div>
         </div>
+        <div className="header-controls bg-white">
+          <input 
+            type="text" 
+            placeholder="Search all columns..."
+            value={searchKey}
+            onChange={onSearchChange}
+            className="search-input"
+          />
+        </div>
+        <div style={{ padding: '8px 5px', borderBottom: '1px solid #eee', display: 'flex', gap: 7, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
+  <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight:'bold' }}>
+    <TextBoxComponent
+      ref={settingNameRef}
+      placeholder="setting name"
+      style={{ width: '80px' }}
+    />
+  </div>
+
+  <ButtonComponent
+    onClick={saveSetting}
+    cssClass="e-primary"
+    style={{ padding: '3px 6px', fontSize: '13px' }}
+  >
+    💾
+  </ButtonComponent>
+
+<div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+  <DropDownListComponent
+    ref={dropdownRef}
+    id="settings-dropdown"
+    dataSource={savedSettings
+      .filter(
+        s =>
+          s.user?.toLowerCase() === username?.toLowerCase() // normalize for comparison
+      )
+      .map(s => ({ text: s.name, value: s.id }))}
+    fields={{ text: 'text', value: 'value' }}
+    placeholder="Select setting"
+    style={{ width: '80px' }}
+    change={() => setSelectedSetting(dropdownRef.current?.value as string)}
+  />
+</div>
+
+  <ButtonComponent
+    onClick={applySetting}
+    cssClass="e-outline"
+    style={{ padding: '3px 6px', fontSize: '15px' }}
+  >
+   ✔
+  </ButtonComponent>
+
+  <ButtonComponent
+    onClick={deleteSetting}
+    cssClass="e-outline e-danger"
+    style={{ padding: '3px 6px', fontSize: '15px' }}
+  >
+    🗑
+  </ButtonComponent>
+</div>
       </div>
 
       {/* Grid Container */}

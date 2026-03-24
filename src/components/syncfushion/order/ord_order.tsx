@@ -1130,9 +1130,9 @@ const showVal = (val: any): string => {
           <ColumnDirective field="styleno" headerText="qualy" width="150" maxWidth="150" template={qualy} />
           <ColumnDirective field="styleno" headerText="udf2" width="150" maxWidth="150" template={udf2} />
           <ColumnDirective field="udf4" headerText="udf4" width="150" maxWidth="150" template={udf4} />
-          <ColumnDirective field="prdty" headerText="prdty" width="150" maxWidth="250" template={prdty} />
+          <ColumnDirective field="prdty" headerText="prdty" width="180" maxWidth="250" template={prdty} />
           <ColumnDirective headerText='fsn' width="90" textAlign="Center" allowFiltering={true} template={rollnoTemplate} allowEditing={false} />
-          <ColumnDirective headerText='All ' width="90" textAlign="Center" allowFiltering={true} template={Alldate} allowEditing={false} />
+          <ColumnDirective headerText='All ' width="150" textAlign="Center" allowFiltering={true} template={Alldate} allowEditing={false} />
           <ColumnDirective field="print_img" headerText="PRN IMG" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('print_img')} />
           <ColumnDirective field="prnmeaimg" headerText="MEAS IMG" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('prnmeaimg')} />
           {/* <ColumnDirective field="img_fpath" headerText="AOP" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('img_fpath')} /> */}

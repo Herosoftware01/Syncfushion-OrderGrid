@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import {
   GridComponent,
   ColumnsDirective,
@@ -9,7 +9,8 @@ import {
   Edit,
   Sort,
   ForeignKey,
-  Toolbar
+  Toolbar,
+  InfiniteScroll
 } from "@syncfusion/ej2-react-grids";
 
 function ForeignKeyColumn() {
@@ -44,6 +45,38 @@ function ForeignKeyColumn() {
   const toolbarOptions = ["Add", "Edit", "Delete", "Update", "Cancel", "Search"];
   const validationRules = { required: true };
 
+  const gridContent = useMemo(
+    () => (
+      <GridComponent
+        dataSource={orderData}
+        ref={gridRef}
+        allowFiltering={true}
+        enableInfiniteScrolling={true}
+        height={700}
+        pageSettings={{pageSize:20}}
+        allowSorting={true}
+        editSettings={{
+          allowEditing: true,
+          allowDeleting: true,
+          allowAdding: true
+        }}
+        filterSettings={{ type: "Menu" }}
+        toolbar={toolbarOptions}
+      >
+        <ColumnsDirective>
+
+          <ColumnDirective field="jobno_oms" headerText="RGB Job" width="180" foreignKeyField="jobno_oms" foreignKeyValue="print_type" dataSource={printData} />
+          <ColumnDirective headerText="Image" width="150" template={imageTemplate} />
+          <ColumnDirective field="buyer" headerText="Buyer" width="150" />
+          <ColumnDirective field="style" headerText="Style" width="150" />
+        </ColumnsDirective>
+
+        <Inject services={[Filter, InfiniteScroll,Edit, Sort, ForeignKey, Toolbar]} />
+      </GridComponent>
+    ),
+    [orderData, printData, imageTemplate, toolbarOptions]
+  );
+
   // 🔥 Fetch APIs
   useEffect(() => {
     fetch("https://app.herofashion.com/order_panda/")
@@ -62,31 +95,7 @@ function ForeignKeyColumn() {
   return (
     <div className="control-pane">
       <div className="control-section">
-        <GridComponent
-          dataSource={orderData}
-          ref={gridRef}
-          allowFiltering={true}
-          allowSorting={true}
-          editSettings={{
-            allowEditing: true,
-            allowDeleting: true,
-            allowAdding: true
-          }}
-          filterSettings={{ type: "Menu" }}
-          toolbar={toolbarOptions}
-        >
-          <ColumnsDirective>
-            {/* Primary Key */}
-            {/* <ColumnDirective field="jobno_oms" headerText="Job No" width="150" isPrimaryKey={true} validationRules={validationRules} /> */}
-            {/* 🔗 Foreign Key Column */}
-            <ColumnDirective field="jobno_oms" headerText="RGB Job" width="180" foreignKeyField="jobno_oms" foreignKeyValue="print_type" dataSource={printData} />
-            <ColumnDirective headerText="Image" width="150" template={imageTemplate} />
-            <ColumnDirective field="buyer" headerText="Buyer" width="150" />
-            <ColumnDirective field="style" headerText="Style" width="150" />
-          </ColumnsDirective>
-
-          <Inject services={[Filter, Edit, Sort, ForeignKey, Toolbar]} />
-        </GridComponent>
+         {orderData.length > 0 && printData.length > 0 && gridContent}
       </div>
     </div>
   );  
