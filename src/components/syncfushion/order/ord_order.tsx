@@ -428,7 +428,7 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
                 if (col.field === "jobno_oms" || col.field === "Print" || col.field==="print_img" || col.field==="prnclr" || col.field==="merch" || col.field==="buyer1"
                   || col.field==="punit_sh" || col.field==="punit_sh" || col.field==="styleno" ||  col.field==="director_sample_order"  ||  col.field==="director_sample_order" ||
                     col.field==="abc"  ||  col.field==="order_follow_up" ||  col.field==="styledesc" ||  col.field==="company_name" ||  col.field==="quantity" ||  col.field==="production_type_inside_outside"
-                  ||  col.field==="prnmeaimg" || col.field==="mainimagepath" ||  col.field==="Emb"  ||  col.field==="others1"  ||  col.field==="u25" ||  col.field==="u45" ||  col.field==="slno1" || col.field==="u37" ||  col.field==="actdaten"  ||  col.field==="u46"  ||  col.field==="date" ||  col.field==="ourdelvdate" ||  col.field==="finaldelvdate1" ||  col.field==="u15" ||  col.field==="u14" 
+                  ||  col.field==="prnmeaimg" || col.field==="mainimagepath" ||  col.field==="Emb"   ||  col.field==="udf4"  ||  col.field==="All"  ||  col.field==="fsn"  || col.field==="prdty"  ||  col.field==="others1"  || col.field==="others7" ||   col.field==="u25" ||  col.field==="u45" ||  col.field==="slno1" || col.field==="u37" ||  col.field==="actdaten"  ||  col.field==="u46"  ||  col.field==="date" ||  col.field==="ourdelvdate" ||  col.field==="finaldelvdate1" ||  col.field==="u15" ||  col.field==="u14" ||  col.field==="others2" || col.field==="others3" || col.field==="others4"  || col.field==="others5" || col.field==="others6"||col.field==="Fdt"
                 ) {
                     col.visible = false;
                 }
@@ -1125,7 +1125,7 @@ const showVal = (val: any): string => {
       }
   
     }
-  
+      
     // Background color implementation
     const recordClick=(args:any)=>
       {
@@ -1199,36 +1199,36 @@ const showVal = (val: any): string => {
         recordClick={recordClick}
       >
         <ColumnsDirective>
-          <ColumnDirective isPrimaryKey={true} field="jobno_oms" headerText="ORDER INFO" width="120" maxWidth="120" template={orderSummaryTemplate} allowEditing={false} />                 
-          <ColumnDirective field="mainimagepath" headerText="IMG" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('mainimagepath')} allowEditing={false} />
-          <ColumnDirective field="Fdt" headerText="DELIVERY INFO" width="180" maxWidth="150" template={deliveryInfoTemplate} />
-          <ColumnDirective field="Print" headerText="Print" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Print')} allowEditing={false} />
-          <ColumnDirective field="Emb" headerText="Emb" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Emb')} allowEditing={false} />
-          <ColumnDirective field="others1" headerText="imgs1" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others1')} allowEditing={false} />
-          <ColumnDirective field="others2" headerText="imgs2" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others2')} allowEditing={false} />
+          <ColumnDirective isPrimaryKey={true} field="jobno_oms" headerText="ORDER INFO" width="120" maxWidth="120" template={orderSummaryTemplate} allowEditing={false} customAttributes={{ class: 'editCss' }}/>                 
+          <ColumnDirective field="mainimagepath" headerText="IMG" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('mainimagepath')} allowEditing={false} customAttributes={{ class: 'img' }}/>
+          <ColumnDirective field="Fdt" headerText="DELIVERY INFO" width="180" maxWidth="150" template={deliveryInfoTemplate} customAttributes={{ class: 'editCss' }}/>
+          <ColumnDirective field="Print" headerText="Print" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Print')} allowEditing={false} customAttributes={{ class: 'img' }}/>
+          <ColumnDirective field="Emb" headerText="Emb" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Emb')} allowEditing={false} customAttributes={{ class: 'img' }}/>
+          <ColumnDirective field="others1" headerText="imgs1" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others1')} allowEditing={false} customAttributes={{ class: 'img' }}/>
+          <ColumnDirective field="others2" headerText="imgs2" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others2')} allowEditing={false} customAttributes={{ class: 'img' }} />
           {/* <ColumnDirective field="Fdt" headerText="DELIVERY INFO" width="150" maxWidth="150" template={deliveryInfoTemplate} /> */}
-          <ColumnDirective field="printing_R" headerText="udf1" width="150" maxWidth="150" template={udf} />
-          <ColumnDirective field="styleno" headerText="udf2" width="150" maxWidth="150" template={udf2} />
-          <ColumnDirective field="udf4" headerText="udf4" width="150" maxWidth="150" template={udf4} />
-          <ColumnDirective field="prdty" headerText="prdty" width="150" maxWidth="250" template={prdty} />
-          <ColumnDirective field="styleno" headerText="qualy" width="150" maxWidth="150" template={qualy} />
-          <ColumnDirective headerText='fsn' width="90" textAlign="Center" allowFiltering={true} template={rollnoTemplate} allowEditing={false} />
-          <ColumnDirective headerText='All ' width="150" textAlign="Center" allowFiltering={true} template={Alldate} allowEditing={false} />
+          <ColumnDirective field="printing_R" headerText="Printing_R" width="150" maxWidth="150" template={udf} customAttributes={{ class: 'editCss' }}/>
+          <ColumnDirective field="styleno" headerText="udf2" width="150" maxWidth="150" template={udf2} customAttributes={{ class: 'editCss' }}/>
+          <ColumnDirective field="udf4" headerText="udf4" width="150" maxWidth="150" template={udf4} customAttributes={{ class: 'editCss' }}/>
+          <ColumnDirective field="prdty" headerText="prdty" width="150" maxWidth="250" template={prdty} customAttributes={{ class: 'editCss' }}/>
+          <ColumnDirective field="styleno" headerText="qualy" width="150" maxWidth="150" template={qualy} customAttributes={{ class: 'editCss' }}/>
+          <ColumnDirective field="fsn" headerText='fsn' width="90" textAlign="Center" allowFiltering={true} template={rollnoTemplate} allowEditing={false} />
+          <ColumnDirective field="All"headerText='All ' width="150" textAlign="Center" allowFiltering={true} template={Alldate} allowEditing={false} />
           <ColumnDirective field="print_img" headerText="PRN IMG" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('print_img')} />
           <ColumnDirective field="prnmeaimg" headerText="MEAS IMG" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('prnmeaimg')} />
           {/* <ColumnDirective field="img_fpath" headerText="AOP" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('img_fpath')} /> */}
           <ColumnDirective field="prnclr" headerText="PRN COL" width="100" template={genericHighlighter('prnclr')} />
-          <ColumnDirective field="printing_R" headerText="1 PRINT" width="100"     template={genericHighlighter('printing_R')} />
+          {/* <ColumnDirective field="printing_R" headerText="1 PRINT" width="100"     template={genericHighlighter('printing_R')} /> */}
           <ColumnDirective field="jobno_oms" headerText="jobno_oms" width="100" template={genericHighlighter('jobno_oms')} />
           {/* <ColumnDirective field="jobno_oms" headerText="jobno_oms" width="100" template={genericHighlighter('jobno_oms')} /> */}
           <ColumnDirective isPrimaryKey={true} field="jobno_oms" headerText="ORDER INFO" width="120" maxWidth="120" template={orderSummaryTemplate} allowEditing={false} customAttributes={{ class: 'editCss' }} />
           <ColumnDirective field="finaldelvdate1" headerText="finaldelvdate1" width="100" template={genericHighlighter('finaldelvdate1')} />
           <ColumnDirective field="date" headerText="date" width="100" template={genericHighlighter('finaldelvdate1')} />
-          <ColumnDirective field="others3" headerText="imgs3" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others3')} allowEditing={false} />
-          <ColumnDirective field="others4" headerText="imgs4" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others4')} allowEditing={false} />
-          <ColumnDirective field="others5" headerText="imgs5" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others5')} allowEditing={false} />
-          <ColumnDirective field="others6" headerText="imgs6" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others6')} allowEditing={false} />
-          <ColumnDirective field="others7" headerText="imgs7" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others7')} allowEditing={false} />
+          <ColumnDirective field="others3" headerText="imgs3" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others3')} allowEditing={false} customAttributes={{ class: 'img' }} />
+          <ColumnDirective field="others4" headerText="imgs4" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others4')} allowEditing={false} customAttributes={{ class: 'img' }}/>
+          <ColumnDirective field="others5" headerText="imgs5" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others5')} allowEditing={false} customAttributes={{ class: 'img' }}/>
+          <ColumnDirective field="others6" headerText="imgs6" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others6')} allowEditing={false} customAttributes={{ class: 'img' }}/>
+          <ColumnDirective field="others7" headerText="imgs7" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others7')} allowEditing={false} customAttributes={{ class: 'img' }}/>
           {/* <ColumnDirective field="qltycontroller" headerText="QC-ms" width="100" template={genericHighlighter('qltycontroller')} edit={qualityControllerEdit} allowEditing={true} />
           <ColumnDirective field="ourdelvdate" headerText="ourdelvdate" width="100" template={genericHighlighter('ourdelvdate')} />
           <ColumnDirective field="actdaten" headerText="actdaten" width="100" template={genericHighlighter('actdaten')} />
@@ -1261,7 +1261,7 @@ const showVal = (val: any): string => {
           {/* <ColumnDirective field="reference" headerText="reference" width="250" maxWidth="250" template={genericHighlighter('reference')} /> */}
           {/* <ColumnDirective field="quantity" headerText="QTY" width="90" textAlign="Right" template={genericHighlighter('quantity')} /> */}
           {/* <ColumnDirective field="company_name" headerText="COMPANY" width="90" template={genericHighlighter('company_name')} /> */}
-
+                    
         </ColumnsDirective>
         <AggregatesDirective>
           <AggregateDirective>

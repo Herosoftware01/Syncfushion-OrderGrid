@@ -345,7 +345,7 @@ const HeroFashionGrid13: React.FC = () => {
         {src ? (
           <img src={src} alt="photo" style={{ width: "85px", height: "85px", objectFit: "contain", border: "1px solid #ccc", borderRadius: "6px" }}
             onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
-        ) : <div style={{width:55, height:55, background:'#eee', borderRadius:6}}></div>}
+        ) : <div style={{width:105, height:155, background:'#eee', borderRadius:6}}></div>}
       </div>
     );
   };
@@ -1046,7 +1046,7 @@ const HeroFashionGrid13: React.FC = () => {
             <ColumnsDirective>
               <ColumnDirective headerText='fsn' width="90" textAlign="Center" allowFiltering={true} template={rollnoTemplate} allowEditing={false} />
               <ColumnDirective field="jobno_oms" headerText="Order Info" width="100" template={orderSummaryTemplate} isPrimaryKey={true} />
-              <ColumnDirective headerText="Photo" width="80" template={photoTemplate} textAlign="Center" allowFiltering={false} />
+              <ColumnDirective headerText="Photo" width="150" template={photoTemplate} textAlign="Center" allowFiltering={false} />
               <ColumnDirective field="Fdt" headerText="Delivery Info" width="100" template={deliveryInfoTemplate} />
               <ColumnDirective field="print_img" headerText="PRN IMG" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('print_img')} />
               <ColumnDirective field="prnmeaimg" headerText="MEAS IMG" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('prnmeaimg')} />
