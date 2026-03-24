@@ -32,7 +32,8 @@ import {
   AggregateDirective,
   AggregatesDirective,
   PdfExport,DetailRow,
-  ExcelExport
+  ExcelExport,
+  recordClick
 }from '@syncfusion/ej2-react-grids';
 import { TooltipComponent } from '@syncfusion/ej2-react-popups';
 import { Ajax, registerLicense } from '@syncfusion/ej2-base';
@@ -91,14 +92,30 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
   const settingNameRef = useRef<TextBoxComponent>(null);
   const dropdownRef = useRef<DropDownListComponent>(null);
   const tooltipRef = useRef<TooltipComponent>(null);  
+  const previousCellRef = useRef<HTMLElement | null>(null);
   const gridRef = useRef<GridComponent>(null);
   const searchTimeout = useRef<any>(null);
 
-  const searchableFields = [
-    'jobno_oms', 'company_name', 'buyer1', 'stylename', 'merch',
-    'punit_sh', 'styleno', 'quantity', 'director_sample_order',
-    'printing_R', 'Emb', 'abc', 'u46', 'uom', 'final_delivery_date',
-    'production_type_inside_outside', 'prnclr'
+  // const searchableFields = [
+  //   'jobno_oms', 'company_name', 'buyer1', 'stylename', 'merch',
+  //   'punit_sh', 'styleno', 'quantity', 'director_sample_order',
+  //   'printing_R', 'Emb', 'abc', 'u46', 'uom', 'final_delivery_date',
+  //   'production_type_inside_outside', 'prnclr'
+  // ];
+    const searchableFields = [
+    'slno1', 'jobno_oms', 'company_name', 'buyer1', 'stylename', 'uom',
+    'final_delivery_date', 'merch', 'punit_sh', 'styleno',
+    'production_type_inside_outside', 'quantity', 'director_sample_order',
+    'printing_R', 'Fdt', 'Emb', 'abc', 'order_follow_up',
+    'quality_controller', 'reference', 'insdatenew', 'styledesc',
+    'date', 'ourdelvdate', 'podate', 'vessel_dt', 'vessel_yr',
+    'shipment_complete', 'u7', 'u141', 'u45', 'u36', 'u31',
+    'u15', 'u14', 'u8', 'u25', 'insdate', 'insdateyear', 'finaldelvdate1',
+    'number_03_emb', 'actdate', 'actdaten', 'actyeardate', 'pono', 'u46', 'u37',
+    'qltycontroller', 'Print', 'others1', 'mainimagepath', 'finaldelvdate',
+    'prnclr', 'prnfile1', 'prnfile2', 'img_fpath', 'clr', 'print_img',
+    'Fab_R', 'ITS_R', 'Order_R', 'Dy_R', 'Sample_R', 'Week_R',
+    'prnmeaimg', 'mpic', 'Others2', 'Others3', 'Others4', 'Others5', 'Others6', 'Others7'
   ];
 //  const groupOptions = {
 //     columns: ["abc"], // Group by "Category" column
@@ -476,7 +493,7 @@ const  udf= (p: OrderData) => (
       <b>3-Emb:</b> {highlightText(p.number_03_emb)}<br />
       <b>7:</b> {highlightText(p.u7)}<br />
       <b>8-Fab:</b> {highlightText(p.Fab_R)}<br />
-      <b>14-Fabdy:</b> {highlightText(p.Dy_R)}<br />
+      <b>14-dy:</b> {highlightText(p.Dy_R)}<br />
       {/* <b>25-week:</b> {highlightText(p.Week_R)}<br /> */}
       {/* <b>Unit:</b> <span style={getPunitStyle(p.punit_sh)}>{highlightText(p.punit_sh)}</span><br />
       <b>Qty:</b> {highlightText(p.quantity)} */}
@@ -558,6 +575,7 @@ const   Alldate= (p: OrderData) => (
     </div>
   );
 
+  
   const toolbarOptions: any[] = [
     "Search",
     { text: '', prefixIcon: 'e-add', id: 'add_icon', tooltipText: 'Add Records' },
@@ -807,23 +825,6 @@ const showVal = (val: any): string => {
     }
   };
 
-<TooltipComponent 
-  target=".image-tooltip-target" 
-  cssClass="custom-tooltip-size" // இந்த கிளாஸ் முக்கியம்
-  width="450px" 
-  height="450px"
-  content={(args: any) => (
-    <div style={{ width: '100%', height: '100%' }}>
-      <img 
-        src={args.target.src} 
-        style={{ width: '200%', height: '200%', objectFit: 'contain' }}
-      />
-    </div>
-  )}
->
-  {/* Unga Grid code inga varum */}
-</TooltipComponent>
-
   const groupByPrint = (printing: OrderData[]) => {
     const map = new Map<string, any>();
 
@@ -1017,66 +1018,145 @@ const showVal = (val: any): string => {
     );
   };
 
-  const tooltipOpen = (args: any) => {
+  <TooltipComponent 
+    target=".image-tooltip-target" 
+    cssClass="custom-tooltip-size" 
+    width="450px" 
+    height="450px"
+    content={(args: any) => (
+      <div style={{ width: '100%', height: '100%' }}>
+        <img 
+          src={args.target.src} 
+          style={{ width: '200%', height: '200%', objectFit: 'contain' }} 
+        />
+      </div>
+    )}
+  >
+  </TooltipComponent>
 
-    const isHeaderCell = args.target.closest('.e-headercell');
-    const isRowCell = args.target.closest('.e-rowcell');
-    
-    if (isRowCell || isHeaderCell) {
-      let img = args.target.querySelector('img')
-      if (img) {
-        let imgElem:any= args.target.innerHTML;
-        // Create a wrapper div with increased image height
-        const wrapper = document.createElement('div');
-        wrapper.innerHTML = imgElem;
-        const tooltipImg = wrapper.querySelector('img');
-        if (tooltipImg) {
-          tooltipImg.style.width = '500px';
-          tooltipImg.style.height = '500px';
-          tooltipImg.style.objectFit = 'contain';
+    const tooltipBeforeRender = (args: any) => {
+  
+      const isHeaderCell = args.target.closest('.e-headercell');
+      const isRowCell = args.target.closest('.e-rowcell');
+  
+      if (isRowCell || isHeaderCell) {
+        let img = args.target.querySelector('img')
+        if (img && !isHeaderCell) {
+          // Get row information
+          const rowInfo = gridRef.current?.getRowInfo(args.target.closest('td'));
+          const rowData: OrderData = rowInfo?.rowData as OrderData;
+          
+          if (rowData) {
+            // Get image source
+            const imgSrc = img.src;
+            
+            // Build order information HTML
+            const orderInfo = `
+              <div style="padding: 12px; line-height: 1.6; font-size: 13px;">
+                <div style="margin-bottom: 8px;"><strong>Job No:</strong> ${rowData.jobno_oms || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Company:</strong> ${rowData.company_name || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Buyer:</strong> ${rowData.buyer1 || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Style:</strong> ${rowData.stylename || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Style No:</strong> ${rowData.styleno || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Quantity:</strong> ${rowData.quantity || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Unit:</strong> ${rowData.punit_sh || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Merch:</strong> ${rowData.merch || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Delivery Date:</strong> ${rowData.Fdt || rowData.final_delivery_date || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Type:</strong> ${rowData.director_sample_order || 'N/A'}</div>
+              </div>
+            `;
+            
+            // Create tooltip content with order info on left and image on right
+            const tooltipContent = `
+              <div style="display: flex; max-width: 600px;">
+                <div style="flex: 1; min-width: 200px; max-width: 250px; border-right: 1px solid #e0e0e0;">
+                  ${orderInfo}
+                </div>
+                <div style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 12px;">
+                  <img 
+                    src="${imgSrc}" 
+                    style="max-width: 250px; max-height: 280px; width: auto; height: auto; object-fit: contain;" 
+                    alt="Order Image"
+                  />
+                </div>
+              </div>
+            `;
+            
+            (tooltipRef.current as TooltipComponent).content = tooltipContent;
+            (tooltipRef.current as TooltipComponent).width = '450px';
+            (tooltipRef.current as TooltipComponent).height = 'auto';
+          }
         }
-        (tooltipRef.current as TooltipComponent).content = wrapper.innerHTML;
-        
-        // Set different dimensions for header cells
-        if (isHeaderCell) {
+        else if (img && isHeaderCell) {
+          // For header cells, show simple image
+          let imgElem:any= args.target.innerHTML;
+          const wrapper = document.createElement('div');
+          wrapper.innerHTML = imgElem;
+          const tooltipImg = wrapper.querySelector('img');
+          if (tooltipImg) {
+            tooltipImg.style.width = '100px';
+            tooltipImg.style.height = '100px';
+            tooltipImg.style.objectFit = 'contain';
+          }
+          (tooltipRef.current as TooltipComponent).content = wrapper.innerHTML;
           (tooltipRef.current as TooltipComponent).width = '100px';
           (tooltipRef.current as TooltipComponent).height = '100px';
-        } else {
-          (tooltipRef.current as TooltipComponent).width = '500px';
-          (tooltipRef.current as TooltipComponent).height = '500px';
+        }
+        else {
+          // Create a wrapper div for text content with styling
+          const textWrapper = document.createElement('div');
+          textWrapper.style.padding = '8px';
+          textWrapper.style.maxHeight = '150px';
+          textWrapper.style.overflowY = 'auto';
+          textWrapper.style.fontSize = '14px';
+          textWrapper.style.lineHeight = '1.5';
+          textWrapper.innerText = args.target.innerText;
+          (tooltipRef.current as TooltipComponent).content = textWrapper.outerHTML;
+          
+          // Set different dimensions for header cells
+          if (isHeaderCell) {
+            (tooltipRef.current as TooltipComponent).width = '100px';
+            (tooltipRef.current as TooltipComponent).height = '100px';
+          } else {
+            (tooltipRef.current as TooltipComponent).width = '150px';
+            (tooltipRef.current as TooltipComponent).height = '150px';
+          }
         }
       }
-       
-        // args.cancel=true
-        
-      
-      else {
-        // Create a wrapper div for text content with styling
-        const textWrapper = document.createElement('div');
-        textWrapper.style.padding = '8px';
-        textWrapper.style.maxHeight = '150px';
-        textWrapper.style.overflowY = 'auto';
-        textWrapper.style.fontSize = '14px';
-        textWrapper.style.lineHeight = '1.5';
-        textWrapper.innerText = args.target.innerText;
-        (tooltipRef.current as TooltipComponent).content = textWrapper.outerHTML;
-        
-        // Set different dimensions for header cells
-        if (isHeaderCell) {
-          (tooltipRef.current as TooltipComponent).width = '100px';
-          (tooltipRef.current as TooltipComponent).height = '100px';
-        } else { args.cancel=true;
-          (tooltipRef.current as TooltipComponent).width = '200px';
-          (tooltipRef.current as TooltipComponent).height = '200px';
-        }
-      }
+  
     }
-
-  }
+  
+    // Background color implementation
+    const recordClick=(args:any)=>
+      {
+        // Remove background from previously clicked cell
+        if (previousCellRef.current) {
+          previousCellRef.current.style.backgroundColor = '';
+        }
+        
+        // Set yellow background on the newly clicked cell
+        if (args.cell) {
+          args.cell.style.backgroundColor = 'yellow';
+          // Store the current cell as the previous cell for next click
+          previousCellRef.current = args.cell;
+        }
+        
+        console.log('Cell clicked:', args);
+      }
+  
+    const beforeOpen = (args: any) => {
+      // Adjust tooltip dimensions based on content type
+      const hasOrderInfo = args.element.innerHTML.includes('Job No:');
+      
+      if (hasOrderInfo) {
+        args.element.style.maxWidth = '750px';
+        args.element.style.width = 'auto';
+      }
+    };
 
   // Memoize the grid component to prevent unnecessary re-renders
   const memoizedGridComponent = useMemo(() => (
-    <><div><TooltipComponent ref={tooltipRef} target=".e-rowcell, .e-headercell" position={"RightCenter"} width="200px" height="200px" beforeOpen={tooltipOpen}>
+    <><div><TooltipComponent ref={tooltipRef} target=".e-rowcell, .e-headercell" width="130px" height="130px" beforeRender={tooltipBeforeRender} beforeOpen={beforeOpen}>
       <GridComponent
         id="default-aggregate-grid"
         ref={gridRef}
@@ -1100,9 +1180,9 @@ const showVal = (val: any): string => {
         allowReordering={true}
         allowResizing={true}
         allowPdfExport={true}
-
+         
         gridLines="Both"
-        searchSettings={{  operator: 'contains', ignoreCase: true }}
+         searchSettings={{ fields: searchableFields, operator: 'contains', ignoreCase: true }} 
         toolbar={toolbarOptions}
         editSettings={{
           allowDeleting: true,
@@ -1116,31 +1196,32 @@ const showVal = (val: any): string => {
         created={created}
         frozenColumns={2}
         toolbarClick={toolbarClick} 
+        recordClick={recordClick}
       >
         <ColumnsDirective>
-          <ColumnDirective isPrimaryKey={true} field="jobno_oms" headerText="ORDER INFO" width="120" maxWidth="120" template={orderSummaryTemplate} allowEditing={false} />
+          <ColumnDirective isPrimaryKey={true} field="jobno_oms" headerText="ORDER INFO" width="120" maxWidth="120" template={orderSummaryTemplate} allowEditing={false} />                 
           <ColumnDirective field="mainimagepath" headerText="IMG" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('mainimagepath')} allowEditing={false} />
-          <ColumnDirective field="Fdt" headerText="DELIVERY INFO" width="150" maxWidth="150" template={deliveryInfoTemplate} />
+          <ColumnDirective field="Fdt" headerText="DELIVERY INFO" width="180" maxWidth="150" template={deliveryInfoTemplate} />
           <ColumnDirective field="Print" headerText="Print" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Print')} allowEditing={false} />
           <ColumnDirective field="Emb" headerText="Emb" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Emb')} allowEditing={false} />
           <ColumnDirective field="others1" headerText="imgs1" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others1')} allowEditing={false} />
           <ColumnDirective field="others2" headerText="imgs2" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others2')} allowEditing={false} />
           {/* <ColumnDirective field="Fdt" headerText="DELIVERY INFO" width="150" maxWidth="150" template={deliveryInfoTemplate} /> */}
           <ColumnDirective field="printing_R" headerText="udf1" width="150" maxWidth="150" template={udf} />
-          <ColumnDirective field="styleno" headerText="qualy" width="150" maxWidth="150" template={qualy} />
           <ColumnDirective field="styleno" headerText="udf2" width="150" maxWidth="150" template={udf2} />
           <ColumnDirective field="udf4" headerText="udf4" width="150" maxWidth="150" template={udf4} />
-          <ColumnDirective field="prdty" headerText="prdty" width="180" maxWidth="250" template={prdty} />
+          <ColumnDirective field="prdty" headerText="prdty" width="150" maxWidth="250" template={prdty} />
+          <ColumnDirective field="styleno" headerText="qualy" width="150" maxWidth="150" template={qualy} />
           <ColumnDirective headerText='fsn' width="90" textAlign="Center" allowFiltering={true} template={rollnoTemplate} allowEditing={false} />
           <ColumnDirective headerText='All ' width="150" textAlign="Center" allowFiltering={true} template={Alldate} allowEditing={false} />
           <ColumnDirective field="print_img" headerText="PRN IMG" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('print_img')} />
           <ColumnDirective field="prnmeaimg" headerText="MEAS IMG" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('prnmeaimg')} />
           {/* <ColumnDirective field="img_fpath" headerText="AOP" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('img_fpath')} /> */}
           <ColumnDirective field="prnclr" headerText="PRN COL" width="100" template={genericHighlighter('prnclr')} />
-          <ColumnDirective field="printing_R" headerText="1 PRINT" width="100" template={genericHighlighter('printing_R')} />
+          <ColumnDirective field="printing_R" headerText="1 PRINT" width="100"     template={genericHighlighter('printing_R')} />
           <ColumnDirective field="jobno_oms" headerText="jobno_oms" width="100" template={genericHighlighter('jobno_oms')} />
-          <ColumnDirective field="jobno_oms" headerText="jobno_oms" width="100" template={genericHighlighter('jobno_oms')} />
-          
+          {/* <ColumnDirective field="jobno_oms" headerText="jobno_oms" width="100" template={genericHighlighter('jobno_oms')} /> */}
+          <ColumnDirective isPrimaryKey={true} field="jobno_oms" headerText="ORDER INFO" width="120" maxWidth="120" template={orderSummaryTemplate} allowEditing={false} customAttributes={{ class: 'editCss' }} />
           <ColumnDirective field="finaldelvdate1" headerText="finaldelvdate1" width="100" template={genericHighlighter('finaldelvdate1')} />
           <ColumnDirective field="date" headerText="date" width="100" template={genericHighlighter('finaldelvdate1')} />
           <ColumnDirective field="others3" headerText="imgs3" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others3')} allowEditing={false} />
@@ -1185,7 +1266,7 @@ const showVal = (val: any): string => {
         <AggregatesDirective>
           <AggregateDirective>
             <AggregateColumnsDirective>
-              <AggregateColumnDirective field='slno1' type='Count' footerTemplate={footerCount} format='N'> </AggregateColumnDirective>
+              {/* <AggregateColumnDirective field='slno1' type='Count' footerTemplate={footerCount} format='N'> </AggregateColumnDirective> */}
               <AggregateColumnDirective field='quantity' type='Sum' footerTemplate={footerSum} format='N'> </AggregateColumnDirective>
             </AggregateColumnsDirective>
           </AggregateDirective>
@@ -1302,6 +1383,7 @@ const showVal = (val: any): string => {
             border: 1px solid #dce1e6;
             display:none
             }
+          
                           .count-display1 {
             background: #e9ecef;
             color: #007bff;

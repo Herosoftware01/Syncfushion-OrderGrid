@@ -696,12 +696,88 @@ const HeroFashionGrid13: React.FC = () => {
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#fff', minWidth: 0, overflow: 'hidden' }}>
       {/* CSS Styles */}
       <style>{`
-        .custom-highlight { background-color: #fff9c4 !important; color: #d32f2f !important; font-weight: bold; }
+        .custom-highlight { background-color: #fff9c4 !important; color: '#d32f2f' !important; font-weight: bold; }
         .e-rowcell { vertical-align: top !important; font-size: 12px !important; line-height: 1.3 !important; padding-top: 8px !important; }
-        .e-filter-popup { z-index: 10000001 !important; }
-        .e-grid { min-width: 0 !important; }
+        .e-detailrow .e-tab { border: none; }
+        .e-dtdiagonal, .e-dtvertical { display: none !important; }
+
+        /* --- Pizza Menu Layout Styles (Ref Code) --- */
+        .e-pizza-cell { 
+            padding: 10px; 
+            border-bottom: 1px solid #e0e0e0; 
+            background: #fff;
+        }
+        .e-pizza-info-container {
+            display: flex;
+            align-items: center;
+            min-height: 120px;
+        }
+        .e-pizza-image-layout {
+            width: 120px;
+            height: 120px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .e-pizza-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        .e-pizza-info-layout {
+            padding: 10px 20px;
+            flex-grow: 1;
+        }
+        .e-info-text-separator {
+            margin-bottom: 8px;
+        }
+        .e-pizza-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-right: 5px;
+        }
+        .e-pizza-size {
+            font-size: 14px;
+            color: #888;
+        }
+        .e-pizza-price-min-layout {
+            display: none; /* Hidden on larger screens */
+        }
+        .e-pizza-price-layout {
+            padding: 20px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+        .e-pizza-price-text {
+            font-size: 12px;
+            color: #888;
+            display: block;
+        }
+        .e-pizza-price {
+            font-size: 20px;
+            font-weight: bold;
+            color: #d62828;
+            display: block;
+        }
+        .e-flex-grow { flex-grow: 1; }
         
-        /* --- Desktop Layout --- */
+        /* Chip styles */
+        .e-chip-list.e-outline .e-chip { 
+            border: 1px solid #e0e0e0; 
+            background: transparent; 
+            color: #666;
+            padding: 0 8px;
+            height: 24px;
+            line-height: 22px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin: 2px;
+        }
+
+ /* --- Desktop Layout --- */
         .dashboard-header {
           display: flex;
           flex-direction: row;
@@ -798,6 +874,7 @@ const HeroFashionGrid13: React.FC = () => {
             border: 1px solid #dce1e6;
             display:none
             }
+          
                           .count-display1 {
             background: #e9ecef;
             color: #007bff;
@@ -838,7 +915,6 @@ const HeroFashionGrid13: React.FC = () => {
                 boxSizing: 'border-box';
                 }
                 }
-                
       `}</style>
 
       {/* Header */}
