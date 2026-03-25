@@ -23,6 +23,7 @@ import HeroFashionGrid131 from "../order/ord_parent.tsx"
 import Schedule from "../order/Schedule.tsx"
 import GanttChart from '../order/Gantt Chart/GanttChart.tsx';
 import OrderDetails from '../order/OrderDetails.tsx';
+import PivotTableExporting from '../order/pivot.tsx';
 import ForeignKeyColumn from '../order/SyncForignkey.tsx';
 
 // import Overview from "../order/chart.tsx"
@@ -65,6 +66,7 @@ function Home() {
         <Route path='/HeroFashionGrid131' element={<HeroFashionGrid131 />} />
         <Route path='/chart' element={<GanttChart />} />
         <Route path='/order_detail' element={<OrderDetails />} />
+        <Route path='/PivotTableExporting' element={<PivotTableExporting />} />
         <Route path='/forign' element={<ForeignKeyColumn />} />
     </Routes>
   );
