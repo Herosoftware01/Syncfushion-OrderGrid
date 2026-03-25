@@ -153,7 +153,7 @@ function Sidebar({ children }) {
       <style>{`.no-scrollbar::-webkit-scrollbar { display:none }`}</style>
 
       {/* MOBILE HEADER */}
-      <header className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-cyan-950 text-white flex items-center justify-between px-4 z-[90] shadow-xl">
+      <header className="lg:hidden fixed top-0 left-0 right-0 h-10 bg-cyan-950 text-white flex items-center justify-between px-4 z-[90] shadow-xl">
         <button onClick={() => setMobileMenuOpen(true)} className="p-2 hover:bg-white/10 rounded-xl">
           <Menu size={24} />
         </button>
