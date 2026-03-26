@@ -1212,7 +1212,7 @@ const showVal = (val: any): string => {
           <ColumnDirective field="others1" headerText="imgs1" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others1')} allowEditing={false} customAttributes={{ class: 'img' }}/>
           <ColumnDirective field="others2" headerText="imgs2" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others2')} allowEditing={false} customAttributes={{ class: 'img' }} />
           {/* <ColumnDirective field="Fdt" headerText="DELIVERY INFO" width="150" maxWidth="150" template={deliveryInfoTemplate} /> */}
-          <ColumnDirective field="printing_R" headerText="Printing_R" width="150" maxWidth="150" template={udf} customAttributes={{ class: 'editCss' }}/>
+          <ColumnDirective field="printing_R" headerText="udf" width="150" maxWidth="150" template={udf} customAttributes={{ class: 'editCss' }}/>
           <ColumnDirective field="styleno" headerText="udf2" width="150" maxWidth="150" template={udf2} customAttributes={{ class: 'editCss' }}/>
           <ColumnDirective field="udf4" headerText="udf4" width="150" maxWidth="150" template={udf4} customAttributes={{ class: 'editCss' }}/>
           <ColumnDirective field="prdty" headerText="prdty" width="150" maxWidth="250" template={prdty} customAttributes={{ class: 'editCss' }}/>

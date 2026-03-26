@@ -387,6 +387,15 @@ const HeroFashionGrid13: React.FC = () => {
       <b>25-week:</b> {highlightText(p.u25)}<br />
     </div>
   );
+  const udf4 = (p: OrderData) => (
+    <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
+      {/* <b>Fdt:</b> <span style={getDateStyle(p.Fdt || p.final_delivery_date)}>{highlightText(p.Fdt || p.final_delivery_date)}</span><br /> */}
+      <b>Week_R:</b> {highlightText(p.Week_R)}<br />
+      <b>ST:</b> {highlightText(p.styleno)}<br />
+      <b>Uom:</b> {highlightText(p.uom)}<br />
+      <b>Type:</b> {highlightText(p.production_type_inside_outside)}
+    </div>
+  );
 
   const udf2= (p: OrderData) => (
     <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
@@ -448,8 +457,8 @@ const HeroFashionGrid13: React.FC = () => {
             <div className="e-content">
 
                 {/* TAB 1: ORDER DETAILS */}
-                <div style={{ padding: '5px' ,height:'10px' }}>
-                    <div style={{ display: "grid", gridTemplateColumns: "0.2fr 0.2fr 0.2fr", columnGap: "2px", rowGap: "1px", fontSize: "14px",height:"50px" }}>
+                <div style={{ padding: '5px' ,height:'80px' }}>
+                    <div style={{ display: "grid", gridTemplateColumns: "0.2fr 0.2fr 0.2fr", columnGap: "2px", rowGap: "1px", fontSize: "14px",height:"80px" }}>
                       
                         <div><b>Job No:</b> {showVal(props.jobno_oms)}</div>
                         <div><b>Buyer:</b> {showVal(props.buyer1)}</div>
@@ -472,7 +481,7 @@ const HeroFashionGrid13: React.FC = () => {
 
                 {/* TAB 2: PRINT DETAILS */}
                 <div>
-                    {printGroups.length === 0 && <div style={{color: '#999', textAlign: 'center', padding: '20px'}}>No Print Details Available</div>}
+                    {printGroups.length === 0 && <div style={{color: '#999', textAlign: 'center',height:'30px', padding: '20px'}}>No Print Details Available</div>}
                     
                     {printGroups.map((grp: any, idx: number) => {
                         const colours = getUniqueColours(grp.rows);
@@ -542,11 +551,11 @@ const HeroFashionGrid13: React.FC = () => {
 
                 {/* TAB 3: NEWDATA (Product Card Style) */}
                 <div style={{ padding: '15px', background: '#f5f5f5' }}>
-                    <h4 style={{ margin: '0 0 15px 0', color: '#333', fontSize: '16px' }}>PRINTING MENU</h4>
+                    {/* <h4 style={{ margin: '0 0 15px 0', color: '#333', fontSize: '16px' }}>PRINTING MENU</h4> */}
                     
-                    {printGroups.length === 0 && <div style={{color: '#999', textAlign: 'center', padding: '40px', background: '#fff', borderRadius: '8px'}}>No Print Details Available</div>}
+                    {printGroups.length === 0 && <div style={{color: '#999',width:'50px', textAlign: 'center', background: '#fff', borderRadius: '8px'}}>No Print Details Available</div>}
                     
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '15px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '15px' }}>
                         {printGroups.map((grp: any, idx: number) => {
                             const tags = [grp.print_screen_1, grp.print_screen_2, grp.individual_part_print_emb].filter(t => t && t !== "–");
 
@@ -632,6 +641,9 @@ const HeroFashionGrid13: React.FC = () => {
                     {/* Using the exact structure from reference */}
                     <div className="details e-pizza-cell">
                         <div className="e-pizza-info-container">
+                          <div>
+                            <h1>Hai</h1>
+                          </div>
                             {/* Image Layout */}
                             <div className="e-pizza-image-layout">
                                 {props.mainimagepath ? (
@@ -655,9 +667,11 @@ const HeroFashionGrid13: React.FC = () => {
                                 </div>
                                 {/* <div> <span className="e-pizza-size">({showVal(props.reference)})</span></div> */}
                                
-                                <div className="e-info-text-separator">
+                                {/* <div className="e-info-text-separator">
                                     {chipTags([showVal(props.punit_sh), showVal(props.production_type_inside_outside), showVal(props.director_sample_order)])}
-                                </div>
+                                </div> */}
+
+
                                   {/* <div className="e-pizza-price-min-layout e-info-text-separator">
                                     <span className="e-pizza-price-text">({showVal(props.reference)})</span>
                                   </div>
@@ -713,6 +727,9 @@ const HeroFashionGrid13: React.FC = () => {
         .e-grid .e-detailrowcollapse{
           border-top:2px solid gray !important;
         }
+          .e-content{
+          height:auto !important;
+          }
 
         /* --- Pizza Menu Layout Styles (Ref Code) --- */
         .e-pizza-cell { 
@@ -1059,20 +1076,30 @@ const HeroFashionGrid13: React.FC = () => {
             detailTemplate={detailTemplate}
           >
             <ColumnsDirective>
-              <ColumnDirective field="jobno_oms" headerText="Order Info" width="100" template={orderSummaryTemplate} isPrimaryKey={true} />
+              <ColumnDirective field="jobno_oms" headerText="Order Info" width="100" template={orderSummaryTemplate} isPrimaryKey={true} customAttributes={{ class: 'editCss' }} />
               <ColumnDirective headerText="Photo" width="150" template={photoTemplate} textAlign="Center" allowFiltering={false} />
+              <ColumnDirective field="Fdt" headerText="DELIVERY INFO" width="180" maxWidth="150" template={deliveryInfoTemplate} customAttributes={{ class: 'editCss' }}/>
+              <ColumnDirective field="Print" headerText="Print" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Print')} allowEditing={false} customAttributes={{ class: 'img' }}/>
+              <ColumnDirective field="Emb" headerText="Emb" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Emb')} allowEditing={false} customAttributes={{ class: 'img' }}/>
+              <ColumnDirective field="others1" headerText="imgs1" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others1')} allowEditing={false} customAttributes={{ class: 'img' }}/>
+              <ColumnDirective field="others2" headerText="imgs2" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others2')} allowEditing={false} customAttributes={{ class: 'img' }} />
+              <ColumnDirective field="printing_R" headerText="udf" width="150" maxWidth="150" template={udf} customAttributes={{ class: 'editCss' }}/>
+              <ColumnDirective field="styleno" headerText="udf2" width="150" maxWidth="150" template={udf2} customAttributes={{ class: 'editCss' }}/>
+              <ColumnDirective field="udf4" headerText="udf4" width="150" maxWidth="150" template={udf4} customAttributes={{ class: 'editCss' }}/>
+              <ColumnDirective field="prdty" headerText="prdty" width="150" maxWidth="250" template={prdty} customAttributes={{ class: 'editCss' }}/>
+              <ColumnDirective field="qualy" headerText="qualy" width="120" template={qualy} customAttributes={{ class: 'editCss' }}/>
               <ColumnDirective headerText='fsn' width="90" textAlign="Center" allowFiltering={true} template={rollnoTemplate} allowEditing={false} />
-              <ColumnDirective field="Fdt" headerText="Delivery Info" width="100" template={deliveryInfoTemplate} />
+              <ColumnDirective field="Fdt" headerText="Delivery Info" width="100" template={deliveryInfoTemplate}  />
               <ColumnDirective field="print_img" headerText="PRN IMG" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('print_img')} />
               <ColumnDirective field="prnmeaimg" headerText="MEAS IMG" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('prnmeaimg')} />
               <ColumnDirective field="Print" headerText="Print" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Print')} allowEditing={false} />
               <ColumnDirective field="Emb" headerText="Emb" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Emb')} allowEditing={false} />
               <ColumnDirective field="others1" headerText="others1" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others1')} allowEditing={false} />
-              <ColumnDirective field="printing_R" headerText="udf1" width="100" template={udf} />
+              {/* <ColumnDirective field="printing_R" headerText="udf1" width="100" template={udf} />
               <ColumnDirective field="udf2" headerText="udf2" width="100" template={udf2} />
               <ColumnDirective field="qualy" headerText="qualy" width="120" template={qualy} />
-              <ColumnDirective field="prdty" headerText="prdty" width="120" template={prdty} />
-              <ColumnDirective field="udf" headerText="udf" width="120" template={udf11} />
+              <ColumnDirective field="prdty" headerText="prdty" width="120" template={prdty} /> */}
+              <ColumnDirective field="udf" headerText="udf" width="120" template={udf11} customAttributes={{ class: 'editCss' }} /> 
               {/* <ColumnDirective field="quantity" headerText="Qty" width="90" textAlign="Right" template={genericHighlighter('quantity')} />
               <ColumnDirective field="final_delivery_date" headerText="Fdt" width="120" template={genericHighlighter('final_delivery_date')} />
               <ColumnDirective field="production_type_inside_outside" headerText="Type" width="120" template={genericHighlighter('production_type_inside_outside')} /> */}
