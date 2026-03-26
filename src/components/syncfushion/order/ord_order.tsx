@@ -1352,7 +1352,7 @@ const showVal = (val: any): string => {
 
             @media (max-width: 1023px){
             .dashboard-header {
-              margin-top: 60px
+              margin-top: 40px !important
             }
             }
             
@@ -1389,15 +1389,15 @@ const showVal = (val: any): string => {
             padding: 2px 4px;
             border-radius: 4px;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 12px;
             white-space: nowrap;
             display:block;
-            width: 70px;
+            width: 60px;
             float: right;
             }
             .count{
-              margin-top: -28px;
-              margin-left: 30px
+              margin-top: -45px;
+              margin-left: 295px
             }
                 .header-title {
                   text-align: center;
@@ -1450,12 +1450,7 @@ const showVal = (val: any): string => {
             Order Table
           </li>
         </ol>
-        <div className='count'>
 
-          <div className="count-display1">
-            {showingCount} / {totalCount}
-          </div>
-        </div>
         {/* <div className="header-controls bg-white">
           <input 
             type="text" 
@@ -1514,6 +1509,12 @@ const showVal = (val: any): string => {
             >
               🗑
             </ButtonComponent>
+                    <div className='count'>
+
+          <div className="count-display1">
+            {showingCount} / {totalCount}
+          </div>
+        </div>
         </div>
       </div>
 
