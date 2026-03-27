@@ -446,7 +446,7 @@ const HeroFashionGrid13: React.FC = () => {
     };
 
     return (
-      <div style={{ padding: "10px"}}>
+      <div>
         <TabComponent heightAdjustMode="Auto">
             <div className="e-tab-header">
                 <div> Order Details </div>
@@ -728,7 +728,6 @@ const HeroFashionGrid13: React.FC = () => {
           border-top:2px solid gray !important;
         }
 
-
        .e-touch{
         height: 80px !important;
         }
@@ -881,7 +880,7 @@ const HeroFashionGrid13: React.FC = () => {
             @media (max-width: 768px) {
               .dashboard-header {
                 flex-direction: column;
-                padding: 2px;
+                padding: 0px;
                 align-items: stretch;
                 gap: 1px;             
                 }
@@ -889,25 +888,18 @@ const HeroFashionGrid13: React.FC = () => {
                 .breadcromp{
                 width:80%;
                 font-size:50px;
+                display: none
                 }
                  
         
-                          .count-display {
-            background: #e9ecef;
-            color: #007bff;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 14px;
-            white-space: nowrap;
-            border: 1px solid #dce1e6;
+            .count-display {
             display:none
             }
           
                           .count-display1 {
             background: #e9ecef;
             color: #007bff;
-            padding: 2px 4px;
+            padding: 0px 4px;
             border-radius: 4px;
             font-weight: bold;
             font-size: 12px;
@@ -981,7 +973,7 @@ const HeroFashionGrid13: React.FC = () => {
             className="search-input"
           />
         </div> */}
-        <div style={{ padding: '8px 5px 0px 5px', display: 'flex', gap: 7, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
+        <div style={{ padding: '0px 5px', marginLeft: '5px', display: 'flex', gap: 7, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
   <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight:'bold' }}>
     <TextBoxComponent
       ref={settingNameRef}
@@ -1068,6 +1060,7 @@ const HeroFashionGrid13: React.FC = () => {
             enableAdaptiveUI={true}
             adaptiveUIMode={'Mobile'}
             allowReordering={true}
+            gridLines='Both'
             searchSettings={{  operator: 'contains', ignoreCase: true }}
             toolbar={toolbarOptions}
             editSettings={{ allowEditing: true, allowDeleting: true, mode: 'Dialog' }}
@@ -1081,6 +1074,7 @@ const HeroFashionGrid13: React.FC = () => {
               <ColumnDirective field="jobno_oms" headerText="Order Info" width="100" template={orderSummaryTemplate} isPrimaryKey={true} customAttributes={{ class: 'editCss' }} />
               <ColumnDirective headerText="Photo" width="150" template={photoTemplate} textAlign="Center" allowFiltering={false} />
               <ColumnDirective field="Fdt" headerText="DELIVERY INFO" width="180" maxWidth="150" template={deliveryInfoTemplate} customAttributes={{ class: 'editCss' }}/>
+              <ColumnDirective headerText='fsn' width="30" textAlign="Left" allowFiltering={false} template={rollnoTemplate} allowEditing={false} />
               <ColumnDirective field="Print" headerText="Print" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Print')} allowEditing={false} customAttributes={{ class: 'img' }}/>
               <ColumnDirective field="Emb" headerText="Emb" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Emb')} allowEditing={false} customAttributes={{ class: 'img' }}/>
               <ColumnDirective field="others1" headerText="imgs1" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others1')} allowEditing={false} customAttributes={{ class: 'img' }}/>
@@ -1090,7 +1084,6 @@ const HeroFashionGrid13: React.FC = () => {
               <ColumnDirective field="udf4" headerText="udf4" width="150" maxWidth="150" template={udf4} customAttributes={{ class: 'editCss' }}/>
               <ColumnDirective field="prdty" headerText="prdty" width="150" maxWidth="250" template={prdty} customAttributes={{ class: 'editCss' }}/>
               <ColumnDirective field="qualy" headerText="qualy" width="120" template={qualy} customAttributes={{ class: 'editCss' }}/>
-              <ColumnDirective headerText='fsn' width="90" textAlign="Center" allowFiltering={true} template={rollnoTemplate} allowEditing={false} />
               <ColumnDirective field="Fdt" headerText="Delivery Info" width="100" template={deliveryInfoTemplate}  />
               <ColumnDirective field="print_img" headerText="PRN IMG" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('print_img')} />
               <ColumnDirective field="prnmeaimg" headerText="MEAS IMG" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('prnmeaimg')} />
