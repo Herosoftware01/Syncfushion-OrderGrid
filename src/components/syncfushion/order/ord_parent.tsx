@@ -728,6 +728,7 @@ const HeroFashionGrid13: React.FC = () => {
           border-top:2px solid gray !important;
         }
 
+
        .e-touch{
         height: 80px !important;
         }
