@@ -427,7 +427,7 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
                 if (col.field === "jobno_oms" || col.field === "Print" || col.field==="print_img" || col.field==="prnclr" || col.field==="merch" || col.field==="buyer1"
                   || col.field==="punit_sh" || col.field==="punit_sh" || col.field==="styleno" ||  col.field==="director_sample_order"  ||  col.field==="director_sample_order" ||
                     col.field==="abc"  ||  col.field==="order_follow_up" ||  col.field==="styledesc" ||  col.field==="company_name" ||  col.field==="quantity" ||  col.field==="production_type_inside_outside"
-                  ||  col.field==="prnmeaimg" || col.field==="mainimagepath" ||  col.field==="Emb"   ||  col.field==="udf4"  ||  col.field==="All"  ||  col.field==="fsn"  || col.field==="prdty"  ||  col.field==="others1"  || col.field==="others7" ||   col.field==="u25" ||  col.field==="u45" ||  col.field==="slno1" || col.field==="u37" ||  col.field==="actdaten"  ||  col.field==="u46"  ||  col.field==="date" ||  col.field==="ourdelvdate" ||  col.field==="finaldelvdate1" ||  col.field==="u15" ||  col.field==="u14" ||  col.field==="others2" || col.field==="others3" || col.field==="others4"  || col.field==="others5" || col.field==="others6"||col.field==="Fdt"
+                  ||  col.field==="prnmeaimg" || col.field==="Emb"   ||  col.field==="udf4"  ||  col.field==="All"  ||  col.field==="fsn"  || col.field==="prdty"  ||  col.field==="others1"  || col.field==="others7" ||   col.field==="u25" ||  col.field==="u45" ||  col.field==="slno1" || col.field==="u37" ||  col.field==="actdaten"  ||  col.field==="u46"  ||  col.field==="date" ||  col.field==="ourdelvdate" ||  col.field==="finaldelvdate1" ||  col.field==="u15" ||  col.field==="u14" ||  col.field==="others2" || col.field==="others3" || col.field==="others4"  || col.field==="others5" || col.field==="others6"||col.field==="Fdt"
                 ) {
                     col.visible = false;
                 }
@@ -1147,6 +1147,12 @@ const showVal = (val: any): string => {
       }
   
     }
+
+    const load = () =>{
+      let grid = (document.getElementById('default-aggregate-grid')as any).ej2_instances[0]
+      grid.height=window.innerHeight
+
+    }
       
     // Background color implementation
     const recordClick=(args:any)=>
@@ -1184,8 +1190,8 @@ const showVal = (val: any): string => {
         ref={gridRef}
         dataSource={dataSource}
         dataBound={dataBound}
-        pageSettings={{pageSize:10}}
-        height="500px"
+        pageSettings={{pageSize:30}}
+        height="80%"
         enableVirtualization={true}
         // allowPaging={true}
         allowSorting={true}
@@ -1221,10 +1227,11 @@ const showVal = (val: any): string => {
         frozenColumns={2}
         toolbarClick={toolbarClick} 
         recordClick={recordClick}
+        load={load}
       >
         <ColumnsDirective>
           <ColumnDirective isPrimaryKey={true} field="jobno_oms" headerText="ORDER INFO" width="120" maxWidth="120" template={orderSummaryTemplate} allowEditing={false} customAttributes={{ class: 'editCss' }}/>                 
-          <ColumnDirective field="mainimagepath" headerText="IMG" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('mainimagepath')} allowEditing={false} customAttributes={{ class: 'img' }}/>
+          <ColumnDirective field="mainimagepath" headerText="IMG" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('mainimagepath')} allowEditing={true} customAttributes={{ class: 'img' }}/>
           <ColumnDirective field="Fdt" headerText="DELIVERY INFO" width="180" maxWidth="150" template={deliveryInfoTemplate} customAttributes={{ class: 'editCss' }}/>
           <ColumnDirective field="Print" headerText="Print" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Print')} allowEditing={false} customAttributes={{ class: 'img' }}/>
           <ColumnDirective field="Emb" headerText="Emb" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Emb')} allowEditing={false} customAttributes={{ class: 'img' }}/>
@@ -1538,7 +1545,7 @@ const showVal = (val: any): string => {
       </div>
 
       {/* Grid Container */}
-      <div style={{ flex: 1, overflow: 'hidden' }}>
+      <div style={{ flex: 1, overflow: 'scroll'}}>
         {loading ? (
           <div style={{ padding: '50px', textAlign: 'center' }}>Loading Data...</div>
         ) : error ? (
