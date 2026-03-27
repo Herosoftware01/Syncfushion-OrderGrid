@@ -121,7 +121,7 @@ const Dashboard = () => {
               <FaAudible className="text-red-500 text-2xl" />
             </div>
             <h2 className="text-lg font-semibold text-gray-800 group-hover:text-red-600 transition">
-              Printing - Waiting
+              Printing Syncfusion - B,K
             </h2>
             <p className="text-gray-500 text-sm mt-1">
               Printing Details
