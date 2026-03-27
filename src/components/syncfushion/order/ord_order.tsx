@@ -1232,8 +1232,8 @@ const showVal = (val: any): string => {
         <ColumnsDirective>
           <ColumnDirective isPrimaryKey={true} field="jobno_oms" headerText="ORDER INFO" width="120" maxWidth="120" template={orderSummaryTemplate} allowEditing={false} customAttributes={{ class: 'editCss' }}/>                 
           <ColumnDirective field="mainimagepath" headerText="IMG" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('mainimagepath')} allowEditing={true} customAttributes={{ class: 'img' }}/>
-          <ColumnDirective field="Fdt" headerText="DELIVERY INFO" width="180" maxWidth="150" template={deliveryInfoTemplate} customAttributes={{ class: 'editCss' }}/>
-          <ColumnDirective headerText='n' width="30" textAlign="Center" allowFiltering={false} template={rollnoTemplate} allowEditing={false} />
+          <ColumnDirective field="Fdt" headerText="DELIVERY INFO" width="180" maxWidth="115" template={deliveryInfoTemplate} customAttributes={{ class: 'editCss' }}/>
+          <ColumnDirective headerText='n' width="30" textAlign="Left" allowFiltering={false} template={rollnoTemplate} allowEditing={false} />
           <ColumnDirective field="Print" headerText="Print" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Print')} allowEditing={false} customAttributes={{ class: 'img' }}/>
           <ColumnDirective field="Emb" headerText="Emb" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Emb')} allowEditing={false} customAttributes={{ class: 'img' }}/>
           <ColumnDirective field="others1" headerText="imgs1" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('others1')} allowEditing={false} customAttributes={{ class: 'img' }}/>
@@ -1531,11 +1531,11 @@ const showVal = (val: any): string => {
             <ButtonComponent
               onClick={deleteSetting}
               cssClass="e-outline e-danger"
-              style={{ padding: '3px 6px', fontSize: '15px' }}
+              style={{ padding: '3px 6px', fontSize: '15px'}}
             >
               🗑
             </ButtonComponent>
-                    <div className='count'>
+                    <div className='count mr-1'>
 
           <div className="count-display1">
             {showingCount} / {totalCount}
