@@ -1231,7 +1231,8 @@ const showVal = (val: any): string => {
         <ColumnsDirective>
           <ColumnDirective isPrimaryKey={true} field="jobno_oms" headerText="ORDER INFO" width="120" maxWidth="120" template={orderSummaryTemplate} allowEditing={false} customAttributes={{ class: 'editCss' }}/>                 
           <ColumnDirective field="mainimagepath" headerText="IMG" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('mainimagepath')} allowEditing={true} customAttributes={{ class: 'img' }}/>
-          <ColumnDirective field="Fdt" headerText="DELIVERY INFO" width="180" maxWidth="150" template={deliveryInfoTemplate} customAttributes={{ class: 'editCss' }}/>
+          <ColumnDirective field="Fdt" headerText="DELIVERY INFO" width="180" maxWidth="115" template={deliveryInfoTemplate} customAttributes={{ class: 'editCss' }}/>
+          <ColumnDirective headerText='n' width="30" textAlign="Left" allowFiltering={false} template={rollnoTemplate} allowEditing={false} />
           <ColumnDirective field="Print" headerText="Print" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Print')} allowEditing={false} customAttributes={{ class: 'img' }}/>
           <ColumnDirective field="Emb" headerText="Emb" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Emb')} allowEditing={false} customAttributes={{ class: 'img' }}/>
           <ColumnDirective field="Others1" headerText="imgs1" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Others1')} allowEditing={false} customAttributes={{ class: 'img' }}/>
@@ -1242,7 +1243,6 @@ const showVal = (val: any): string => {
           <ColumnDirective field="udf4" headerText="udf4" width="150" maxWidth="150" template={udf4} customAttributes={{ class: 'editCss' }}/>
           <ColumnDirective field="prdty" headerText="prdty" width="150" maxWidth="250" template={prdty} customAttributes={{ class: 'editCss' }}/>
           <ColumnDirective field="styleno" headerText="qualy" width="150" maxWidth="150" template={qualy} customAttributes={{ class: 'editCss' }}/>
-          <ColumnDirective field="fsn" headerText='fsn' width="90" textAlign="Center" allowFiltering={true} template={rollnoTemplate} allowEditing={false} />
           <ColumnDirective field="All"headerText='All ' width="150" textAlign="Center" allowFiltering={true} template={Alldate} allowEditing={false} />
           <ColumnDirective field="print_img" headerText="PRN IMG" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('print_img')} />
           <ColumnDirective field="prnmeaimg" headerText="MEAS IMG" width="120" maxWidth="120" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('prnmeaimg')} />
@@ -1320,7 +1320,7 @@ const showVal = (val: any): string => {
           flex-direction: row;
           justify-content: space-between;
           align-items: center;
-          padding: 5px 10px;
+          padding: 0px 10px;
           background-color: #0ff180;
           flex-shrink: 0;
           margin-top:0px;
@@ -1328,7 +1328,7 @@ const showVal = (val: any): string => {
           }
           
           .header-title {
-            font-size: 16px;
+            font-size: 2px;
             font-weight: bold;
             color: #333;
             margin-right: 20px;
@@ -1357,7 +1357,7 @@ const showVal = (val: any): string => {
           .count-display {
             background: #e9ecef;
             color: #007bff;
-            padding: 8px 12px;
+            padding: 0px 12px;
             border-radius: 4px;
             font-weight: bold;
             font-size: 14px;
@@ -1385,15 +1385,15 @@ const showVal = (val: any): string => {
             @media (max-width: 768px) {
               .dashboard-header {
                 flex-direction: column;
-                padding: 10px;
                 align-items: stretch;
-                gap: 10px;             
+                gap: 1px;             
                 margin-top: 60px
                 }
 
                 .breadcromp{
                 width:80%;
                 font-size:50px;
+                display:none
                 }
                  
         
@@ -1422,7 +1422,7 @@ const showVal = (val: any): string => {
             }
             .count{
               margin-top: -45px;
-              margin-left: 295px
+              margin-left: 276px
             }
                 .header-title {
                   text-align: center;
@@ -1458,20 +1458,20 @@ const showVal = (val: any): string => {
 
         <ol className="flex items-center whitespace-nowrap breadcromp">
           <li className="inline-flex items-center">
-            <a className="flex items-center text-xs md:text-sm text-lg text-muted-foreground-1 hover:text-primary-focus focus:outline-hidden focus:text-primary-focus" href="/#/dashboard">
+            <a className="flex items-center text-xs md:text-xs text-xs text-muted-foreground-1 hover:text-primary-focus focus:outline-hidden focus:text-primary-focus" href="/#/dashboard">
               <svg className="shrink-0 me-3 size-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
               Dashboard
             </a>
             <svg className="shrink-0 mx-2 size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></svg>
           </li>
           <li className="inline-flex items-center">
-            <a className="flex items-center text-xs md:text-sm text-muted-foreground-1 hover:text-primary-focus focus:outline-hidden focus:text-primary-focus" href="/#/sy-order">
+            <a className="flex items-center text-xs md:text-xs text-muted-foreground-1 hover:text-primary-focus focus:outline-hidden focus:text-primary-focus" href="/#/sy-order">
               <svg className="shrink-0 me-3 size-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="14" y="3" rx="1" /><path d="M10 21V8a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1H3" /></svg>
               Order
               <svg className="shrink-0 mx-2 size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></svg>
             </a>
           </li>
-          <li className="inline-flex items-center text-xs md:text-sm font-semibold text-foreground truncate" aria-current="page">
+          <li className="inline-flex items-center text-xs md:text-xs text-foreground truncate" aria-current="page">
             Order Table
           </li>
         </ol>
@@ -1485,12 +1485,12 @@ const showVal = (val: any): string => {
             className="search-input"
           />
         </div> */}
-        <div style={{ padding: '0px 5px', borderBottom: '1px solid #eee', display: 'flex', gap: 7, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
+        <div style={{ padding: '0px 5px', marginLeft: '5px', display: 'flex', gap: 7, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
             <div style={{ display: 'flex', alignItems: 'center', fontWeight:'bold' }}>
               <TextBoxComponent
                 ref={settingNameRef}
                 placeholder="setting name"
-                style={{ width: '80px' }}
+                style={{ width: '70px' }}
               />
             </div>
 
@@ -1514,7 +1514,7 @@ const showVal = (val: any): string => {
                 .map(s => ({ text: s.name, value: s.id }))}
               fields={{ text: 'text', value: 'value' }}
               placeholder="Select setting"
-              style={{ width: '80px' }}
+              style={{ width: '70px' }}
               change={() => setSelectedSetting(dropdownRef.current?.value as string)}
             />
           </div>
@@ -1530,11 +1530,11 @@ const showVal = (val: any): string => {
             <ButtonComponent
               onClick={deleteSetting}
               cssClass="e-outline e-danger"
-              style={{ padding: '3px 6px', fontSize: '15px' }}
+              style={{ padding: '3px 6px', fontSize: '15px'}}
             >
               🗑
             </ButtonComponent>
-                    <div className='count'>
+                    <div className='count mr-1'>
 
           <div className="count-display1">
             {showingCount} / {totalCount}
