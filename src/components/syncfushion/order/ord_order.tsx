@@ -561,7 +561,7 @@ const   Alldate= (p: OrderData) => (
       <b>Dir:</b> {highlightText(p.director_sample_order)}<br />
       <b>ST:</b> {highlightText(p.styleno)}<br />
       <b>Uom:</b> {highlightText(p.uom)}<br />
-      <b>Type:</b> {highlightText(p.production_type_inside_outside)}
+      <b>PType:</b> {highlightText(p.production_type_inside_outside)}
     </div>
   );
 
@@ -574,7 +574,7 @@ const   Alldate= (p: OrderData) => (
       <b>Year-</b> {highlightText(p.wk)}<br />
       {/* <b>ST:</b> {highlightText(p.styleno)}<br /> */}
       <b>Uom-</b> {highlightText(p.uom)}<br />
-      <b>Type-</b> {highlightText(p.production_type_inside_outside)}<br />
+      <b>abc-</b> {highlightText(p.abc)}<br />
       
     </div>
   );
@@ -1249,7 +1249,7 @@ const showVal = (val: any): string => {
           <ColumnDirective field="printing_R" headerText="printing_R" width="150" maxWidth="150" template={udf} customAttributes={{ class: 'editCss' }}/>
           <ColumnDirective field="ITS_R" headerText="ITS_R" width="150" maxWidth="150" template={udf2} customAttributes={{ class: 'editCss' }}/>
           <ColumnDirective field="Week_R" headerText="Week_R" width="150" maxWidth="150" template={udf4} customAttributes={{ class: 'editCss' }}/>
-           <ColumnDirective field="finaldelvdate1" headerText="finaldelvdate1" width="90" template={genericHighlighter('finaldelvdate1')} /> 
+           <ColumnDirective field="finaldelvdate" headerText="finaldelvdate" width="90" template={genericHighlighter('finaldelvdate')} /> 
         <ColumnDirective field="year" headerText="Year" width="150" maxWidth="150"  template={genericHighlighter('year')} customAttributes={{ class: 'editCss' }}/>
           <ColumnDirective field="Print" headerText="Print" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Print')} allowEditing={false} customAttributes={{ class: 'img' }}/>
           <ColumnDirective field="Emb" headerText="Emb" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Emb')} allowEditing={true} customAttributes={{ class: 'img' }}/>
@@ -1282,7 +1282,7 @@ const showVal = (val: any): string => {
           <ColumnDirective field="prnclr" headerText="PRN COL" width="100" template={genericHighlighter('prnclr')} />
           {/* <ColumnDirective field="printing_R" headerText="1 PRINT" width="100"     template={genericHighlighter('printing_R')} /> */}
           <ColumnDirective field="jobno_oms" headerText="jobno_oms" width="100" template={genericHighlighter('jobno_oms')} />
-          <ColumnDirective field="finaldelvdate1" headerText="finaldelvdate1" width="100" template={genericHighlighter('finaldelvdate1')} />
+          <ColumnDirective field="finaldelvdate" headerText="finaldelvdate" width="100" template={genericHighlighter('finaldelvdate')} />
                <ColumnDirective
       field="finaldelvdate1"
       headerText="Final Delivery Date"
