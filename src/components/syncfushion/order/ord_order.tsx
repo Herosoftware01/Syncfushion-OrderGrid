@@ -1234,7 +1234,7 @@ const showVal = (val: any): string => {
         showColumnChooser={true}
         enableAdaptiveUI={true}
         adaptiveUIMode={'Mobile'}
-        // allowTextWrap={true}
+        allowTextWrap={true}
         allowReordering={true}
         allowResizing={true}
         allowPdfExport={true}
