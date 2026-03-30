@@ -410,15 +410,6 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
     });
   };
 
-  // const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const value = e.target.value;
-  //   setSearchKey(value);
-  //   if (searchTimeout.current) clearTimeout(searchTimeout.current);
-  //   searchTimeout.current = setTimeout(() => {
-  //     if (gridRef.current) gridRef.current.search(value);
-  //   }, 400);
-  // };
-
   const genericHighlighter = (field: keyof OrderData) => (props: OrderData) => (
     <>{highlightText(props[field])}</>
   );
@@ -981,28 +972,7 @@ const showVal = (val: any): string => {
                       }}
                     />
                   ) : null}
-{/* 
-                  {/* {grp.image1 ? (
-                    <img
-                      src={grp.image1}
-                      alt="print 2"
-                      style={{ width: "160px", border: "1px solid #ccc", padding: "6px", display: "block", objectFit: "contain", background: "#fff" }}
-                      onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
-                        (e.currentTarget as HTMLImageElement).style.display = "none";
-                      }}
-                    />
-                  ) : null}
 
-                  {grp.image2 ? (
-                    <img
-                      src={grp.image2}
-                      alt="image_tb"
-                      style={{ width: "160px", border: "1px solid #ccc", padding: "6px", display: "block", objectFit: "contain", background: "#fff" }}
-                      onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
-                        (e.currentTarget as HTMLImageElement).style.display = "none";
-                      }}
-                    />
-                   ) :} */}
                 </div> 
 
                 /* DATA BLOCK */
@@ -1370,11 +1340,9 @@ const showVal = (val: any): string => {
           <ColumnDirective field="u7" headerText="U7" width="100" template={genericHighlighter('u7')} />
           <ColumnDirective field="quality_controller" headerText="QC" width="100" template={genericHighlighter('quality_controller')} /> */}
           <ColumnDirective field="slno1" headerText="No" width="90" textAlign="Center" />
-          {/* <ColumnDirective field="u14" headerText="14 DY" width="70" minWidth="90" template={genericHighlighter('u14')} /> */}
-          {/* <ColumnDirective field="styledesc" headerText="DESC" width="160" template={genericHighlighter('styledesc')} /> */}
-          {/* <ColumnDirective field="reference" headerText="reference" width="250" maxWidth="250" template={genericHighlighter('reference')} /> */}
+           
           <ColumnDirective field="quantity" headerText="QTY" width="110" textAlign="Center" template={genericHighlighter('quantity')} />
-          {/* <ColumnDirective field="company_name" headerText="COMPANY" width="90" template={genericHighlighter('company_name')} /> */}
+        
                     
         </ColumnsDirective>
         <AggregatesDirective>
@@ -1563,15 +1531,7 @@ const showVal = (val: any): string => {
           </li>
         </ol>
 
-        {/* <div className="header-controls bg-white">
-          <input 
-            type="text" 
-            placeholder="Search all columns..."
-            value={searchKey}
-            onChange={onSearchChange}
-            className="search-input"
-          />
-        </div> */}
+       
         <div style={{ padding: '0px 5px', marginLeft: '5px', display: 'flex', gap: 7, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
             <div style={{ display: 'flex', alignItems: 'center', fontWeight:'bold' }}>
               <TextBoxComponent
@@ -1590,7 +1550,7 @@ const showVal = (val: any): string => {
             </ButtonComponent>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <DropDownListComponent
+            {/* <DropDownListComponent
               ref={dropdownRef}
               id="settings-dropdown"
               dataSource={savedSettings
@@ -1604,6 +1564,21 @@ const showVal = (val: any): string => {
               style={{ width: '70px' }}
               change={() => {setSelectedSetting(dropdownRef.current?.value as string);applySetting()}}
             />
+              change={() => setSelectedSetting(dropdownRef.current?.value as string)}
+            /> */}
+
+            <DropDownListComponent
+            ref={dropdownRef}
+            id="settings-dropdown"
+            dataSource={savedSettings
+              .filter(s => s.user?.toLowerCase() === username?.toLowerCase())
+              .map(s => ({ text: s.name, value: s.id }))}
+            fields={{ text: 'text', value: 'value' }}
+            placeholder="Select setting"
+            style={{ width: '70px' }}
+            value={savedSettings.find(s => s.name === selectedSetting)?.id || null}
+            change={() => setSelectedSetting(dropdownRef.current?.value as string)}
+          />
           </div>
 
             {/* <ButtonComponent
