@@ -1616,7 +1616,7 @@ const showVal = (val: any): string => {
         ) : (
           memoizedGridComponent
         )}
-      </div>
+      </div> 
     </div>
   );
 };
