@@ -433,47 +433,47 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
         gridRef.current?.closeEdit();
       },
     });
-    console.log(args)
-    if(args.requestType==='searching')
-    {
-      if (gridRef.current?.element) {
-        // searchHighlightText(gridRef.current?.searchSettings?.key, gridRef.current.element);
-      }
-    }
-     if (gridRef.current && args.requestType === 'beginEdit') {
-            const cols: any = gridRef.current?.columns;
-            for (const col of cols) {
-                if (col.field === "jobno_oms" || col.field === "Print" || col.field==="print_img" || col.field==="prnclr" || col.field==="merch" || col.field==="buyer1"
-                  || col.field==="punit_sh" || col.field==="punit_sh" || col.field==="styleno" ||  col.field==="director_sample_order"  ||  col.field==="director_sample_order" ||
-                    col.field==="abc"  ||  col.field==="order_follow_up" ||  col.field==="styledesc" ||  col.field==="company_name" ||  col.field==="quantity" ||  col.field==="production_type_inside_outside"
-                  ||  col.field==="prnmeaimg" ||  col.field==="All"  ||  col.field==="fsn"  || col.field==="prdty"  ||  col.field==="Others1"  || col.field==="Others7" || col.field==="n" ||  col.field==="slno1" ||  col.field==="actdaten"  ||  col.field==="u46"  ||  col.field==="date" ||  col.field==="ourdelvdate" ||  col.field==="finaldelvdate1"  ||  col.field==="Others2" || col.field==="Others3" || col.field==="Others4"  || col.field==="Others5" || col.field==="Others6"||col.field==="Fdt"
-                ) {
-                    // col.visible = false;
-                }
-            }
-        }
+    // console.log(args)
+    // if(args.requestType==='searching')
+    // {
+    //   if (gridRef.current?.element) {
+    //     // searchHighlightText(gridRef.current?.searchSettings?.key, gridRef.current.element);
+    //   }
+    // }
+    //  if (gridRef.current && args.requestType === 'beginEdit') {
+    //         const cols: any = gridRef.current?.columns;
+    //         for (const col of cols) {
+    //             if (col.field === "jobno_oms" || col.field === "Print" || col.field==="print_img" || col.field==="prnclr" || col.field==="merch" || col.field==="buyer1"
+    //               || col.field==="punit_sh" || col.field==="punit_sh" || col.field==="styleno" ||  col.field==="director_sample_order"  ||  col.field==="director_sample_order" ||
+    //                 col.field==="abc"  ||  col.field==="order_follow_up" ||  col.field==="styledesc" ||  col.field==="company_name" ||  col.field==="quantity" ||  col.field==="production_type_inside_outside"
+    //               ||  col.field==="prnmeaimg" ||  col.field==="All"  ||  col.field==="fsn"  || col.field==="prdty"  ||  col.field==="Others1"  || col.field==="Others7" || col.field==="n" ||  col.field==="slno1" ||  col.field==="actdaten"  ||  col.field==="u46"  ||  col.field==="date" ||  col.field==="ourdelvdate" ||  col.field==="finaldelvdate1"  ||  col.field==="Others2" || col.field==="Others3" || col.field==="Others4"  || col.field==="Others5" || col.field==="Others6"||col.field==="Fdt"
+    //             ) {
+    //                 // col.visible = false;
+    //             }
+    //         }
+    //     }
 
-        // if (gridRef.current && args.requestType === 'add') {
-        //     const cols: any = gridRef.current?.columns;
-        //     for (const col of cols) {
-        //         if (col.field === "jobno_oms" || col.field === "mainimagepath") {
-        //             col.visible = true;
-        //         }
-        //     }
-        // }
-        if (gridRef.current && args.requestType === 'save') {
-            const cols: any = gridRef.current?.columns;
-             for (const col of cols) {
-                if (col.field === "jobno_oms" || col.field === "Print" || col.field==="print_img" || col.field==="prnclr" || col.field==="merch" || col.field==="buyer1"
-                  || col.field==="punit_sh" || col.field==="punit_sh" || col.field==="styleno" ||  col.field==="director_sample_order"  ||  col.field==="director_sample_order" ||
-                    col.field==="abc"  ||  col.field==="order_follow_up" ||  col.field==="styledesc" ||  col.field==="company_name" ||  col.field==="quantity" ||  col.field==="production_type_inside_outside"
-                  ||  col.field==="prnmeaimg" ||  col.field==="All"  ||  col.field==="fsn"  || col.field==="prdty"  ||  col.field==="Others1"  || col.field==="Others7" || col.field==="n" ||  col.field==="slno1" ||  col.field==="actdaten"  ||  col.field==="u46"  ||  col.field==="date" ||  col.field==="ourdelvdate" ||  col.field==="finaldelvdate1"  ||  col.field==="Others2" || col.field==="Others3" || col.field==="Others4"  || col.field==="Others5" || col.field==="Others6"||col.field==="Fdt"
-                ) {
-                    // col.visible = true;
-                }
+    //     // if (gridRef.current && args.requestType === 'add') {
+    //     //     const cols: any = gridRef.current?.columns;
+    //     //     for (const col of cols) {
+    //     //         if (col.field === "jobno_oms" || col.field === "mainimagepath") {
+    //     //             col.visible = true;
+    //     //         }
+    //     //     }
+    //     // }
+    //     if (gridRef.current && args.requestType === 'save') {
+    //         const cols: any = gridRef.current?.columns;
+    //          for (const col of cols) {
+    //             if (col.field === "jobno_oms" || col.field === "Print" || col.field==="print_img" || col.field==="prnclr" || col.field==="merch" || col.field==="buyer1"
+    //               || col.field==="punit_sh" || col.field==="punit_sh" || col.field==="styleno" ||  col.field==="director_sample_order"  ||  col.field==="director_sample_order" ||
+    //                 col.field==="abc"  ||  col.field==="order_follow_up" ||  col.field==="styledesc" ||  col.field==="company_name" ||  col.field==="quantity" ||  col.field==="production_type_inside_outside"
+    //               ||  col.field==="prnmeaimg" ||  col.field==="All"  ||  col.field==="fsn"  || col.field==="prdty"  ||  col.field==="Others1"  || col.field==="Others7" || col.field==="n" ||  col.field==="slno1" ||  col.field==="actdaten"  ||  col.field==="u46"  ||  col.field==="date" ||  col.field==="ourdelvdate" ||  col.field==="finaldelvdate1"  ||  col.field==="Others2" || col.field==="Others3" || col.field==="Others4"  || col.field==="Others5" || col.field==="Others6"||col.field==="Fdt"
+    //             ) {
+    //                 // col.visible = true;
+    //             }
             
-            }
-        }
+    //         }
+    //     }
     if (args.requestType === 'save') {
       if ((args as any).action === 'edit') {
         console.log(args)
@@ -491,10 +491,9 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
 
   const actionComplete = (args: AddEventArgs | SaveEventArgs | EditEventArgs | DeleteEventArgs | ActionEventArgs) => {
     if (args.requestType === 'beginEdit') {
-      // buyerIdVal = args.rowData['buyerid_id'];
     }
     if (args.requestType === 'save') {
-      // integrate your WhatsApp Integration code logic here
+
       serverUpdated = false;
       newPrimaryKey = null;
     }
@@ -1158,7 +1157,8 @@ const showVal = (val: any): string => {
   
     // }
 
-    const load = () =>{
+    const load = (args:any) =>{
+      args.enableSeamlessScrolling=true;
     const gridContainer = document.querySelector('.grid-container') as HTMLElement | null;
         if (!gridContainer) return;
         const rect = gridContainer.getBoundingClientRect();
@@ -1217,7 +1217,7 @@ const showVal = (val: any): string => {
         ref={gridRef}
         dataSource={dataSource}
         dataBound={dataBound}
-        pageSettings={{pageSize:30}}
+        pageSettings={{pageSize:18}}
         height="100%"
         rowHeight={100}
         enableVirtualization={true}
