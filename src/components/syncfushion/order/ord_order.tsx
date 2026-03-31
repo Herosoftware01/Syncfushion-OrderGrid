@@ -433,47 +433,47 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
         gridRef.current?.closeEdit();
       },
     });
-    // console.log(args)
-    // if(args.requestType==='searching')
-    // {
-    //   if (gridRef.current?.element) {
-    //     // searchHighlightText(gridRef.current?.searchSettings?.key, gridRef.current.element);
-    //   }
-    // }
-    //  if (gridRef.current && args.requestType === 'beginEdit') {
-    //         const cols: any = gridRef.current?.columns;
-    //         for (const col of cols) {
-    //             if (col.field === "jobno_oms" || col.field === "Print" || col.field==="print_img" || col.field==="prnclr" || col.field==="merch" || col.field==="buyer1"
-    //               || col.field==="punit_sh" || col.field==="punit_sh" || col.field==="styleno" ||  col.field==="director_sample_order"  ||  col.field==="director_sample_order" ||
-    //                 col.field==="abc"  ||  col.field==="order_follow_up" ||  col.field==="styledesc" ||  col.field==="company_name" ||  col.field==="quantity" ||  col.field==="production_type_inside_outside"
-    //               ||  col.field==="prnmeaimg" ||  col.field==="All"  ||  col.field==="fsn"  || col.field==="prdty"  ||  col.field==="Others1"  || col.field==="Others7" || col.field==="n" ||  col.field==="slno1" ||  col.field==="actdaten"  ||  col.field==="u46"  ||  col.field==="date" ||  col.field==="ourdelvdate" ||  col.field==="finaldelvdate1"  ||  col.field==="Others2" || col.field==="Others3" || col.field==="Others4"  || col.field==="Others5" || col.field==="Others6"||col.field==="Fdt"
-    //             ) {
-    //                 // col.visible = false;
-    //             }
-    //         }
-    //     }
+    console.log(args)
+    if(args.requestType==='searching')
+    {
+      if (gridRef.current?.element) {
+        // searchHighlightText(gridRef.current?.searchSettings?.key, gridRef.current.element);
+      }
+    }
+     if (gridRef.current && args.requestType === 'beginEdit') {
+            const cols: any = gridRef.current?.columns;
+            for (const col of cols) {
+                if (col.field === "jobno_oms" || col.field === "Print" || col.field==="print_img" || col.field==="prnclr" || col.field==="merch" || col.field==="buyer1"
+                  || col.field==="punit_sh" || col.field==="punit_sh" || col.field==="styleno" ||  col.field==="director_sample_order"  ||  col.field==="director_sample_order" ||
+                    col.field==="abc"  ||  col.field==="order_follow_up" ||  col.field==="styledesc" ||  col.field==="company_name" ||  col.field==="quantity" ||  col.field==="production_type_inside_outside"
+                  ||  col.field==="prnmeaimg" ||  col.field==="All"  ||  col.field==="fsn"  || col.field==="prdty"  ||  col.field==="Others1"  || col.field==="Others7" || col.field==="n" ||  col.field==="slno1" ||  col.field==="actdaten"  ||  col.field==="u46"  ||  col.field==="date" ||  col.field==="ourdelvdate" ||  col.field==="finaldelvdate1"  ||  col.field==="Others2" || col.field==="Others3" || col.field==="Others4"  || col.field==="Others5" || col.field==="Others6"||col.field==="Fdt"
+                ) {
+                    col.visible = false;
+                }
+            }
+        }
 
-    //     // if (gridRef.current && args.requestType === 'add') {
-    //     //     const cols: any = gridRef.current?.columns;
-    //     //     for (const col of cols) {
-    //     //         if (col.field === "jobno_oms" || col.field === "mainimagepath") {
-    //     //             col.visible = true;
-    //     //         }
-    //     //     }
-    //     // }
-    //     if (gridRef.current && args.requestType === 'save') {
-    //         const cols: any = gridRef.current?.columns;
-    //          for (const col of cols) {
-    //             if (col.field === "jobno_oms" || col.field === "Print" || col.field==="print_img" || col.field==="prnclr" || col.field==="merch" || col.field==="buyer1"
-    //               || col.field==="punit_sh" || col.field==="punit_sh" || col.field==="styleno" ||  col.field==="director_sample_order"  ||  col.field==="director_sample_order" ||
-    //                 col.field==="abc"  ||  col.field==="order_follow_up" ||  col.field==="styledesc" ||  col.field==="company_name" ||  col.field==="quantity" ||  col.field==="production_type_inside_outside"
-    //               ||  col.field==="prnmeaimg" ||  col.field==="All"  ||  col.field==="fsn"  || col.field==="prdty"  ||  col.field==="Others1"  || col.field==="Others7" || col.field==="n" ||  col.field==="slno1" ||  col.field==="actdaten"  ||  col.field==="u46"  ||  col.field==="date" ||  col.field==="ourdelvdate" ||  col.field==="finaldelvdate1"  ||  col.field==="Others2" || col.field==="Others3" || col.field==="Others4"  || col.field==="Others5" || col.field==="Others6"||col.field==="Fdt"
-    //             ) {
-    //                 // col.visible = true;
-    //             }
+        // if (gridRef.current && args.requestType === 'add') {
+        //     const cols: any = gridRef.current?.columns;
+        //     for (const col of cols) {
+        //         if (col.field === "jobno_oms" || col.field === "mainimagepath") {
+        //             col.visible = true;
+        //         }
+        //     }
+        // }
+        if (gridRef.current && (args.requestType === 'save' || args.requestType === 'cancel')) {
+            const cols: any = gridRef.current?.columns;
+             for (const col of cols) {
+                if (col.field === "jobno_oms" || col.field === "Print" || col.field==="print_img" || col.field==="prnclr" || col.field==="merch" || col.field==="buyer1"
+                  || col.field==="punit_sh" || col.field==="punit_sh" || col.field==="styleno" ||  col.field==="director_sample_order"  ||  col.field==="director_sample_order" ||
+                    col.field==="abc"  ||  col.field==="order_follow_up" ||  col.field==="styledesc" ||  col.field==="company_name" ||  col.field==="quantity" ||  col.field==="production_type_inside_outside"
+                  ||  col.field==="prnmeaimg" ||  col.field==="All"  ||  col.field==="fsn"  || col.field==="prdty"  ||  col.field==="Others1"  || col.field==="Others7" || col.field==="n" ||  col.field==="slno1" ||  col.field==="actdaten"  ||  col.field==="u46"  ||  col.field==="date" ||  col.field==="ourdelvdate" ||  col.field==="finaldelvdate1"  ||  col.field==="Others2" || col.field==="Others3" || col.field==="Others4"  || col.field==="Others5" || col.field==="Others6"||col.field==="Fdt"
+                ) {
+                    col.visible = true;
+                }
             
-    //         }
-    //     }
+            }
+        }
     if (args.requestType === 'save') {
       if ((args as any).action === 'edit') {
         console.log(args)
@@ -491,15 +491,18 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
 
   const actionComplete = (args: AddEventArgs | SaveEventArgs | EditEventArgs | DeleteEventArgs | ActionEventArgs) => {
     if (args.requestType === 'beginEdit') {
+      // buyerIdVal = args.rowData['buyerid_id'];
     }
     if (args.requestType === 'save') {
-
+      // integrate your WhatsApp Integration code logic here
       serverUpdated = false;
       newPrimaryKey = null;
     }
   };
 
-  const orderSummaryTemplate = (p: OrderData) => (
+  const orderSummaryTemplate = (p: OrderData) => 
+  {
+    return (
     <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
       <b>OR-</b> {highlightText(p.jobno_oms)}<br />
       <b>Buy-</b> {highlightText(p.buyer1)}<br />
@@ -508,6 +511,7 @@ const [savedSettings, setSavedSettings] = useState<SavedSetting[]>([]);
       <b>Qty-</b> {highlightText(p.quantity)}
     </div>
   );
+  }
 
 const  udf= (p: OrderData) => (
     <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
@@ -603,9 +607,38 @@ const   Alldate= (p: OrderData) => (
     </div>
   );
 
-  
+      const searchTemplate = useMemo(() => {
+    return () => {
+      const handleSearchInput = (e: any) => {
+        const value = e.value || '';
+          if (gridRef.current) {
+            gridRef.current.search(value);
+          }
+
+      };
+
+      return (
+        <div>
+          <TextBoxComponent
+            id="customSearch"
+            placeholder="Search..."
+            input={handleSearchInput}
+            showClearButton={true}
+            style={{ width: '100px' }}
+            cssClass="custom-search-textbox"
+          />
+        </div>
+      );
+    };
+  }, []);
+
   const toolbarOptions: any[] = [
-    { text: 'Search', prefixIcon: 'e-icons e-search', id: 'default-aggregate-grid_search', align: 'Left' as any },
+    {
+      id: 'searching',
+      align: 'Left' as any,
+      template: searchTemplate,
+    },
+    // { text: 'Search', prefixIcon: 'e-icons e-search', id: 'default-aggregate-grid_search', align: 'Left' as any },
     { text: '', prefixIcon: 'e-add', id: 'add_icon', tooltipText: 'Add Records' },
     'Edit',
     'Delete',
@@ -1065,101 +1098,150 @@ const showVal = (val: any): string => {
   >
   </TooltipComponent>
 
-    // const tooltipBeforeRender = (args: any) => {
+ const tooltipBeforeRender = (args: any) => {
   
-    //   const isHeaderCell = args.target.closest('.e-headercell');
-    //   const isRowCell = args.target.closest('.e-rowcell');
+      const isRowCell = args.target.closest('.e-rowcell');
   
-    //   if (isRowCell || isHeaderCell) {
-    //     let img = args.target.querySelector('img')
-    //     if (img && !isHeaderCell) {
-    //       // Get row information
-    //       const rowInfo = gridRef.current?.getRowInfo(args.target.closest('td'));
-    //       const rowData: OrderData = rowInfo?.rowData as OrderData;
+      if (isRowCell) {
+      const cell = args.target.closest('.e-rowcell');
+
+      if (!cell) return;
+
+      const column = gridRef.current?.getColumnByIndex(
+        parseInt(cell.getAttribute('aria-colindex')) - 1
+      );
+
+      const fieldName = column?.field;
+      const allowedColumn = "mainimagepath";
+
+      if (fieldName !== allowedColumn) {
+        args.cancel = true;
+        return;
+      }
+      
+      const img = args.target.querySelector('img') || args.target;
+      if (img) {
+          // Get row information
+          const rowInfo = gridRef.current?.getRowInfo(args.target.closest('td'));
+          const rowData: OrderData = rowInfo?.rowData as OrderData;
           
-    //       if (rowData) {
-    //         // Get image source
-    //         const imgSrc = img.src;
+          if (rowData) {
+            // Get image source
+            const imgSrc = img.src;
+            const printimg = rowData.Print  
+            const Emp = rowData.Emb
+            const others1 = rowData.Others1
+            const others2 = rowData.Others2
+            const others7 = rowData.Others7
             
-    //         // Build order information HTML
-    //         const orderInfo = `
-    //           <div style="padding: 12px; line-height: 1.6; font-size: 13px;">
-    //             <div style="margin-bottom: 8px;"><strong>Job No:</strong> ${rowData.jobno_oms || 'N/A'}</div>
-    //             <div style="margin-bottom: 8px;"><strong>Company:</strong> ${rowData.company_name || 'N/A'}</div>
-    //             <div style="margin-bottom: 8px;"><strong>Buyer:</strong> ${rowData.buyer1 || 'N/A'}</div>
-    //             <div style="margin-bottom: 8px;"><strong>Style:</strong> ${rowData.stylename || 'N/A'}</div>
-    //             <div style="margin-bottom: 8px;"><strong>Style No:</strong> ${rowData.styleno || 'N/A'}</div>
-    //             <div style="margin-bottom: 8px;"><strong>Quantity:</strong> ${rowData.quantity || 'N/A'}</div>
-    //             <div style="margin-bottom: 8px;"><strong>Unit:</strong> ${rowData.punit_sh || 'N/A'}</div>
-    //             <div style="margin-bottom: 8px;"><strong>Merch:</strong> ${rowData.merch || 'N/A'}</div>
-    //             <div style="margin-bottom: 8px;"><strong>Delivery Date:</strong> ${rowData.Fdt || rowData.final_delivery_date || 'N/A'}</div>
-    //             <div style="margin-bottom: 8px;"><strong>Type:</strong> ${rowData.director_sample_order || 'N/A'}</div>
-    //           </div>
-    //         `;
+            // Build order information HTML
+            const orderInfo = `
+              <div style="padding: 12px; line-height: 1; font-size: 13px; display: flex; flex-wrap: wrap; gap: 2px">
+                <div style="margin-bottom: 8px;"><strong>Job No:</strong> ${rowData.jobno_oms || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Company:</strong> ${rowData.company_name || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Buyer:</strong> ${rowData.buyer1 || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Style:</strong> ${rowData.stylename || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Style No:</strong> ${rowData.styleno || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Quantity:</strong> ${rowData.quantity || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Unit:</strong> ${rowData.punit_sh || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Merch:</strong> ${rowData.merch || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Delivery Date:</strong> ${rowData.Fdt || rowData.final_delivery_date || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Type:</strong> ${rowData.director_sample_order || 'N/A'}</div>
+              </div>
+            `;
             
-    //         // Create tooltip content with order info on left and image on right
-    //         const tooltipContent = `
-    //           <div style="display: flex; max-width: 600px;">
-    //             <div style="flex: 1; min-width: 200px; max-width: 250px; border-right: 1px solid #e0e0e0;">
-    //               ${orderInfo}
-    //             </div>
-    //             <div style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 12px;">
-    //               <img 
-    //                 src="${imgSrc}" 
-    //                 style="max-width: 250px; max-height: 280px; width: auto; height: auto; object-fit: contain;" 
-    //                 alt="Order Image"
-    //               />
-    //             </div>
-    //           </div>
-    //         `;
+            const images = [
+              { label: "Print Image", src: printimg },
+              { label: "Emp Image", src: Emp },
+              { label: "PLT-7 Image", src: others1 },
+              { label: "AOP-9 Image", src: others2 },
+              { label: "Fus-14 Image", src: others7 },
+            ];
+
+            // remove empty images
+            const validImages = images.filter(img => img.src);
+
+            const chunkSize = 3;
+            const columns = [];
+            for (let i = 0; i < validImages.length; i += chunkSize) {
+              columns.push(validImages.slice(i, i + chunkSize));
+            }
+
+            // generate html
+            const imagesHtml = columns.map(col => {
+              const count = col.length;
+
+              let height = "100%";
+              if (count === 2) height = "46%";
+              else if (count >= 3) height = "29.33%";
+
+              return `
+                <div style="display:flex; flex-direction:column; height:300px; gap: 20px;">
+                  ${col.map(img => `
+                    <div style="height:${height}; text-align:center;">
+                      <b>${img.label}</b><br/>
+                      <img 
+                        src="${img.src}" 
+                        style="max-height:100%; width:auto; object-fit:contain;"
+                      />
+                    </div>
+                  `).join('')}
+                </div>
+              `;
+            }).join('');
+
+            // Create tooltip content with order info on left and image on right
+            const tooltipContent = `
+            <div style="flex: 1; min-width: 200px; max-width: 570px; border-bottom: 1px solid #e0e0e0;">
+              ${orderInfo}
+            </div>
+            <div style="display: flex; gap: 6px; max-width: 570px;">
+
+              <!-- LEFT BIG IMAGE -->
+              <div style="padding: 12px;">
+                <b>Order Image</b><br />
+                <img 
+                  src="${imgSrc}" 
+                  style="max-width: 250px; max-height: 300px; object-fit: contain;" 
+                />
+              </div>
+
+              <!-- RIGHT DYNAMIC GRID -->
+              <div style="display: flex; gap: 10px; padding: 12px;">
+                ${imagesHtml}
+              </div>
+            </div>
+            <div style="flex: 1; min-width: 200px; max-width: 570px; border-top: 1px solid #e0e0e0;">
+              ${orderInfo}
+            </div>
+            `;
             
-    //         (tooltipRef.current as TooltipComponent).content = tooltipContent;
-    //         (tooltipRef.current as TooltipComponent).width = '450px';
-    //         (tooltipRef.current as TooltipComponent).height = 'auto';
-    //       }
-    //     }
-    //     else if (img && isHeaderCell) {
-    //       // For header cells, show simple image
-    //       let imgElem:any= args.target.innerHTML;
-    //       const wrapper = document.createElement('div');
-    //       wrapper.innerHTML = imgElem;
-    //       const tooltipImg = wrapper.querySelector('img');
-    //       if (tooltipImg) {
-    //         tooltipImg.style.width = '100px';
-    //         tooltipImg.style.height = '100px';
-    //         tooltipImg.style.objectFit = 'contain';
-    //       }
-    //       (tooltipRef.current as TooltipComponent).content = wrapper.innerHTML;
-    //       (tooltipRef.current as TooltipComponent).width = '100px';
-    //       (tooltipRef.current as TooltipComponent).height = '100px';
-    //     }
-    //     else {args.cancel=!isHeaderCell
-    //       // Create a wrapper div for text content with styling
-    //       const textWrapper = document.createElement('div');
-    //       textWrapper.style.padding = '8px';
-    //       textWrapper.style.maxHeight = '150px';
-    //       textWrapper.style.overflowY = 'auto';
-    //       textWrapper.style.fontSize = '14px';
-    //       textWrapper.style.lineHeight = '1.5';
-    //       textWrapper.innerText = args.target.innerText;
-    //       (tooltipRef.current as TooltipComponent).content = textWrapper.outerHTML;
-          
-    //       // Set different dimensions for header cells
-    //       if (isHeaderCell) {
-    //         (tooltipRef.current as TooltipComponent).width = '100px';
-    //         (tooltipRef.current as TooltipComponent).height = '100px';
-    //       } else {
-    //         (tooltipRef.current as TooltipComponent).width = '150px';
-    //         (tooltipRef.current as TooltipComponent).height = '150px';
-    //       }
-    //     }
-    //   }
-  
-    // }
+            (tooltipRef.current as TooltipComponent).content = tooltipContent;
+            (tooltipRef.current as TooltipComponent).width = '450px';
+            (tooltipRef.current as TooltipComponent).height = 'auto';
+          }
+        }
+        else if (img) {
+          // For header cells, show simple image
+          let imgElem:any= args.target.innerHTML;
+          const wrapper = document.createElement('div');
+          wrapper.innerHTML = imgElem;
+          const tooltipImg = wrapper.querySelector('img');
+          if (tooltipImg) {
+            tooltipImg.style.width = '100px';
+            tooltipImg.style.height = '100px';
+            tooltipImg.style.objectFit = 'contain';
+          }
+          (tooltipRef.current as TooltipComponent).content = wrapper.innerHTML;
+          (tooltipRef.current as TooltipComponent).width = '100px';
+          (tooltipRef.current as TooltipComponent).height = '100px';
+        }
+      }
+    }
 
     const load = (args:any) =>{
       args.enableSeamlessScrolling=true;
-    const gridContainer = document.querySelector('.grid-container') as HTMLElement | null;
+      const gridContainer = document.querySelector('.grid-container') as HTMLElement | null;
         if (!gridContainer) return;
         const rect = gridContainer.getBoundingClientRect();
         const topPosition = rect?.top ?? 0;
@@ -1169,29 +1251,15 @@ const showVal = (val: any): string => {
     }
       const dateEditor = (props :any) => {
   return (
-    <DatePickerComponent
+   <div>
+     <DatePickerComponent
       value={props.finaldelvdate1}
       change={(args) => props.setCellValue(props.column.field, args.value)}
     />
+   </div>
   );
 };
-    // Background color implementation
-    const recordClick=(args:any)=>
-      {
-        // Remove background from previously clicked cell
-        if (previousCellRef.current) {
-          previousCellRef.current.style.backgroundColor = '';
-        }
-        
-        // Set yellow background on the newly clicked cell
-        if (args.cell) {
-          args.cell.style.backgroundColor = 'yellow';
-          // Store the current cell as the previous cell for next click
-          previousCellRef.current = args.cell;
-        }
-        
-        console.log('Cell clicked:', args);
-      }
+
   
     const beforeOpen = (args: any) => {
       // Adjust tooltip dimensions based on content type
@@ -1202,10 +1270,9 @@ const showVal = (val: any): string => {
         args.element.style.width = 'auto';
       }
     };
-// beforeRender={tooltipBeforeRender}  beforeOpen={beforeOpen}
-  // Memoize the grid component to prevent unnecessary re-renders
+   // Memoize the grid component to prevent unnecessary re-renders
   const memoizedGridComponent = useMemo(() => (
-    // <><div><TooltipComponent ref={tooltipRef} target=".e-rowcell, .e-headercell" width="130px" height="130px" >
+    <><div><TooltipComponent ref={tooltipRef} target=".e-rowcell" width="130px" height="130px" beforeRender={tooltipBeforeRender} beforeOpen={beforeOpen}>
     <div className='grid-container'
         style={{
           overflow: 'hidden',
@@ -1217,7 +1284,7 @@ const showVal = (val: any): string => {
         ref={gridRef}
         dataSource={dataSource}
         dataBound={dataBound}
-        pageSettings={{pageSize:18}}
+        pageSettings={{pageSize:15}}
         height="100%"
         rowHeight={100}
         enableVirtualization={true}
@@ -1225,16 +1292,13 @@ const showVal = (val: any): string => {
         allowSorting={true}
         allowFiltering={true}
         allowMultiSorting={true}
-        // filterSettings={{type:'CheckBox'}}
-        filterSettings={{ type: 'Menu' }}
+        filterSettings={{ type:"Menu" }}
         statelessTemplates={['directiveTemplates']}
         allowGrouping={true}
         groupSettings={{showGroupedColumn:true, showDropArea : !Browser.isDevice}}
-        // showColumnMenu={true}
         showColumnChooser={true}
         enableAdaptiveUI={true}
         adaptiveUIMode={'Mobile'}
-        allowTextWrap={true}
         allowReordering={true}
         allowResizing={true}
         allowPdfExport={true}
@@ -1254,8 +1318,8 @@ const showVal = (val: any): string => {
         actionComplete={actionComplete}
         created={created}
         frozenColumns={2}
-        toolbarClick={toolbarClick} 
-        recordClick={recordClick}
+        enableVirtualMaskRow={false}
+        toolbarClick={toolbarClick}
         load={load}
       >
         <ColumnsDirective>
@@ -1263,8 +1327,8 @@ const showVal = (val: any): string => {
           <ColumnDirective field="mainimagepath" headerText="IMG" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('mainimagepath')} allowEditing={true} customAttributes={{ class: 'img' }}/>
           <ColumnDirective field="Fdt" headerText="Fdt,Dir,ST,Uom,Ptype" width="200" maxWidth="150" template={deliveryInfoTemplate} customAttributes={{ class: 'editCss' }}/>
           <ColumnDirective field="n" headerText='n' minWidth={60} width="30" textAlign="Center" allowFiltering={false} template={rollnoTemplate} allowEditing={false} />
-          <ColumnDirective field="printing_R" headerText="1_PR,3_Em,8_Fa_9_Dy,7_Cu" width="150" maxWidth="150" template={udf} customAttributes={{ class: 'editCss' }}/>
-          <ColumnDirective field="ITS_R" headerText="31_IT,36_Cu,45_Or,46_Em,141-Sa" width="150" maxWidth="150" template={udf2} customAttributes={{ class: 'editCss' }}/>
+          <ColumnDirective field="printing_R" headerText="1_PR,3_Em,8_Fa_9_Dy,7_Cu" width="150" maxWidth="150"  type="string" template={udf} customAttributes={{ class: 'editCss' }}/>
+          <ColumnDirective field="ITS_R" headerText="31_IT,36_Cu,45_Or,46_Em,141-Sa" width="150" maxWidth="150" type="string" template={udf2} customAttributes={{ class: 'editCss' }}/>
           <ColumnDirective field="director_sample_order" headerText="dir" width="70" maxWidth="100" customAttributes={{ class: 'editCss' }}/>
           <ColumnDirective field="production_type_inside_outside" headerText="pty" width="70" maxWidth="100" customAttributes={{ class: 'editCss' }}/>
           <ColumnDirective field="Week_R" headerText="Mo,Wk,Ye,Uo" width="150" maxWidth="150" template={udf4} customAttributes={{ class: 'editCss' }}/>
@@ -1357,7 +1421,7 @@ const showVal = (val: any): string => {
         </AggregatesDirective>
         <Inject services={[Sort, Edit, Filter, Group, Reorder, Search, VirtualScroll, DetailRow,Freeze, Resize, ContextMenu, Page, Toolbar, ColumnChooser, ColumnMenu, Aggregate, PdfExport]} />
       </GridComponent></div>
-      // </TooltipComponent></div></>
+      </TooltipComponent></div></>
   ), [dataSource]);
 
   return (
