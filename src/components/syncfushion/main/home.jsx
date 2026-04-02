@@ -24,6 +24,7 @@ import OrderDetails from '../order/OrderDetails.tsx';
 import PivotTableExporting from '../order/pivot.tsx';
 import ForeignKeyColumn from '../order/SyncForignkey.tsx';
 import Pivot from '../order/pivot/Pivotview.tsx';
+import Kanban from '../order/Kanban/Kanban.jsx';
 // import Overview from "../order/chart.tsx"
 
 function Home() {
@@ -57,6 +58,7 @@ function Home() {
         <Route path='/PivotTableExporting' element={<PivotTableExporting />} />
         <Route path='/forign' element={<ForeignKeyColumn />} />
         <Route path='/pivot' element={<Pivot />} />
+        <Route path='/kanban' element={<Kanban />} />
     </Routes>
   );
 }
