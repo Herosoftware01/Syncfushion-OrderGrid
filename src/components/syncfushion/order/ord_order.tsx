@@ -604,11 +604,55 @@ const HeroFashionGrid131: React.FC = () => {
     <>{highlightText(props[field])}</>
   );
 
+  // Double-tap detection for mobile
+  const lastTapTimeRef = useRef<number>(0);
+  const lastTapTargetRef = useRef<EventTarget | null>(null);
+  
+  const imageDoubleTapHandler = useCallback((e: React.MouseEvent<HTMLImageElement> | React.TouchEvent<HTMLImageElement>) => {
+    const currentTime = new Date().getTime();
+    const tapLength = currentTime - lastTapTimeRef.current;
+    const target = e.currentTarget;
+    
+    // Double tap detected (within 300ms and on same element)
+    if (tapLength < 300 && tapLength > 0 && lastTapTargetRef.current === target) {
+      console.log('Double tap detected on mobile!');
+      e.preventDefault(); // Prevent zoom on mobile
+      
+      if (target.getAttribute("data-tooltip-id")) {
+        tooltipRef.current?.close();
+      } else {
+        tooltipRef.current?.open(target);
+      }
+      
+      // Reset
+      lastTapTimeRef.current = 0;
+      lastTapTargetRef.current = null;
+    } else {
+      // First tap
+      lastTapTimeRef.current = currentTime;
+      lastTapTargetRef.current = target;
+    }
+  }, []);
+
   // --- Templates ---
-  const imageFieldTemplate = (field: 'mainimagepath' | 'Print' | 'print_img' | 'prnmeaimg' | 'img_fpath' | 'Emb' | 'Others1' | 'Others2' | 'Others3' | 'Others4' | 'Others5' | 'Others6' | 'Others7') => (p: OrderData) => {
+  const imageFieldTemplate = useCallback((field: 'mainimagepath' | 'Print' | 'print_img' | 'prnmeaimg' | 'img_fpath' | 'Emb' | 'Others1' | 'Others2' | 'Others3' | 'Others4' | 'Others5' | 'Others6' | 'Others7') => (p: OrderData) => {
     if (!p[field]) return <div style={{ color: '#ccc', fontSize: '10px' }}>No Image</div>;
-    return <img src={p[field]} alt="img" style={{ width: '70px', height: '70px', objectFit: 'contain', border: '1px solid #eee' }} />;
-  };
+    
+    return (
+      <img 
+        src={p[field]} 
+        alt="img" 
+        onClick={Browser.isDevice ? imageDoubleTapHandler : undefined}
+        style={{ 
+          width: '70px', 
+          height: '70px', 
+          objectFit: 'contain', 
+          border: '1px solid #eee',
+          touchAction: Browser.isDevice ? 'manipulation' : 'auto' // Prevents zoom on double-tap
+        }} 
+      />
+    );
+  }, [imageDoubleTapHandler]);
 
   let serverUpdated = false;
   let newPrimaryKey: number | null = null;
@@ -843,19 +887,19 @@ const HeroFashionGrid131: React.FC = () => {
     'Delete',
     'Update',
     'Cancel',
-    { type: 'Separator' },
+    // { type: 'Separator' },
     { text: '', prefixIcon: 'e-filter', id: 'query_builder_toggle', tooltipText: 'Toggle Query Builder' },
     { text: 'FilterToggle', id: 'filterToggle', tooltipText: 'filterToggle' },
     { text: 'Clear All', id: 'clearAll', tooltipText: 'Clear All' },
     { text: '', prefixIcon: 'sf-icon-clear-sorting', id: 'clearsorting_icon', tooltipText: 'Clear Sorting' },
     { text: '', prefixIcon: 'e-filter-clear icon', id: 'clearfilter_icon', tooltipText: 'Clear Filtering' },
-    { type: 'Separator' },
+    // { type: 'Separator' },
     { text: '', prefixIcon: 'sf-icon-clear-selection', id: 'clear_selection', tooltipText: 'Clear Selection' },
     { text: '', prefixIcon: 'sf-icon-row-clear', id: 'clear_row_selection', tooltipText: 'Clear Row Selection' },
     { text: '', prefixIcon: 'sf-icon-column-clear', id: 'clear_column_selection', tooltipText: 'Clear Column Selection' },
     { text: '', prefixIcon: 'sf-icon-clear-cell', id: 'clear_cell_selection', tooltipText: 'Clear Cell Selection' },
-    { type: 'Separator' },
-    { type: 'Separator' },
+    // { type: 'Separator' },
+    // { type: 'Separator' },
     { text: '', prefixIcon: 'e-csvexport', id: 'export_csv', tooltipText: 'Export CSV' },
     { text: '', prefixIcon: 'e-excelexport', id: 'export_excel', tooltipText: 'Export Excel' },
     { text: '', prefixIcon: 'e-pdfexport', id: 'export_pdf', tooltipText: 'Export PDF' },
@@ -1842,8 +1886,8 @@ const HeroFashionGrid131: React.FC = () => {
   ),[])
   // Memoize the grid component to prevent unnecessary re-renders
   const memoizedGridComponent = useMemo(() => (
-    <><div><TooltipComponent ref={tooltipRef} target=".e-rowcell" width="130px" height="130px" beforeRender={tooltipBeforeRender} beforeOpen={beforeOpen}>
-      <div className='grid-container'
+    <><div><TooltipComponent ref={tooltipRef} target=".e-rowcell" width="130px" height="130px" opensOn={!Browser.isDevice ? "Hover" :"Custom"} beforeRender={tooltipBeforeRender} beforeOpen={beforeOpen}>
+      <div className='grid-container e-bigger'
         style={{
           overflow: 'hidden',
           minHeight: 0
