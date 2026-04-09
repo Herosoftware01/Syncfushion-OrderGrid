@@ -393,40 +393,29 @@ const HeroFashionGrid131: React.FC = () => {
     }
   };
 
-  // --- QueryBuilder Configuration (Memoized for performance) ---
+ const stringOperator = [
+  { key: 'IN', value: 'in' },
+  { key: 'NOT IN', value: 'notin' },
+  { key: 'STARTS WITH', value: 'startswith' },
+  { key: 'ENDS WITH', value: 'endswith' },
+  { key: 'CONTAINS', value: 'contains' },
+  { key: 'EQUAL', value: 'equal' },
+  { key: 'NOT EQUAL', value: 'notequal' },
+
+];
+  // QueryBuilder Configuration 
   const queryBuilderColumns: ColumnsModel[] = useMemo(() => [
-    // { field: 'jobno_oms', label: 'Job No', type: 'string' },
-    // { field: 'company_name', label: 'Company', type: 'string' },
-    // { field: 'buyer1', label: 'Buyer', type: 'string' },
-    // { field: 'stylename', label: 'Style Name', type: 'string' },
-    // { field: 'styleno', label: 'Style No', type: 'string' },
-    // { field: 'quantity', label: 'Quantity', type: 'number' },
-    // { field: 'director_sample_order', label: 'Director Sample/Order', type: 'string' },
-    // { field: 'production_type_inside_outside', label: 'Production Type', type: 'string' },
-    // { field: 'merch', label: 'Merch', type: 'string' },
-    // { field: 'punit_sh', label: 'Unit', type: 'string' },
-    // { field: 'finaldelvdate1', label: 'Final Delivery Date', type: 'date', format: 'dd/MM/yyyy' },
-    // { field: 'Fdt', label: 'Fdt', type: 'string' },
-    // { field: 'printing_R', label: 'Printing', type: 'string' },
-    // { field: 'Emb_R', label: 'Embroidery', type: 'string' },
-    // { field: 'Fab_R', label: 'Fabric', type: 'string' },
-    // { field: 'ITS_R', label: 'ITS', type: 'string' },
-    // { field: 'Order_R', label: 'Order', type: 'string' },
-    // { field: 'quality_controller', label: 'Quality Controller', type: 'string' },
-    // { field: 'uom', label: 'UOM', type: 'string' },
-    // { field: 'abc', label: 'ABC', type: 'string' }
-    
-    { field: 'fdt', label: 'FDT ISO', type: 'date' },
+    { field: 'fdt', label: 'FDT ISO', type: 'date', },
     { field: 'slno', label: 'Serial No', type: 'number' },
-    { field: 'insdatenew', label: 'Ins Date New', type: 'string' },
-    { field: 'jobno_oms', label: 'Job No OMS', type: 'string' },
-    { field: 'printing_R', label: 'Printing Status', type: 'string' },
+    { field: 'insdatenew', label: 'Ins Date New', type: 'string',operators:stringOperator },
+    { field: 'jobno_oms', label: 'Job No OMS', type: 'string',operators:stringOperator },
+    { field: 'printing_R', label: 'Printing Status', type: 'string',operators:stringOperator },
     { field: 'buyerid', label: 'Buyer ID', type: 'number' },
     { field: 'mpyear', label: 'MP Year', type: 'number' },
     { field: 'number_01_printing', label: 'Printing No', type: 'number' },
     { field: 'number_03_emb', label: 'Embroidery No', type: 'number' },
     { field: 'mpdate', label: 'MP Date', type: 'date' },
-    { field: 'refno', label: 'Ref No', type: 'string' },
+    { field: 'refno', label: 'Ref No', type: 'string',operators:stringOperator },
     { field: 'stylename', label: 'Style Name', type: 'string' },
     { field: 'styledesc', label: 'Style Description', type: 'string' },
     { field: 'season', label: 'Season', type: 'string' },
