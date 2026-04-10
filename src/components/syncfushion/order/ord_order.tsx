@@ -167,9 +167,7 @@ const HeroFashionGrid131: React.FC = () => {
         setLoading(true); setError(null);
         const [orderResponse] = await Promise.all([
           fetch('https://app.herofashion.com/order_panda'),
-          // fetch('https://app.herofashion.com/PrintRgb/'),
-          // fetch('https://app.herofashion.com/ord_prn/'),
-          // fetch('https://app.herofashion.com/get_quality_controllers/')
+          
         ]);
         if (!orderResponse.ok ) throw new Error("Failed to fetch data from APIs");
 
@@ -393,29 +391,40 @@ const HeroFashionGrid131: React.FC = () => {
     }
   };
 
- const stringOperator = [
-  { key: 'IN', value: 'in' },
-  { key: 'NOT IN', value: 'notin' },
-  { key: 'STARTS WITH', value: 'startswith' },
-  { key: 'ENDS WITH', value: 'endswith' },
-  { key: 'CONTAINS', value: 'contains' },
-  { key: 'EQUAL', value: 'equal' },
-  { key: 'NOT EQUAL', value: 'notequal' },
-
-];
-  // QueryBuilder Configuration 
+  // --- QueryBuilder Configuration (Memoized for performance) ---
   const queryBuilderColumns: ColumnsModel[] = useMemo(() => [
-    { field: 'fdt', label: 'FDT ISO', type: 'date', },
+    // { field: 'jobno_oms', label: 'Job No', type: 'string' },
+    // { field: 'company_name', label: 'Company', type: 'string' },
+    // { field: 'buyer1', label: 'Buyer', type: 'string' },
+    // { field: 'stylename', label: 'Style Name', type: 'string' },
+    // { field: 'styleno', label: 'Style No', type: 'string' },
+    // { field: 'quantity', label: 'Quantity', type: 'number' },
+    // { field: 'director_sample_order', label: 'Director Sample/Order', type: 'string' },
+    // { field: 'production_type_inside_outside', label: 'Production Type', type: 'string' },
+    // { field: 'merch', label: 'Merch', type: 'string' },
+    // { field: 'punit_sh', label: 'Unit', type: 'string' },
+    // { field: 'finaldelvdate1', label: 'Final Delivery Date', type: 'date', format: 'dd/MM/yyyy' },
+    // { field: 'Fdt', label: 'Fdt', type: 'string' },
+    // { field: 'printing_R', label: 'Printing', type: 'string' },
+    // { field: 'Emb_R', label: 'Embroidery', type: 'string' },
+    // { field: 'Fab_R', label: 'Fabric', type: 'string' },
+    // { field: 'ITS_R', label: 'ITS', type: 'string' },
+    // { field: 'Order_R', label: 'Order', type: 'string' },
+    // { field: 'quality_controller', label: 'Quality Controller', type: 'string' },
+    // { field: 'uom', label: 'UOM', type: 'string' },
+    // { field: 'abc', label: 'ABC', type: 'string' }
+    
+    { field: 'fdt', label: 'FDT ISO', type: 'date' },
     { field: 'slno', label: 'Serial No', type: 'number' },
-    { field: 'insdatenew', label: 'Ins Date New', type: 'string',operators:stringOperator },
-    { field: 'jobno_oms', label: 'Job No OMS', type: 'string',operators:stringOperator },
-    { field: 'printing_R', label: 'Printing Status', type: 'string',operators:stringOperator },
+    { field: 'insdatenew', label: 'Ins Date New', type: 'string' },
+    { field: 'jobno_oms', label: 'Job No OMS', type: 'string' },
+    { field: 'printing_R', label: 'Printing Status', type: 'string' },
     { field: 'buyerid', label: 'Buyer ID', type: 'number' },
     { field: 'mpyear', label: 'MP Year', type: 'number' },
     { field: 'number_01_printing', label: 'Printing No', type: 'number' },
     { field: 'number_03_emb', label: 'Embroidery No', type: 'number' },
     { field: 'mpdate', label: 'MP Date', type: 'date' },
-    { field: 'refno', label: 'Ref No', type: 'string',operators:stringOperator },
+    { field: 'refno', label: 'Ref No', type: 'string' },
     { field: 'stylename', label: 'Style Name', type: 'string' },
     { field: 'styledesc', label: 'Style Description', type: 'string' },
     { field: 'season', label: 'Season', type: 'string' },
@@ -1655,22 +1664,6 @@ const HeroFashionGrid131: React.FC = () => {
           const others2 = rowData.Others2
           const others7 = rowData.Others7
 
-          // Build order information HTML
-          const orderInfo = `
-              <div style="padding: 12px; line-height: 1; font-size: 13px; display: flex; flex-wrap: wrap; gap: 2px">
-                <div style="margin-bottom: 8px;"><strong>Job No:</strong> ${rowData.jobno_oms || 'N/A'}</div>
-                <div style="margin-bottom: 8px;"><strong>Company:</strong> ${rowData.company_name || 'N/A'}</div>
-                <div style="margin-bottom: 8px;"><strong>Buyer:</strong> ${rowData.buyer1 || 'N/A'}</div>
-                <div style="margin-bottom: 8px;"><strong>Style:</strong> ${rowData.stylename || 'N/A'}</div>
-                <div style="margin-bottom: 8px;"><strong>Style No:</strong> ${rowData.styleno || 'N/A'}</div>
-                <div style="margin-bottom: 8px;"><strong>Quantity:</strong> ${rowData.quantity || 'N/A'}</div>
-                <div style="margin-bottom: 8px;"><strong>Unit:</strong> ${rowData.punit_sh || 'N/A'}</div>
-                <div style="margin-bottom: 8px;"><strong>Merch:</strong> ${rowData.merch || 'N/A'}</div>
-                <div style="margin-bottom: 8px;"><strong>Delivery Date:</strong> ${rowData.Fdt || rowData.final_delivery_date || 'N/A'}</div>
-                <div style="margin-bottom: 8px;"><strong>Type:</strong> ${rowData.director_sample_order || 'N/A'}</div>
-              </div>
-            `;
-
           const images = [
             { label: "Print Image", src: printimg },
             { label: "Emp Image", src: Emp },
@@ -1688,7 +1681,10 @@ const HeroFashionGrid131: React.FC = () => {
             columns.push(validImages.slice(i, i + chunkSize));
           }
 
-          // generate html
+          // generate html with device-specific heights
+          const isMobile = !Browser.isDevice; // true on mobile, false on desktop
+          const containerHeight = isMobile ? "150px" : "300px"; // Mobile: smaller container
+          
           const imagesHtml = columns.map(col => {
             const count = col.length;
 
@@ -1697,10 +1693,10 @@ const HeroFashionGrid131: React.FC = () => {
             else if (count >= 3) height = "29.33%";
 
             return `
-                <div style="display:flex; flex-direction:column; height:300px; gap: 20px;">
+                <div style="display:flex; flex-direction:column; height:${containerHeight}; gap: ${isMobile ? '10px' : '20px'};">
                   ${col.map(img => `
                     <div style="height:${height}; text-align:center;">
-                      <b>${img.label}</b><br/>
+                      <b style="font-size: ${isMobile ? '11px' : '13px'};">${img.label}</b><br/>
                       <img 
                         src="${img.src}" 
                         style="max-height:100%; width:auto; object-fit:contain;"
@@ -1711,35 +1707,60 @@ const HeroFashionGrid131: React.FC = () => {
               `;
           }).join('');
 
-          // Create tooltip content with order info on left and image on right
+          // Create tooltip content with device-specific layout
+          const isMobileLayout = !Browser.isDevice;
+          const mainImageWidth = isMobileLayout ? "200px" : "80px";
+          const mainImageHeight = isMobileLayout ? "200px" : "80px";
+          const orderInfoFontSize = isMobileLayout ? "11px" : "11px";
+          const layoutDisplay = isMobileLayout ? "column" : "flex";
+          
           const tooltipContent = `
             <div style="flex: 1; min-width: 200px; max-width: 570px; border-bottom: 1px solid #e0e0e0;">
-              ${orderInfo}
+              <div style="padding: 12px; line-height: 1; font-size: ${orderInfoFontSize}; display: flex; flex-wrap: wrap; gap: 2px">
+                <div style="margin-bottom: 8px;"><strong>Job No:</strong> ${rowData.jobno_oms || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Company:</strong> ${rowData.company_name || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Buyer:</strong> ${rowData.buyer1 || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Style:</strong> ${rowData.stylename || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Style No:</strong> ${rowData.styleno || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Quantity:</strong> ${rowData.quantity || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Unit:</strong> ${rowData.punit_sh || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Merch:</strong> ${rowData.merch || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Delivery Date:</strong> ${rowData.Fdt || rowData.final_delivery_date || 'N/A'}</div>
+                <div style="margin-bottom: 8px;"><strong>Type:</strong> ${rowData.director_sample_order || 'N/A'}</div>
+              </div>
             </div>
-            <div style="display: flex; gap: 6px; max-width: 570px;">
+            <div style="display: ${layoutDisplay}; gap: ${isMobileLayout ? '8px' : '6px'}; max-width: 570px;">
 
               <!-- LEFT BIG IMAGE -->
               <div style="padding: 12px;">
-                <b>Order Image</b><br />
+                <b style="font-size: ${orderInfoFontSize};">Order Image</b><br />
                 <img 
                   src="${imgSrc}" 
-                  style="max-width: 250px; max-height: 300px; object-fit: contain;" 
+                  style="max-width: ${mainImageWidth}; max-height: ${mainImageHeight}; object-fit: contain;" 
                 />
               </div>
 
               <!-- RIGHT DYNAMIC GRID -->
-              <div style="display: flex; gap: 10px; padding: 12px;">
+              <div style="display: flex; gap: ${isMobileLayout ? '5px' : '10px'}; padding: 12px;">
                 ${imagesHtml}
               </div>
             </div>
-            <div style="flex: 1; min-width: 200px; max-width: 570px; border-top: 1px solid #e0e0e0;">
-              ${orderInfo}
-            </div>
+
             `;
 
-          (tooltipRef.current as TooltipComponent).content = tooltipContent;
+        (tooltipRef.current as TooltipComponent).content = tooltipContent;
+        if(Browser.isDevice)
+        {
+          console.log('Mobile');
+          (tooltipRef.current as TooltipComponent).position = "TopCenter" ;
+          (tooltipRef.current as TooltipComponent).width = '350px';
+          (tooltipRef.current as TooltipComponent).height = '250px';
+        }
+        else
+        {
           (tooltipRef.current as TooltipComponent).width = '450px';
           (tooltipRef.current as TooltipComponent).height = 'auto';
+        }
         }
       }
       else if (img) {
@@ -1754,6 +1775,10 @@ const HeroFashionGrid131: React.FC = () => {
           tooltipImg.style.objectFit = 'contain';
         }
         (tooltipRef.current as TooltipComponent).content = wrapper.innerHTML;
+        if(!Browser.isDevice)
+        {
+          (tooltipRef.current as TooltipComponent).position = "TopCenter" ;
+        }
         (tooltipRef.current as TooltipComponent).width = '100px';
         (tooltipRef.current as TooltipComponent).height = '100px';
       }
@@ -1846,12 +1871,7 @@ const HeroFashionGrid131: React.FC = () => {
 
   const beforeOpen = (args: any) => {
     // Adjust tooltip dimensions based on content type
-    const hasOrderInfo = args.element.innerHTML.includes('Job No:');
 
-    if (hasOrderInfo) {
-      args.element.style.maxWidth = '750px';
-      args.element.style.width = 'auto';
-    }
   };
   const editSettings = useMemo(() =>
   (
@@ -1875,7 +1895,7 @@ const HeroFashionGrid131: React.FC = () => {
   ),[])
   // Memoize the grid component to prevent unnecessary re-renders
   const memoizedGridComponent = useMemo(() => (
-    <><div><TooltipComponent ref={tooltipRef} target=".e-rowcell" width="130px" height="130px" opensOn={!Browser.isDevice ? "Hover" :"Custom"} beforeRender={tooltipBeforeRender} beforeOpen={beforeOpen}>
+    <><div><TooltipComponent ref={tooltipRef} target=".e-rowcell" width="130px" height="130px"  opensOn={!Browser.isDevice ? "Hover" :"Custom"} beforeRender={tooltipBeforeRender} beforeOpen={beforeOpen}>
       <div className='grid-container e-bigger'
         style={{
           overflow: 'hidden',
