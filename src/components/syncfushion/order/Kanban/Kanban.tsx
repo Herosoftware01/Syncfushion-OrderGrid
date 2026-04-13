@@ -37,26 +37,24 @@ function App() {
                         <table className="card-template-wrap">
                             <tbody>
                                 <tr>
-                                    <td className="CardHeader">Entry No:</td>
-                                    <td>{props.entryno}</td>
+                                    
+                                    <td><b>{props.entryno}</b></td>
                                 </tr>
                                 <tr>
-                                    <td className="CardHeader">Name:</td>
+                                    
                                     <td>{props.asgby_name}</td>
                                 </tr>
                                 <tr>
-                                    <td className="CardHeader">Code:</td>
-                                    <td>{props.asgby_code}</td>
+                                    
+                                    <td>{props.asgdt}</td>
                                 </tr>
                                 <tr>
-                                    <td className="CardHeader">Category:</td>
-                                    <td>{props.wrkcat}</td>
+                                    
+                                    <td><div className="e-card-tags"><div className="e-card-tag e-card-label">{props.wrkcat}</div></div></td>
+                                    <td><div className="e-card-tags"><div className="e-card-tag e-card-label">{props.asgby_code}</div></div></td>
+                                    <td><img src={props.photo_url} alt={props.ImageURL} height={50} width={50} style={{ borderRadius: '30px' }}/></td>
                                 </tr>
-                                <tr>
-                                   <td className="e-image">
-                                    <img src={props.photo_url} alt={props.ImageURL} height={50} width={50}/>
-                                </td>
-                                </tr>
+                              
                             </tbody>
                         </table>
                     </div>
@@ -187,7 +185,7 @@ function App() {
                             </td>
                         </tr>
                         <tr>
-                            <td className="e-label">Status</td>
+                            <td className="e-label">Work Type</td>
                             <td>
                                 <DropDownListComponent
                                     id="Status"
@@ -213,7 +211,7 @@ function App() {
                             </td>
                         </tr>
                         <tr>
-                            <td className="e-label">Priority</td>
+                            <td className="e-label">Work Category</td>
                             <td>
                                 <DropDownListComponent
                                     type="text"
@@ -228,7 +226,7 @@ function App() {
                             </td>
                         </tr>
                         <tr>
-                            <td className="e-label">Summary</td>
+                            <td className="e-label">Time</td>
                             <td>
                                 <div className="e-float-input e-control-wrapper">
                                     <textarea
@@ -299,6 +297,7 @@ let kanbanObj = useRef(null);
         (statusObj.current as any).value = "None";
         (kanbanObj.current as any).query = new Query();
     };
+    
   return (
     <div style={{ marginTop: '100px' }}>
       <div className="col-lg-3 property-section" id="searchFilterProperty">
@@ -372,6 +371,7 @@ let kanbanObj = useRef(null);
                     </div>
                 </div>
             </div>
+          
       <KanbanComponent 
         id="kanban" 
         keyField="worktype1" 
@@ -383,7 +383,8 @@ let kanbanObj = useRef(null);
         swimlaneSettings={{ keyField: "asgby_code" }}
         cardSettings={{
           headerField: "entryno",
-          template: cardTemplate  ,
+          template: cardTemplate,
+          grabberField: 'color',
         }}
         dialogSettings={{ template: dialogTemplate }}
       >
