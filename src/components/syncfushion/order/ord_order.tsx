@@ -57,8 +57,8 @@ interface OrderData {
   u15: string; u14: string; u8: string; u25: string; insdate: string; insdateyear: string; finaldelvdate1: string; number_03_emb: string; actdate: string;
   actdaten: string; actyeardate: string; pono: string; u46: string; u37: string; qltycontroller: string; Print: string; Others1: string;
   mainimagepath: string; finaldelvdate: string; prnclr?: string | null; prnfile1?: string; prnfile2?: string; img_fpath?: string; clr?: string; print_img?: string; Fab_R: string;
-  ITS_R: string; Order_R: string; Dy_R: string; Sample_R: string; Week_R: string; FMonth_yr: string; Emb_R: string; Week_R1: string; year: string; wk: string;
-  prnmeaimg?: string; mpic?: string;
+  ITS_R: string; Order_R: string; Dy_R: string; Sample_R: string; Week_R: string; FMonth_yr: string; Emb_R: string; Week_R1: string; year: string; wk: string; 
+  prnmeaimg?: string; mpic?: string; FabdyIN?: string;
   Others2: string; Others3: string; Others4: string; Others5: string; Others6: string; Others7: string,
 }
 
@@ -113,7 +113,7 @@ const HeroFashionGrid131: React.FC = () => {
     'number_03_emb', 'actdate', 'actdaten', 'actyeardate', 'pono', 'u46', 'u37',
     'qltycontroller', 'Print', 'others1', 'mainimagepath', 'finaldelvdate',
     'prnclr', 'prnfile1', 'prnfile2', 'img_fpath', 'clr', 'print_img', 'FMonth_yr', 'wk',
-    'Fab_R', 'ITS_R', 'Order_R', 'Dy_R', 'Sample_R', 'Week_R', 'year',
+    'Fab_R', 'ITS_R', 'Order_R', 'Dy_R', 'Sample_R', 'Week_R', 'year',"FabdyIN",
     'prnmeaimg', 'mpic', 'Others2', 'Others3', 'Others4', 'Others5', 'Others6', 'Others7'
   ], []);
 
@@ -727,6 +727,7 @@ const HeroFashionGrid131: React.FC = () => {
       </div>
     );
   }
+
   const orderSummaryHeaderTemplate = (p: OrderData) => {
     return (
       <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
@@ -739,7 +740,20 @@ const HeroFashionGrid131: React.FC = () => {
     );
   }
 
-   const udfheaderTemplate = (p: OrderData) => {
+  const ordHeaderTemplate = (p: OrderData) => {
+    return (
+      <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
+        <b>Fdt</b><br/>
+        <b>Dir</b> <br/>
+        <b>ST</b> <br/>
+        <b>UOM</b><br/>
+        <b>Type</b><br/>
+        
+      </div>
+    );
+  }
+
+  const udfheaderTemplate = (p: OrderData) => {
     return (
       <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
         <b>1-Print</b><br/>
@@ -751,6 +765,37 @@ const HeroFashionGrid131: React.FC = () => {
     );
   }
   
+  const udf4HeaderTemplate = (p: OrderData) => {
+    return (
+        <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
+          <b>MO</b><br/>
+          <b>wk</b> <br/>
+          <b>yr</b> <br/>
+          <b>uom</b> <br/>
+          <b>abc</b> <br/>
+          {/* <b>order_follow_up</b><br/>
+          <b>Qty</b><br/> */}
+      </div>
+    );
+  }
+
+  const udf2HeaderTemplate = (p: OrderData) => {
+    return (
+      <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
+        <b>31-ITS</b><br/>
+        <b>36-CT</b> <br/>
+        <b>45-Ord</b> <br/>
+        <b>46-Empty</b><br/>
+        <b>141-Sam</b><br/>
+      </div>
+    );
+  }
+
+    const udf11 = (p: OrderData) => (
+      <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
+        <b>FabdyIN :</b> {highlightText(p.FabdyIN)}<br />
+      </div>
+    );
 
   const udf = (p: OrderData) => (
     <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
@@ -781,12 +826,6 @@ const HeroFashionGrid131: React.FC = () => {
       <b>Qty:</b> {highlightText(p.quantity)} */}
     </div>
   );
-
-
-
-
-
-
 
   const qualy = (p: OrderData) => (
     <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
@@ -1631,12 +1670,10 @@ const HeroFashionGrid131: React.FC = () => {
   const tooltipBeforeRender = (args: any) => {
 
     const isRowCell = args.target.closest('.e-rowcell');
-
     if (isRowCell) {
       const cell = args.target.closest('.e-rowcell');
 
       if (!cell) return;
-
       const column = gridRef.current?.getColumnByIndex(
         parseInt(cell.getAttribute('aria-colindex')) - 1
       );
@@ -1664,6 +1701,22 @@ const HeroFashionGrid131: React.FC = () => {
           const others2 = rowData.Others2
           const others7 = rowData.Others7
 
+          // Build order information HTML
+          const orderInfo = `
+              <div style="padding: 6px 8px; line-height: 1.2; font-size: 10px; display: flex; flex-wrap: wrap; gap: 4px">
+                <div style="margin-bottom: 4px;"><strong>Job No:</strong> ${rowData.jobno_oms || 'N/A'}</div>
+                <div style="margin-bottom: 4px;"><strong>Company:</strong> ${rowData.company_name || 'N/A'}</div>
+                <div style="margin-bottom: 4px;"><strong>Buyer:</strong> ${rowData.buyer1 || 'N/A'}</div>
+                <div style="margin-bottom: 4px;"><strong>Style:</strong> ${rowData.stylename || 'N/A'}</div>
+                <div style="margin-bottom: 4px;"><strong>Style No:</strong> ${rowData.styleno || 'N/A'}</div>
+                <div style="margin-bottom: 4px;"><strong>Qty:</strong> ${rowData.quantity || 'N/A'}</div>
+                <div style="margin-bottom: 4px;"><strong>Unit:</strong> ${rowData.punit_sh || 'N/A'}</div>
+                <div style="margin-bottom: 4px;"><strong>Merch:</strong> ${rowData.merch || 'N/A'}</div>
+                <div style="margin-bottom: 4px;"><strong>Delv Date:</strong> ${rowData.Fdt || rowData.final_delivery_date || 'N/A'}</div>
+                <div style="margin-bottom: 4px;"><strong>Type:</strong> ${rowData.director_sample_order || 'N/A'}</div>
+              </div>
+            `;
+
           const images = [
             { label: "Print Image", src: printimg },
             { label: "Emp Image", src: Emp },
@@ -1681,22 +1734,18 @@ const HeroFashionGrid131: React.FC = () => {
             columns.push(validImages.slice(i, i + chunkSize));
           }
 
-          // generate html with device-specific heights
-          const isMobile = !Browser.isDevice; // true on mobile, false on desktop
-          const containerHeight = isMobile ? "150px" : "300px"; // Mobile: smaller container
-          
+          // generate html
           const imagesHtml = columns.map(col => {
             const count = col.length;
-
             let height = "100%";
             if (count === 2) height = "46%";
             else if (count >= 3) height = "29.33%";
 
             return `
-                <div style="display:flex; flex-direction:column; height:${containerHeight}; gap: ${isMobile ? '10px' : '20px'};">
+                <div style="display:flex; flex-direction:column; height:180px; gap: 10px;">
                   ${col.map(img => `
                     <div style="height:${height}; text-align:center;">
-                      <b style="font-size: ${isMobile ? '11px' : '13px'};">${img.label}</b><br/>
+                      <b style="font-size: 10px;">${img.label}</b><br/>
                       <img 
                         src="${img.src}" 
                         style="max-height:100%; width:auto; object-fit:contain;"
@@ -1707,60 +1756,32 @@ const HeroFashionGrid131: React.FC = () => {
               `;
           }).join('');
 
-          // Create tooltip content with device-specific layout
-          const isMobileLayout = !Browser.isDevice;
-          const mainImageWidth = isMobileLayout ? "200px" : "80px";
-          const mainImageHeight = isMobileLayout ? "200px" : "80px";
-          const orderInfoFontSize = isMobileLayout ? "11px" : "11px";
-          const layoutDisplay = isMobileLayout ? "column" : "flex";
-          
+          // Create tooltip content with order info on left and image on right
           const tooltipContent = `
-            <div style="flex: 1; min-width: 200px; max-width: 570px; border-bottom: 1px solid #e0e0e0;">
-              <div style="padding: 12px; line-height: 1; font-size: ${orderInfoFontSize}; display: flex; flex-wrap: wrap; gap: 2px">
-                <div style="margin-bottom: 8px;"><strong>Job No:</strong> ${rowData.jobno_oms || 'N/A'}</div>
-                <div style="margin-bottom: 8px;"><strong>Company:</strong> ${rowData.company_name || 'N/A'}</div>
-                <div style="margin-bottom: 8px;"><strong>Buyer:</strong> ${rowData.buyer1 || 'N/A'}</div>
-                <div style="margin-bottom: 8px;"><strong>Style:</strong> ${rowData.stylename || 'N/A'}</div>
-                <div style="margin-bottom: 8px;"><strong>Style No:</strong> ${rowData.styleno || 'N/A'}</div>
-                <div style="margin-bottom: 8px;"><strong>Quantity:</strong> ${rowData.quantity || 'N/A'}</div>
-                <div style="margin-bottom: 8px;"><strong>Unit:</strong> ${rowData.punit_sh || 'N/A'}</div>
-                <div style="margin-bottom: 8px;"><strong>Merch:</strong> ${rowData.merch || 'N/A'}</div>
-                <div style="margin-bottom: 8px;"><strong>Delivery Date:</strong> ${rowData.Fdt || rowData.final_delivery_date || 'N/A'}</div>
-                <div style="margin-bottom: 8px;"><strong>Type:</strong> ${rowData.director_sample_order || 'N/A'}</div>
-              </div>
+            <div style="flex: 1; min-width: 200px; max-width: 450px; border-bottom: 1px solid #e0e0e0;">
+              ${orderInfo}
             </div>
-            <div style="display: ${layoutDisplay}; gap: ${isMobileLayout ? '8px' : '6px'}; max-width: 570px;">
+            <div style="display: flex; gap: 6px; max-width: 450px;">
 
               <!-- LEFT BIG IMAGE -->
-              <div style="padding: 12px;">
-                <b style="font-size: ${orderInfoFontSize};">Order Image</b><br />
+              <div style="padding: 8px;">
+                <b style="font-size: 11px;">Order Image</b><br />
                 <img 
                   src="${imgSrc}" 
-                  style="max-width: ${mainImageWidth}; max-height: ${mainImageHeight}; object-fit: contain;" 
+                  style="max-width: 160px; max-height: 180px; object-fit: contain;" 
                 />
               </div>
 
               <!-- RIGHT DYNAMIC GRID -->
-              <div style="display: flex; gap: ${isMobileLayout ? '5px' : '10px'}; padding: 12px;">
+              <div style="display: flex; gap: 6px; padding: 8px;">
                 ${imagesHtml}
               </div>
             </div>
-
             `;
 
-        (tooltipRef.current as TooltipComponent).content = tooltipContent;
-        if(Browser.isDevice)
-        {
-          console.log('Mobile');
-          (tooltipRef.current as TooltipComponent).position = "TopCenter" ;
-          (tooltipRef.current as TooltipComponent).width = '350px';
-          (tooltipRef.current as TooltipComponent).height = '250px';
-        }
-        else
-        {
+          (tooltipRef.current as TooltipComponent).content = tooltipContent;
           (tooltipRef.current as TooltipComponent).width = '450px';
           (tooltipRef.current as TooltipComponent).height = 'auto';
-        }
         }
       }
       else if (img) {
@@ -1775,10 +1796,6 @@ const HeroFashionGrid131: React.FC = () => {
           tooltipImg.style.objectFit = 'contain';
         }
         (tooltipRef.current as TooltipComponent).content = wrapper.innerHTML;
-        if(!Browser.isDevice)
-        {
-          (tooltipRef.current as TooltipComponent).position = "TopCenter" ;
-        }
         (tooltipRef.current as TooltipComponent).width = '100px';
         (tooltipRef.current as TooltipComponent).height = '100px';
       }
@@ -1871,7 +1888,12 @@ const HeroFashionGrid131: React.FC = () => {
 
   const beforeOpen = (args: any) => {
     // Adjust tooltip dimensions based on content type
+    const hasOrderInfo = args.element.innerHTML.includes('Job No:');
 
+    if (hasOrderInfo) {
+      args.element.style.maxWidth = '750px';
+      args.element.style.width = 'auto';
+    }
   };
   const editSettings = useMemo(() =>
   (
@@ -1895,7 +1917,7 @@ const HeroFashionGrid131: React.FC = () => {
   ),[])
   // Memoize the grid component to prevent unnecessary re-renders
   const memoizedGridComponent = useMemo(() => (
-    <><div><TooltipComponent ref={tooltipRef} target=".e-rowcell" width="130px" height="130px"  opensOn={!Browser.isDevice ? "Hover" :"Custom"} beforeRender={tooltipBeforeRender} beforeOpen={beforeOpen}>
+    <><div><TooltipComponent ref={tooltipRef} target=".e-rowcell" position='TopCenter' opensOn={!Browser.isDevice ? "Hover" :"Custom"} beforeRender={tooltipBeforeRender} beforeOpen={beforeOpen}>
       <div className='grid-container e-bigger'
         style={{
           overflow: 'hidden',
@@ -1928,7 +1950,7 @@ const HeroFashionGrid131: React.FC = () => {
           allowTextWrap={true}
           textWrapSettings={{ wrapMode: 'Both' }}
           autoFit={true}
-          sortSettings={sortSettings}
+          sortSettings={{ columns: [{ field: 'director_sample_order', direction: 'Descending' }, { field: 'Fdt', direction: 'Ascending' }] }}
           gridLines="Both"
           searchSettings={searchSettings}
           toolbar={toolbarOptions}
@@ -1944,16 +1966,18 @@ const HeroFashionGrid131: React.FC = () => {
           <ColumnsDirective>
             <ColumnDirective isPrimaryKey={true} field="jobno_oms" headerTemplate={orderSummaryHeaderTemplate} width="90" maxWidth="120" filter={{ operator: 'startsWith' }} template={orderSummaryTemplate} allowEditing={false} customAttributes={{ class: 'editCss' }} />
             <ColumnDirective field="mainimagepath" headerText="IMG" width="100" textAlign="Center" allowFiltering={false} filter={{ operator: 'startsWith' }} template={imageFieldTemplate('mainimagepath')} allowEditing={true} customAttributes={{ class: 'img' }} />
-            <ColumnDirective field="Fdt" headerText="Fdt,Dir,ST,Uom,Ptype" width="110" maxWidth="150" template={deliveryInfoTemplate} filter={{ operator: 'startsWith' }} customAttributes={{ class: 'editCss' }} />
+            <ColumnDirective field="Fdt" headerText="Fdt,Dir,ST,Uom,Ptype" width="110" maxWidth="150" headerTemplate={ordHeaderTemplate} template={deliveryInfoTemplate} filter={{ operator: 'startsWith' }} customAttributes={{ class: 'editCss' }} />
             <ColumnDirective field="n" headerText='n' minWidth={60} width="30" textAlign="Center" allowFiltering={false} template={rollnoTemplate} filter={{ operator: 'startsWith' }} allowEditing={false} />
-            <ColumnDirective field="printing_R" headerText="1_PR,3_Em,8_Fa_9_Dy,7_Cus" headerTemplate= {udfheaderTemplate} width="150" maxWidth="150" type="string" template={udf} filter={{ operator: 'startsWith' }} customAttributes={{ class: 'editCss' }} />
-            <ColumnDirective field="ITS_R" headerText="31_IT,36_Cu,45_Or,46_Em,141-Sa" width="150" maxWidth="150" type="string" template={udf2} filter={{ operator: 'startsWith' }} customAttributes={{ class: 'editCss' }} />
-            <ColumnDirective field="Week_R" headerText="Mo,Wk,Ye,Uo" width="150" maxWidth="150" template={udf4} customAttributes={{ class: 'editCss' }} />
+            <ColumnDirective field="printing_R" headerText="1_PR,3_Em,8_Fa_9_Dy,7_Cus" headerTemplate= {udfheaderTemplate} width="110" maxWidth="150" type="string" template={udf} filter={{ operator: 'startsWith' }} customAttributes={{ class: 'editCss' }} />
+            <ColumnDirective field="ITS_R" headerText="31_IT,36_Cu,45_Or,46_Em,141-Sa" headerTemplate={udf2HeaderTemplate} width="110" maxWidth="200" type="string" template={udf2} filter={{ operator: 'startsWith' }} customAttributes={{ class: 'editCss' }} />
+            <ColumnDirective field="FabdyIN" headerText="FabdyIN"  width="110" maxWidth="150" type="string" template={udf11} filter={{ operator: 'startsWith' }} customAttributes={{ class: 'editCss' }} />
+            <ColumnDirective field="Week_R" headerText="Mo,Wk,Ye,Uo" width="110" headerTemplate={udf4HeaderTemplate} maxWidth="150" template={udf4} customAttributes={{ class: 'editCss' }} />
             <ColumnDirective field="Print" headerText="Print" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Print')} allowEditing={false} customAttributes={{ class: 'img' }} />
             <ColumnDirective field="Emb" headerText="Emb" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Emb')} allowEditing={true} customAttributes={{ class: 'img' }} />
             <ColumnDirective field="Others1" headerText="imgs1" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Others1')} allowEditing={false} customAttributes={{ class: 'img' }} />
             <ColumnDirective field="Others2" headerText="AOP-9 img" width="100" textAlign="Center" allowFiltering={false} template={imageFieldTemplate('Others2')} allowEditing={false} customAttributes={{ class: 'img' }} />
-            <ColumnDirective field="quantity" headerText="QTY" width="110" textAlign="Center" template={genericHighlighter('quantity')} />
+            <ColumnDirective field="quantity" headerText="QTY" width="100" textAlign="Center" template={genericHighlighter('quantity')} />
+            <ColumnDirective field="director_sample_order" headerText="dir" width="75" maxWidth="75" filter={{ operator: 'startsWith' }} customAttributes={{ class: 'editCss' }} />
           </ColumnsDirective>
           <AggregatesDirective>
             <AggregateDirective>
@@ -2123,16 +2147,16 @@ const HeroFashionGrid131: React.FC = () => {
         <ol className="flex items-center whitespace-nowrap breadcromp">
           <li className="inline-flex items-center">
             <a className="flex items-center text-xs md:text-xs text-xs text-muted-foreground-1 hover:text-primary-focus focus:outline-hidden focus:text-primary-focus" href="/#/dashboard">
-              <svg className="shrink-0 me-3 size-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" ><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
+              <svg className="shrink-0 me-3 size-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
               Dashboard
             </a>
-            <svg className="shrink-0 mx-2 size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+            <svg className="shrink-0 mx-2 size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></svg>
           </li>
           <li className="inline-flex items-center">
             <a className="flex items-center text-xs md:text-xs text-muted-foreground-1 hover:text-primary-focus focus:outline-hidden focus:text-primary-focus" href="/#/sy-order">
-              <svg className="shrink-0 me-3 size-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="7" height="7" x="14" y="3" rx="1" /><path d="M10 21V8a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1H3" /></svg>
+              <svg className="shrink-0 me-3 size-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="14" y="3" rx="1" /><path d="M10 21V8a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1H3" /></svg>
               Order
-              <svg className="shrink-0 mx-2 size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+              <svg className="shrink-0 mx-2 size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></svg>
             </a>
           </li>
           <li className="inline-flex items-center text-xs md:text-xs text-foreground truncate" aria-current="page">
