@@ -13,7 +13,10 @@ function App() {
   // here you can modify the loggged in user from your data to filter the data based on the logged in user.
   const loggedInUser = 'PREMAVATHI.N';
   const data = new DataManager(kanbanData);
-  const query = new Query().where('asgby_name', 'equal', loggedInUser);
+  const [query, setQuery] = useState(new Query());
+  useEffect(() => {
+    setQuery(new Query().where('asgby_name', 'equal', loggedInUser));
+  }, [loggedInUser]);
   // Load initial data
   useEffect(() => {
     loadData();
@@ -246,6 +249,23 @@ function App() {
 const dialogTemplate = (props: any) => {
         return <KanbanDialogFormTemplate {...props} />;
 };
+const imageContainer: HTMLElement | null = document.getElementById('image-container') as HTMLElement;
+    if (imageContainer) {
+      const circularImages: NodeListOf<HTMLElement> = imageContainer.querySelectorAll('.circular-image');
+      circularImages.forEach((image: HTMLElement) => {
+        image.addEventListener('click', (event: Event) => {
+          const target = event.target as HTMLImageElement;
+          if (target.tagName === 'IMG') {
+            let altText: any = target.alt;
+            if (altText) {
+                const newQuery = new Query().where('asgby_name', 'equal', altText);
+                setQuery(newQuery);
+            }
+          }
+        });
+      });
+    }
+
 let priorityObj = useRef(null);
 let kanbanObj = useRef(null);
     let textBoxObj = useRef(null);
@@ -371,7 +391,18 @@ let kanbanObj = useRef(null);
                     </div>
                 </div>
             </div>
-          
+          <div className="datasource-filter-container">
+                       
+              <div id="image-container" className="custom-dropdown">
+                <img src="https://app.herofashion.com/staff_images/10006.jpg" alt="PREMAVATHI.N" className="circular-image" title="Martin Tamer" style={{ width: '35px', height: '35px' }} />
+                <img src="https://app.herofashion.com/staff_images/10014.jpg" alt="SARANYA.S" className="circular-image" title="Rose Fuller" style={{ width: '35px', height: '35px' }} />
+                <img src="https://app.herofashion.com/staff_images/10021.jpg" alt="KANDASAMY.M" className="circular-image" title="Margaret Buchanan" style={{ width: '35px', height: '35px' }} />
+                <img src="https://app.herofashion.com/staff_images/10022.jpg" alt="VIJAYAKUMAR.K" className="circular-image" title="Fuller King" style={{ width: '35px', height: '35px' }} />
+                <img src="https://app.herofashion.com/staff_images/10028.jpg" alt="THANGADURAI.P" className="circular-image" title="Davolio Fuller" style={{ width: '35px', height: '35px' }} />
+              </div>
+              
+            
+          </div>
       <KanbanComponent 
         id="kanban" 
         keyField="worktype1" 
