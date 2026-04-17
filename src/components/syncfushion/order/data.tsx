@@ -1,3 +1,5 @@
+import { DataSchema, UISchema } from "@syncfusion/ej2-react-form-renderer";
+
 export let data: Object[] = [
     {
         OrderID: 10248, CustomerID: 'VINET', EmployeeID: 5, OrderDate: new Date(8364186e5),
@@ -324,3 +326,99 @@ export let editingData = [
     { TaskID: 39, TaskName: "Celebrate Project Completion", StartDate: new Date("08/07/2025"), EndDate: new Date("08/09/2025"), Duration: 3, Progress: 0, Predecessor: "38", resources: [6, 7] },
     { TaskID: 40, TaskName: "Begin Next Project Planning", StartDate: new Date("08/10/2025"), EndDate: new Date("08/13/2025"), Duration: 4, Progress: 0, Predecessor: "39", resources: [8, 9] }
 ];
+export const formData: DataSchema = {
+  "version": "0.1.0",
+  "properties": {
+    "planNo": {
+      "id": "textbox_1776239290909_976",
+      "type": "number",
+      "label": "Plan No",
+      "textboxType": "number",
+      "required": true
+    },
+    "orderId": {
+      "id": "textbox_1776239505711_293",
+      "type": "number",
+      "label": "Order ID",
+      "textboxType": "number",
+      "required": true
+    },
+    "shipReqd": {
+      "id": "dropdown_1776239544550_617",
+      "type": "string",
+      "label": "Ship Reqd",
+      "required": true
+    },
+    "submit": {
+      "id": "submit_button_initial",
+      "type": "button",
+      "label": "Submit",
+      "buttonType": "submit"
+    }
+  }
+}
+
+export const uiSchema: UISchema = {
+  "properties": {
+    "planNo": {
+      "widget": "number",
+      "format": "n"
+    },
+    "orderId": {
+      "widget": "number",
+      "format": "n"
+    },
+    "shipReqd": {
+      "widget": "datepicker"
+    },
+    "submit": {
+      "widget": "button",
+      "buttonsGroups": [
+        {
+          "label": "Submit",
+          "type": "submit",
+          "style": "success",
+          "iconCss": "e-icons e-check",
+          "iconPosition": "Right",
+          "disabled": false
+        },
+        {
+          "label": "Reset",
+          "type": "reset",
+          "style": "error",
+          "iconCss": "e-icons e-close",
+          "iconPosition": "Right",
+          "disabled": false
+        }
+      ],
+      "gap": "20px",
+      "allowMultiple": true
+    }
+  },
+  "layout": [
+    {
+      "type": "card",
+      "id": "card_1776239637286_235",
+      "label": "Card",
+      "cardTitle": "Order Ship Plan",
+      "children": [
+        {
+          "type": "field",
+          "propertyId": "planNo"
+        },
+        {
+          "type": "field",
+          "propertyId": "orderId"
+        },
+        {
+          "type": "field",
+          "propertyId": "shipReqd"
+        },
+        {
+          "type": "field",
+          "propertyId": "submit"
+        }
+      ]
+    }
+  ]
+};
